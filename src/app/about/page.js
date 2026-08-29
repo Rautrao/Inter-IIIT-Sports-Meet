@@ -1,5 +1,6 @@
 import SectionHeading from '@/components/SectionHeading';
 import PlaceholderImage from '@/components/PlaceholderImage';
+import { eventInfo } from '@/data/info';
 
 export default function About() {
   return (
@@ -15,18 +16,22 @@ export default function About() {
           <div>
             <h3 className="text-2xl font-bold text-brand-dark mb-4">Our History & Legacy</h3>
             <p className="text-gray-700 leading-relaxed mb-6">
-              The Inter IIIT Sports Meet, hosted once every four years, serves as a paramount display of unity and competition among the 25 government-funded IIITs spread across the nation. 
+              The {eventInfo.name}, hosted once every four years, serves as a paramount display of unity and competition among the government-funded IIITs spread across the nation. 
             </p>
             <p className="text-gray-700 leading-relaxed mb-6">
               This unique sports event brings together elite athletes and teams, solidifying its position as a premier competition in the IIIT community. Celebrating a shared passion for sportsmanship and athleticism, Inter IIIT fosters lasting bonds and leaves an enduring mark on intercollegiate sports within the IIIT ecosystem.
             </p>
             <div className="grid grid-cols-2 gap-6 mt-8">
               <div className="bg-brand-surface p-6 rounded-xl border-l-4 border-brand-primary">
-                <div className="text-4xl font-black text-brand-primary mb-2">25</div>
+                <div className="text-4xl font-black text-brand-primary mb-2">
+                  {eventInfo.stats.find(s => s.label === "Participating IIITs")?.value || "25+"}
+                </div>
                 <div className="text-sm font-bold text-gray-600 uppercase tracking-wider">Institutes</div>
               </div>
               <div className="bg-brand-surface p-6 rounded-xl border-l-4 border-brand-accent">
-                <div className="text-4xl font-black text-brand-accent mb-2">1200+</div>
+                <div className="text-4xl font-black text-brand-accent mb-2">
+                  {eventInfo.stats.find(s => s.label === "Student-Athletes")?.value || "2000+"}
+                </div>
                 <div className="text-sm font-bold text-gray-600 uppercase tracking-wider">Athletes</div>
               </div>
             </div>

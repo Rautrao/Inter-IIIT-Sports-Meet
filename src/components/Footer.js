@@ -1,4 +1,6 @@
 import Link from 'next/link';
+import Image from 'next/image';
+import { eventInfo } from '@/data/info';
 
 export default function Footer() {
   return (
@@ -8,15 +10,15 @@ export default function Footer() {
           {/* Brand Col */}
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-brand-primary flex items-center justify-center border-2 border-brand-accent">
-                <span className="text-brand-accent font-bold text-lg">IIIT</span>
+              <div className="w-12 h-12 relative flex items-center justify-center bg-white rounded-full p-1 border-2 border-brand-accent">
+                <Image src="/assets/brand/inter-iiit-logo.png" alt="Inter-IIIT Logo" fill className="object-contain p-1" />
               </div>
               <div>
                 <div className="text-white font-bold text-xl leading-tight tracking-wide">
                   INTER IIIT
                 </div>
                 <div className="text-brand-accent font-medium text-xs tracking-[0.2em] uppercase">
-                  Sports Meet 2026
+                  {eventInfo.shortName}
                 </div>
               </div>
             </div>
