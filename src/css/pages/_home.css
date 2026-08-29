@@ -1,0 +1,16 @@
+/* Home Page */
+.stats-bar { background: var(--clr-bg-800); border-top: var(--border-glass); border-bottom: var(--border-glass); padding-block: var(--space-8); }
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: var(--space-6); }
+@media(max-width:768px){ .stats-grid{ grid-template-columns: repeat(2,1fr); } }
+.sports-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-6); }
+.institutes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--space-4); }
+.preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-8); }
+@media(max-width:900px){ .preview-grid{ grid-template-columns: 1fr; } }
+.preview-panel { background: var(--clr-surface); border: var(--border-glass); border-radius: var(--radius-lg); overflow: hidden; }
+.preview-panel-header { display: flex; justify-content: space-between; align-items: center; padding: var(--space-5) var(--space-6); border-bottom: var(--border-glass); }
+.preview-panel-header h3 { font-size: var(--text-base); }
+.preview-panel-body { padding: var(--space-4); }
+.schedule-row { display: flex; align-items: center; gap: var(--space-4); padding: var(--space-3) var(--space-2); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.schedule-row:last-child { border-bottom: none; }
+.schedule-time { font-size: var(--text-xs); color: var(--clr-text-400); min-width: 60px; font-family: var(--font-mono); }
+.schedule-sport { flex: 1; font-size: var(--text-sm); font-weight: 500; }

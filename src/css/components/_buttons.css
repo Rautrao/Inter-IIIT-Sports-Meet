@@ -1,0 +1,28 @@
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+.btn {
+  display: inline-flex; align-items: center; gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-weight: 600; font-size: var(--text-sm);
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--clr-primary);
+  color: #fff;
+  box-shadow: var(--shadow-glow-orange);
+}
+.btn-primary:hover { background: var(--clr-primary-d); transform: translateY(-2px); }
+.btn-outline {
+  border: 1px solid var(--clr-primary);
+  color: var(--clr-primary);
+}
+.btn-outline:hover { background: var(--clr-primary); color: #fff; transform: translateY(-2px); }
+.btn-ghost { color: var(--clr-text-200); }
+.btn-ghost:hover { color: var(--clr-primary); }
+.btn-gold { background: var(--clr-gold); color: #000; font-weight: 700; }
+.btn-gold:hover { background: #e6a800; transform: translateY(-2px); }
+.btn-sm { padding: var(--space-2) var(--space-4); font-size: var(--text-xs); }
+.btn-lg { padding: var(--space-4) var(--space-8); font-size: var(--text-base); }
