@@ -1,39 +1,52 @@
-import SectionHeading from '@/components/SectionHeading';
 import Image from 'next/image';
 import { gallery } from '@/data/gallery';
-
-const layoutSizes = [
-  'col-span-1 md:col-span-2 row-span-2',
-  'col-span-1 row-span-1',
-  'col-span-1 row-span-1',
-  'col-span-1 row-span-2',
-  'col-span-1 md:col-span-2 row-span-1',
-  'col-span-1 md:col-span-2 row-span-2'
-];
+import Link from 'next/link';
 
 export default function Gallery() {
-  return (
-    <div className="py-24 bg-brand-surface min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeading 
-          title="Gallery" 
-          subtitle="Glimpses of the passion, sweat, and glory."
-        />
+  const featured = gallery[0];
+  const rest = gallery.slice(1);
 
-        <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] gap-4 mt-12">
-          {gallery.map((imagePath, idx) => (
-            <div key={idx} className={`relative rounded-xl overflow-hidden group cursor-pointer shadow-sm hover:shadow-lg transition-shadow ${layoutSizes[idx % layoutSizes.length]}`}>
-              <Image 
-                src={imagePath} 
-                alt={`Gallery image ${idx + 1}`} 
-                fill 
-                className="object-cover transform group-hover:scale-105 transition-transform duration-500" 
+  return (
+    <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
+      {/* Page header */}
+      <div className="py-16 px-4" style={{ background: '#0a2112' }}>
+        <div className="max-w-7xl mx-auto">
+          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#f5c518' }}>
+            Glimpses of Glory
+          </span>
+          <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+            Gallery
+          </h1>
+          <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#c9972f' }} />
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+        {/* Featured image */}
+        <div className="relative w-full overflow-hidden rounded-2xl mb-4 group" style={{ height: '420px' }}>
+          <Image
+            src={featured}
+            alt="Gallery featured"
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-105"
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,33,18,0.5) 0%, transparent 50%)' }} />
+        </div>
+
+        {/* Remaining grid */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
+          {rest.map((img, idx) => (
+            <div key={idx}
+              className={`relative overflow-hidden rounded-xl group ${idx === 0 ? 'md:col-span-2' : ''}`}
+              style={{ height: '200px' }}>
+              <Image
+                src={img}
+                alt={`Gallery image ${idx + 2}`}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-brand-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                 <div className="bg-brand-accent text-brand-dark px-4 py-2 rounded-full font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                   View Full
-                 </div>
-              </div>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                style={{ background: 'rgba(10,33,18,0.3)' }} />
             </div>
           ))}
         </div>

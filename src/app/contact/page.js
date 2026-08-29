@@ -1,73 +1,88 @@
-import SectionHeading from '@/components/SectionHeading';
 import { eventInfo } from '@/data/info';
+import Link from 'next/link';
 
 export default function Contact() {
   return (
-    <div className="bg-brand-surface min-h-screen">
-      {/* Header Section */}
-      <div className="bg-brand-dark py-24 px-4 relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
-          backgroundSize: '32px 32px',
-        }}></div>
-        <div className="max-w-4xl mx-auto text-center relative z-10">
-          <h1 className="text-4xl md:text-5xl font-black text-white uppercase tracking-widest mb-6">
-            Contact <span className="text-brand-accent">Us</span>
+    <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
+      {/* Page header */}
+      <div className="py-16 px-4" style={{ background: '#0a2112' }}>
+        <div className="max-w-7xl mx-auto">
+          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#f5c518' }}>
+            Get In Touch
+          </span>
+          <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+            Contact Us
           </h1>
-          <div className="w-24 h-1 bg-brand-highlight mx-auto mb-8 rounded-full"></div>
-          <p className="text-xl text-gray-300 font-light leading-relaxed">
-            "Got questions? We've got answers! Reach out and let's make magic happen together. Your thoughts matter, and so do you."
-          </p>
+          <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#c9972f' }} />
         </div>
       </div>
 
-      {/* Contact Info Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
-        <div className="grid md:grid-cols-3 gap-12 text-center">
-          
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        {/* Quote */}
+        <p className="text-lg font-medium text-center mb-14" style={{ color: '#444' }}>
+          "Got questions? We've got answers — reach out and let's connect."
+        </p>
+
+        <div className="grid md:grid-cols-3 gap-6">
           {/* Email */}
-          <div className="bg-white p-8 rounded-2xl shadow-sm border-t-4 border-brand-primary hover:shadow-lg transition-shadow">
-            <div className="w-16 h-16 mx-auto bg-brand-surface text-brand-primary rounded-full flex items-center justify-center mb-6">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="rounded-2xl p-8 border" style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.15)' }}>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style={{ background: '#0a2112' }}>
+              <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-brand-dark mb-4 uppercase tracking-wider">E-mail</h3>
-            <a href="mailto:sports@iiitdm.ac.in" className="text-brand-primary font-bold hover:text-brand-accent transition-colors">
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: '#c9972f' }}>Email</div>
+            <h3 className="font-bold text-base mb-3" style={{ color: '#0a2112' }}>Drop us a message</h3>
+            <a href="mailto:sports@iiitdm.ac.in"
+              className="text-sm font-bold transition-colors hover:underline"
+              style={{ color: '#1b5e20' }}>
               sports@iiitdm.ac.in
             </a>
           </div>
 
           {/* Address */}
-          <div className="bg-white p-8 rounded-2xl shadow-sm border-t-4 border-brand-accent hover:shadow-lg transition-shadow">
-            <div className="w-16 h-16 mx-auto bg-brand-surface text-brand-primary rounded-full flex items-center justify-center mb-6">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="rounded-2xl p-8 border" style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.15)' }}>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style={{ background: '#0a2112' }}>
+              <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-brand-dark mb-4 uppercase tracking-wider">Address</h3>
-            <p className="text-gray-600 font-bold">
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: '#c9972f' }}>Venue</div>
+            <h3 className="font-bold text-base mb-3" style={{ color: '#0a2112' }}>Host Institute</h3>
+            <p className="text-sm font-semibold" style={{ color: '#333' }}>
               {eventInfo.host}<br />
-              India
+              <span style={{ color: '#777', fontWeight: 400 }}>Kancheepuram, Tamil Nadu</span>
             </p>
           </div>
 
           {/* Dates */}
-          <div className="bg-white p-8 rounded-2xl shadow-sm border-t-4 border-brand-primary hover:shadow-lg transition-shadow">
-            <div className="w-16 h-16 mx-auto bg-brand-surface text-brand-primary rounded-full flex items-center justify-center mb-6">
-              <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <div className="rounded-2xl p-8 border" style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.15)' }}>
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-5" style={{ background: '#0a2112' }}>
+              <svg className="w-5 h-5 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 className="text-lg font-bold text-brand-dark mb-4 uppercase tracking-wider">Sports Meet Dates</h3>
-            <p className="text-brand-primary font-bold">
-              {eventInfo.dates.split(' to ').join('\nto\n').split('\n').map((line, i) => (
-                <span key={i}>{line}<br /></span>
-              ))}
+            <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-2" style={{ color: '#c9972f' }}>Dates</div>
+            <h3 className="font-bold text-base mb-3" style={{ color: '#0a2112' }}>Event Schedule</h3>
+            <p className="text-sm font-bold" style={{ color: '#1b5e20' }}>
+              19 – 23 December 2026
             </p>
+            <p className="text-xs mt-1" style={{ color: '#777' }}>5 Days · 15+ Sports</p>
           </div>
+        </div>
 
+        {/* Sponsor CTA */}
+        <div className="mt-12 rounded-2xl p-10 text-center" style={{ background: '#0a2112' }}>
+          <h3 className="font-black text-xl text-white mb-2">Interested in Sponsoring?</h3>
+          <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Join us in powering the biggest inter-collegiate sports event among IIITs.
+          </p>
+          <a href="mailto:sports@iiitdm.ac.in"
+            className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold transition-all hover:-translate-y-0.5"
+            style={{ background: '#f5c518', color: '#0a2112' }}>
+            sports@iiitdm.ac.in
+          </a>
         </div>
       </div>
     </div>
