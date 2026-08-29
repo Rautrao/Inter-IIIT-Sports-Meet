@@ -1,6 +1,0 @@
-/* Teams Page */
-.search-bar { position: relative; max-width: 480px; margin-inline: auto; margin-bottom: var(--space-10); }
-.search-bar input { width: 100%; padding: var(--space-4) var(--space-4) var(--space-4) var(--space-12); background: var(--clr-surface); border: var(--border-glass); border-radius: var(--radius-md); color: var(--clr-text-100); font-size: var(--text-base); transition: border-color var(--transition-fast); }
-.search-bar input:focus { outline: none; border-color: var(--clr-primary); }
-.search-bar .search-icon { position: absolute; left: var(--space-4); top: 50%; transform: translateY(-50%); color: var(--clr-text-400); font-size: 1.1rem; }
-.teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: var(--space-5); }
