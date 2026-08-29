@@ -1,1 +1,0 @@
-Inter IIIT Sports meet
