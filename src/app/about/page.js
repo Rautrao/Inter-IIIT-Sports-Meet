@@ -1,6 +1,7 @@
 import SectionHeading from '@/components/SectionHeading';
 import PlaceholderImage from '@/components/PlaceholderImage';
 import { eventInfo } from '@/data/info';
+import Image from 'next/image';
 
 export default function About() {
   return (
@@ -37,8 +38,12 @@ export default function About() {
             </div>
           </div>
           <div className="grid grid-cols-2 gap-4">
-            <PlaceholderImage text="Torch Relay" className="h-64 rounded-2xl" />
-            <PlaceholderImage text="Opening Ceremony" className="h-64 rounded-2xl mt-12" />
+            <div className="relative w-full h-64 rounded-2xl overflow-hidden shadow-xl">
+               <Image src="/assets/gallery/gallery-04.jpg" alt="Torch Relay" fill className="object-cover" />
+            </div>
+            <div className="relative w-full h-64 rounded-2xl overflow-hidden shadow-xl mt-12">
+               <Image src="/assets/gallery/gallery-05.jpg" alt="Opening Ceremony" fill className="object-cover" />
+            </div>
           </div>
         </div>
 

@@ -1,16 +1,14 @@
 import SectionHeading from '@/components/SectionHeading';
-import PlaceholderImage from '@/components/PlaceholderImage';
+import Image from 'next/image';
+import { gallery } from '@/data/gallery';
 
-const galleryItems = [
-  { size: 'col-span-1 md:col-span-2 row-span-2', text: 'Opening Ceremony' },
-  { size: 'col-span-1 row-span-1', text: 'Athletics' },
-  { size: 'col-span-1 row-span-1', text: 'Basketball' },
-  { size: 'col-span-1 row-span-2', text: 'Volleyball' },
-  { size: 'col-span-1 md:col-span-2 row-span-1', text: 'Football' },
-  { size: 'col-span-1 row-span-1', text: 'Tennis' },
-  { size: 'col-span-1 row-span-1', text: 'Swimming' },
-  { size: 'col-span-1 md:col-span-3 row-span-2', text: 'Closing Ceremony' },
-  { size: 'col-span-1 row-span-1', text: 'Badminton' },
+const layoutSizes = [
+  'col-span-1 md:col-span-2 row-span-2',
+  'col-span-1 row-span-1',
+  'col-span-1 row-span-1',
+  'col-span-1 row-span-2',
+  'col-span-1 md:col-span-2 row-span-1',
+  'col-span-1 md:col-span-2 row-span-2'
 ];
 
 export default function Gallery() {
@@ -23,12 +21,13 @@ export default function Gallery() {
         />
 
         <div className="grid grid-cols-2 md:grid-cols-4 auto-rows-[200px] gap-4 mt-12">
-          {galleryItems.map((item, idx) => (
-            <div key={idx} className={`relative rounded-xl overflow-hidden group cursor-pointer shadow-sm hover:shadow-lg transition-shadow ${item.size}`}>
-              <PlaceholderImage 
-                text={item.text} 
-                className="w-full h-full transform group-hover:scale-105 transition-transform duration-500" 
-                gradient="bg-gradient-to-br from-brand-dark to-brand-primary"
+          {gallery.map((imagePath, idx) => (
+            <div key={idx} className={`relative rounded-xl overflow-hidden group cursor-pointer shadow-sm hover:shadow-lg transition-shadow ${layoutSizes[idx % layoutSizes.length]}`}>
+              <Image 
+                src={imagePath} 
+                alt={`Gallery image ${idx + 1}`} 
+                fill 
+                className="object-cover transform group-hover:scale-105 transition-transform duration-500" 
               />
               <div className="absolute inset-0 bg-brand-dark/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                  <div className="bg-brand-accent text-brand-dark px-4 py-2 rounded-full font-bold text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform">

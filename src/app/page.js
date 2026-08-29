@@ -14,7 +14,7 @@ export default function Home() {
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-brand-highlight via-brand-highlight/90 to-brand-primary/90 z-10"></div>
           <div className="absolute right-0 top-0 w-1/2 h-full bg-brand-primary skew-x-12 transform origin-top-right shadow-2xl"></div>
-          <PlaceholderImage text="" className="w-full h-full object-cover opacity-20 mix-blend-overlay" gradient="bg-brand-dark" />
+          <Image src="/assets/hero/hero-placeholder.png" alt="Hero Background" fill className="object-cover opacity-20 mix-blend-overlay" />
         </div>
 
         <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
@@ -100,7 +100,9 @@ export default function Home() {
             </div>
             <div className="relative">
               <div className="absolute inset-0 bg-brand-accent transform translate-x-4 translate-y-4 rounded-2xl"></div>
-              <PlaceholderImage text="Event Torch Relay" className="w-full h-80 rounded-2xl shadow-xl relative z-10" />
+              <div className="relative w-full h-80 rounded-2xl shadow-xl z-10 overflow-hidden">
+                 <Image src="/assets/gallery/gallery-01.jpg" alt="About" fill className="object-cover" />
+              </div>
             </div>
           </div>
         </div>
@@ -128,7 +130,7 @@ export default function Home() {
       <section className="py-0 flex flex-col md:flex-row w-full">
         <div className="flex-1 bg-brand-dark text-white p-12 md:p-24 relative overflow-hidden group">
           <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity">
-            <PlaceholderImage text="" gradient="bg-gradient-to-r from-brand-primary to-brand-dark" className="w-full h-full" />
+            <Image src="/assets/gallery/gallery-02.jpg" alt="Students Meet" fill className="object-cover" />
           </div>
           <div className="relative z-10">
             <h2 className="text-3xl md:text-5xl font-black uppercase italic mb-6">STUDENTS' MEET</h2>
@@ -141,7 +143,7 @@ export default function Home() {
         
         <div className="flex-1 bg-brand-primary text-white p-12 md:p-24 relative overflow-hidden group">
           <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity">
-            <PlaceholderImage text="" gradient="bg-gradient-to-l from-brand-secondary to-brand-primary" className="w-full h-full" />
+            <Image src="/assets/gallery/gallery-03.jpg" alt="Employees Meet" fill className="object-cover" />
           </div>
           <div className="relative z-10">
             <h2 className="text-3xl md:text-5xl font-black uppercase italic mb-6">EMPLOYEES' MEET</h2>
@@ -180,8 +182,14 @@ export default function Home() {
               </button>
             </div>
             <div className="flex justify-center md:justify-end">
-              <div className="relative w-full max-w-md aspect-square">
-                 <PlaceholderImage text="Sponsor Graphics" className="w-full h-full rounded-full shadow-2xl" />
+              <div className="relative w-full max-w-md">
+                 <div className="grid grid-cols-2 gap-4">
+                   {[1, 2, 3, 4].map(num => (
+                     <div key={num} className="bg-white rounded-xl shadow-md p-4 flex items-center justify-center h-24 relative">
+                       <Image src={`/assets/sponsors/sponsor-0${num}.png`} alt={`Sponsor ${num}`} fill className="object-contain p-4" />
+                     </div>
+                   ))}
+                 </div>
               </div>
             </div>
           </div>

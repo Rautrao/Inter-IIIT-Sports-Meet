@@ -1,6 +1,6 @@
 import SectionHeading from '@/components/SectionHeading';
-import PlaceholderImage from '@/components/PlaceholderImage';
 import { sports } from '@/data/sports';
+import Image from 'next/image';
 
 const categories = ["All", "Aquatics", "Athletics", "Powerlifting"];
 
@@ -34,7 +34,7 @@ export default function Events() {
           {sports.map((sport, idx) => (
             <div key={idx} className="group relative rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all h-64 bg-brand-dark cursor-pointer transform hover:-translate-y-1">
               <div className="absolute inset-0 opacity-40 group-hover:opacity-20 transition-opacity">
-                 <PlaceholderImage text={sport.name} gradient="bg-gradient-to-tr from-brand-dark to-brand-primary" className="w-full h-full" />
+                 <Image src={sport.image} alt={sport.name} fill className="object-cover" />
               </div>
               <div className="absolute inset-0 bg-gradient-to-t from-brand-dark via-brand-dark/50 to-transparent"></div>
               
