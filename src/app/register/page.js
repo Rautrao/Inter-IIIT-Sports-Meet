@@ -7,10 +7,36 @@ import Image from 'next/image';
 export default function Register() {
   const [isLogin, setIsLogin] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true);
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Authentication failed');
+      }
+
+      setLoggedInUser(data.user);
+      setSubmitted(true);
+    } catch (err) {
+      setError(err.message || 'Login failed. Please check credentials.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -61,17 +87,29 @@ export default function Register() {
                 </svg>
               </div>
               <h2 className="font-black text-2xl mb-3" style={{ color: '#0a2112' }}>
-                {isLogin ? 'Welcome back!' : 'You\'re registered!'}
+                {loggedInUser ? `Welcome, ${loggedInUser.iiitName || loggedInUser.username}!` : (isLogin ? 'Welcome back!' : 'You\'re registered!')}
               </h2>
-              <p className="text-sm mb-8" style={{ color: '#666' }}>
-                {isLogin ? 'You have successfully logged in.' : 'Welcome to the 9th Inter-IIIT Sports Meet 2026.'}
+              <p className="text-sm mb-6" style={{ color: '#666' }}>
+                {loggedInUser?.role === 'admin'
+                  ? 'You are logged in with administrator privileges.'
+                  : 'You are authenticated. You can now manage your contingent registration.'}
               </p>
-              <button
-                onClick={() => setSubmitted(false)}
-                className="w-full py-3 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5"
-                style={{ background: '#1b5e20', color: '#fff' }}>
-                Go Back
-              </button>
+
+              {loggedInUser?.role === 'admin' ? (
+                <Link
+                  href="/admin"
+                  className="block w-full py-3 rounded-xl font-bold text-sm text-center transition-all hover:-translate-y-0.5"
+                  style={{ background: '#f5c518', color: '#0a2112' }}>
+                  Go to Admin Console →
+                </Link>
+              ) : (
+                <button
+                  onClick={() => setSubmitted(false)}
+                  className="w-full py-3 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5"
+                  style={{ background: '#1b5e20', color: '#fff' }}>
+                  Continue Session
+                </button>
+              )}
               <Link href="/" className="block mt-4 text-sm font-semibold" style={{ color: '#1b5e20' }}>
                 Return to Home
               </Link>
@@ -87,6 +125,12 @@ export default function Register() {
                 </p>
               </div>
 
+              {error && (
+                <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
+                  {error}
+                </div>
+              )}
+
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-xs font-black uppercase tracking-wider mb-1.5" style={{ color: '#444' }}>
@@ -95,8 +139,10 @@ export default function Register() {
                   <input
                     type="text"
                     required
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-                    placeholder="e.g. 2021BCS001"
+                    placeholder="e.g. iiitdm-kancheepuram"
                     style={{
                       border: '1.5px solid rgba(27,94,32,0.2)',
                       background: '#fff',
@@ -113,6 +159,8 @@ export default function Register() {
                   <input
                     type="password"
                     required
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
                     placeholder="Enter your password"
                     style={{
@@ -127,9 +175,10 @@ export default function Register() {
 
                 <button
                   type="submit"
-                  className="w-full py-3.5 rounded-xl font-black text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-md mt-2"
+                  disabled={loading}
+                  className="w-full py-3.5 rounded-xl font-black text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-md mt-2 disabled:opacity-50"
                   style={{ background: '#f5c518', color: '#0a2112' }}>
-                  {isLogin ? 'Sign In →' : 'Register Now →'}
+                  {loading ? 'Processing...' : (isLogin ? 'Sign In →' : 'Sign In / Authenticate →')}
                 </button>
               </form>
 

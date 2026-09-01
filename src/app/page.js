@@ -189,7 +189,7 @@ export default function Home() {
           <div className="relative z-10 p-10 md:p-14">
             <div className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
               style={{ background: '#f5c518', color: '#0a2112' }}>Students</div>
-            <h2 className="font-black text-white text-3xl md:text-4xl leading-tight mb-3">Students' <br />Sports Meet</h2>
+            <h2 className="font-black text-white text-3xl md:text-4xl leading-tight mb-3">Students&apos; <br />Sports Meet</h2>
             <p className="text-sm leading-relaxed max-w-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
               2,000+ athletes from 25+ IIITs competing across 15+ disciplines over 5 thrilling days.
             </p>
@@ -204,7 +204,7 @@ export default function Home() {
           <div className="relative z-10 p-10 md:p-14">
             <div className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
               style={{ background: '#c9972f', color: '#fff' }}>Faculty & Staff</div>
-            <h2 className="font-black text-white text-3xl md:text-4xl leading-tight mb-3">Employees' <br />Sports Meet</h2>
+            <h2 className="font-black text-white text-3xl md:text-4xl leading-tight mb-3">Employees&apos; <br />Sports Meet</h2>
             <p className="text-sm leading-relaxed max-w-sm" style={{ color: 'rgba(255,255,255,0.65)' }}>
               Faculty and staff from IIITs unite in friendly competition, camaraderie, and community.
             </p>

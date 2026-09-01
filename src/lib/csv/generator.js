@@ -1,0 +1,178 @@
+import { eq, and, sql } from "drizzle-orm";
+import { getDb } from "../../db/index.js";
+import { registrations, students, studentEventParticipations } from "../../db/schema.js";
+import { getSportConfig } from "../sports/config.js";
+
+/**
+ * Escape a field for RFC 4180 CSV
+ */
+export function escapeCsvField(val) {
+  if (val === null || val === undefined) return "";
+  const str = String(val);
+  if (str.includes(",") || str.includes('"') || str.includes("\n") || str.includes("\r")) {
+    return `"${str.replace(/"/g, '""')}"`;
+  }
+  return str;
+}
+
+/**
+ * Format an array of rows into a CSV string
+ */
+export function formatCsv(headers, rows) {
+  const headerLine = headers.map(escapeCsvField).join(",");
+  const dataLines = rows.map((row) => row.map(escapeCsvField).join(","));
+  return [headerLine, ...dataLines].join("\r\n");
+}
+
+/**
+ * Generate CSV for a single IIIT's submitted registration
+ */
+export async function generateIIITRegistrationCSV(iiitCode) {
+  const db = getDb();
+
+  const entries = await db
+    .select({
+      iiitName: registrations.iiitName,
+      rollNumber: students.rollNumber,
+      studentName: students.name,
+      studentGender: students.gender,
+      sportId: studentEventParticipations.sportId,
+      eventId: studentEventParticipations.eventId,
+      eventGender: studentEventParticipations.gender,
+      isReserve: studentEventParticipations.isReserve,
+      submittedAt: registrations.submittedAt,
+    })
+    .from(studentEventParticipations)
+    .innerJoin(students, eq(studentEventParticipations.studentId, students.id))
+    .innerJoin(registrations, eq(studentEventParticipations.registrationId, registrations.id))
+    .where(
+      and(
+        eq(registrations.iiitCode, iiitCode),
+        eq(registrations.status, "submitted")
+      )
+    )
+    .orderBy(students.rollNumber, studentEventParticipations.sportId);
+
+  const headers = [
+    "IIIT Name",
+    "Roll Number",
+    "Student Name",
+    "Student Gender",
+    "Sport",
+    "Event / Discipline",
+    "Event Category",
+    "Slot Type",
+    "Submission Date",
+  ];
+
+  const rows = entries.map((entry) => {
+    const sportConfig = getSportConfig(entry.sportId);
+    const sportName = sportConfig?.name || entry.sportId;
+
+    let eventName = entry.eventId;
+    if (sportConfig?.events?.[entry.eventGender]) {
+      const ev = sportConfig.events[entry.eventGender].find(
+        (e) => e.id === entry.eventId
+      );
+      if (ev) eventName = ev.name;
+    }
+
+    return [
+      entry.iiitName,
+      entry.rollNumber,
+      entry.studentName,
+      entry.studentGender,
+      sportName,
+      eventName,
+      entry.eventGender === "M" ? "Men" : entry.eventGender === "F" ? "Women" : "Mixed/Open",
+      entry.isReserve ? "Reserve" : "Main",
+      entry.submittedAt ? new Date(entry.submittedAt).toISOString() : "",
+    ];
+  });
+
+  return formatCsv(headers, rows);
+}
+
+/**
+ * Generate Master CSV for Admin (All or Filtered)
+ */
+export async function generateAdminMasterCSV(filters = {}) {
+  const db = getDb();
+
+  const conditions = [eq(registrations.status, "submitted")];
+
+  if (filters.iiit) {
+    conditions.push(
+      sql`(${registrations.iiitCode} = ${filters.iiit} OR ${registrations.iiitName} ILIKE ${`%${filters.iiit}%`})`
+    );
+  }
+  if (filters.sport) {
+    conditions.push(eq(studentEventParticipations.sportId, filters.sport.toLowerCase()));
+  }
+  if (filters.event) {
+    conditions.push(eq(studentEventParticipations.eventId, filters.event.toLowerCase()));
+  }
+  if (filters.gender) {
+    conditions.push(eq(students.gender, filters.gender.toUpperCase()));
+  }
+
+  const entries = await db
+    .select({
+      iiitCode: registrations.iiitCode,
+      iiitName: registrations.iiitName,
+      rollNumber: students.rollNumber,
+      studentName: students.name,
+      studentGender: students.gender,
+      sportId: studentEventParticipations.sportId,
+      eventId: studentEventParticipations.eventId,
+      eventGender: studentEventParticipations.gender,
+      isReserve: studentEventParticipations.isReserve,
+      submittedAt: registrations.submittedAt,
+    })
+    .from(studentEventParticipations)
+    .innerJoin(students, eq(studentEventParticipations.studentId, students.id))
+    .innerJoin(registrations, eq(studentEventParticipations.registrationId, registrations.id))
+    .where(and(...conditions))
+    .orderBy(registrations.iiitName, students.rollNumber, studentEventParticipations.sportId);
+
+  const headers = [
+    "IIIT Code",
+    "IIIT Name",
+    "Roll Number",
+    "Student Name",
+    "Gender",
+    "Sport",
+    "Event",
+    "Event Category",
+    "Slot Type",
+    "Submission Date",
+  ];
+
+  const rows = entries.map((entry) => {
+    const sportConfig = getSportConfig(entry.sportId);
+    const sportName = sportConfig?.name || entry.sportId;
+
+    let eventName = entry.eventId;
+    if (sportConfig?.events?.[entry.eventGender]) {
+      const ev = sportConfig.events[entry.eventGender].find(
+        (e) => e.id === entry.eventId
+      );
+      if (ev) eventName = ev.name;
+    }
+
+    return [
+      entry.iiitCode,
+      entry.iiitName,
+      entry.rollNumber,
+      entry.studentName,
+      entry.studentGender,
+      sportName,
+      eventName,
+      entry.eventGender === "M" ? "Men" : entry.eventGender === "F" ? "Women" : "Mixed/Open",
+      entry.isReserve ? "Reserve" : "Main",
+      entry.submittedAt ? new Date(entry.submittedAt).toISOString() : "",
+    ];
+  });
+
+  return formatCsv(headers, rows);
+}

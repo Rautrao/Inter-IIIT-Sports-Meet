@@ -20,7 +20,7 @@ export default function Contact() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Quote */}
         <p className="text-lg font-medium text-center mb-14" style={{ color: '#444' }}>
-          "Got questions? We've got answers — reach out and let's connect."
+          &ldquo;Got questions? We&apos;ve got answers &mdash; reach out and let&apos;s connect.&rdquo;
         </p>
 
         <div className="grid md:grid-cols-3 gap-6">
