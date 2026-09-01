@@ -1,200 +1,240 @@
 "use client";
 
-import { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
+import { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/navigation";
+import RegistrationHeader from "@/components/registration/RegistrationHeader";
+import ContactForm from "@/components/registration/ContactForm";
+import SportSection from "@/components/registration/SportSection";
+import ReviewModal from "@/components/registration/ReviewModal";
+import LockedRegistration from "@/components/registration/LockedRegistration";
+import { getAllSportsList } from "@/lib/sports/config";
+import { getLiveValidationErrors, getStudentRegistry } from "@/lib/registration/client-utils";
 
-export default function Register() {
-  const [isLogin, setIsLogin] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [loggedInUser, setLoggedInUser] = useState(null);
+export default function RegisterPage() {
+  const router = useRouter();
+  
+  // Auth & API state
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const [lockedRegistrationData, setLockedRegistrationData] = useState(null);
+  
+  // Form State
+  const [contactDetails, setContactDetails] = useState({
+    contactName: "",
+    contactEmail: "",
+    contactPhone: "",
+    notes: ""
+  });
+  const [slotsMap, setSlotsMap] = useState({});
+  const [lastSaved, setLastSaved] = useState(null);
+  
+  // UI State
+  const [activeTab, setActiveTab] = useState("M");
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
+  // Initialize and check auth/registration status
+  useEffect(() => {
+    const init = async () => {
+      try {
+        const authRes = await fetch("/api/auth/me");
+        if (!authRes.ok) {
+          router.push("/login");
+          return;
+        }
+        const authData = await authRes.json();
+        if (authData.user.role === "admin") {
+          router.push("/admin");
+          return;
+        }
+        setUser(authData.user);
+
+        const regRes = await fetch("/api/registration");
+        if (regRes.ok) {
+          const regData = await regRes.json();
+          // Based on Prompt 1.5, any registration returned is submitted and locked
+          if (regData.registration) {
+            setLockedRegistrationData(regData);
+            setLoading(false);
+            return;
+          }
+        }
+        
+        // Not submitted -> Load drafts from localStorage
+        const draftKey = `inter_iiit_registration_${authData.user.username}`;
+        const saved = localStorage.getItem(draftKey);
+        if (saved) {
+          try {
+            const parsed = JSON.parse(saved);
+            if (parsed.contactDetails) setContactDetails(parsed.contactDetails);
+            if (parsed.slotsMap) setSlotsMap(parsed.slotsMap);
+          } catch (e) {
+            console.error("Failed to parse local draft", e);
+          }
+        }
+        setLoading(false);
+      } catch (err) {
+        console.error("Initialization error:", err);
+        router.push("/login");
+      }
+    };
+    init();
+  }, [router]);
+
+  // Auto-save to localStorage
+  useEffect(() => {
+    if (loading || lockedRegistrationData || !user) return;
+    
+    const draftKey = `inter_iiit_registration_${user.username}`;
+    const timer = setTimeout(() => {
+      localStorage.setItem(draftKey, JSON.stringify({ contactDetails, slotsMap }));
+      setLastSaved(new Date());
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [contactDetails, slotsMap, loading, lockedRegistrationData, user]);
+
+  const handleSlotChange = useCallback((key, newSlotData) => {
+    setSlotsMap(prev => ({
+      ...prev,
+      [key]: newSlotData
+    }));
+  }, []);
+
+  const handleFinalSubmit = async () => {
+    setIsSubmitting(true);
+    setSubmitError("");
+    
+    const { payload, isValid, errors } = getLiveValidationErrors(contactDetails, slotsMap);
+    
+    if (!isValid) {
+      setSubmitError("Please fix validation errors before submitting.");
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
+      const res = await fetch("/api/registration/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
       });
-
+      
       const data = await res.json();
+      
       if (!res.ok) {
-        throw new Error(data.error || 'Authentication failed');
+        throw new Error(data.error || "Submission failed");
       }
-
-      setLoggedInUser(data.user);
-      setSubmitted(true);
+      
+      // Success! Clear localStorage
+      localStorage.removeItem(`inter_iiit_registration_${user.username}`);
+      
+      // Reload page to show locked state
+      window.location.reload();
+      
     } catch (err) {
-      setError(err.message || 'Login failed. Please check credentials.');
-    } finally {
-      setLoading(false);
+      setSubmitError(err.message);
+      setIsSubmitting(false);
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#faf6ee] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-800"></div>
+      </div>
+    );
+  }
+
+  // If locked, render the readonly view
+  if (lockedRegistrationData) {
+    return <LockedRegistration iiitCode={user.username} registrationData={lockedRegistrationData} />;
+  }
+
+  // Otherwise, render the active registration form
+  const { isValid, errors, totalUniqueStudents, payload } = getLiveValidationErrors(contactDetails, slotsMap);
+  const studentRegistry = getStudentRegistry(slotsMap);
+
   return (
-    <div className="min-h-screen flex" style={{ background: '#faf6ee' }}>
-      {/* Left panel - branding */}
-      <div className="hidden md:flex flex-col justify-between w-[42%] p-12 relative overflow-hidden"
-        style={{ background: '#0a2112' }}>
-        {/* background texture */}
-        <div className="absolute inset-0 opacity-20">
-          <Image src="/assets/hero/hero-placeholder.png" alt="" fill className="object-cover" />
+    <div className="min-h-screen bg-[#faf6ee] font-sans pb-32">
+      <RegistrationHeader 
+        iiitName={user.iiitName || user.username} 
+        uniqueStudentsCount={totalUniqueStudents} 
+        lastSaved={lastSaved} 
+      />
+      
+      <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+        <ContactForm 
+          contactDetails={contactDetails} 
+          onChange={setContactDetails} 
+        />
+        
+        {/* Navigation Tabs for Gender Sections */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 mb-6 flex flex-wrap sm:flex-nowrap gap-2">
+          <button 
+            onClick={() => setActiveTab("M")}
+            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "M" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
+          >
+            Men&apos;s Events
+          </button>
+          <button 
+            onClick={() => setActiveTab("F")}
+            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "F" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
+          >
+            Women&apos;s Events
+          </button>
+          <button 
+            onClick={() => setActiveTab("mixed")}
+            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "mixed" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
+          >
+            Combined Events
+          </button>
         </div>
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(10,33,18,0.7) 0%, rgba(10,33,18,0.95) 100%)' }} />
+        
+        {/* Render sports for the active tab */}
+        <div className="space-y-4">
+          {getAllSportsList().map(sport => (
+            <SportSection
+              key={sport.id}
+              sportConfig={sport}
+              gender={activeTab}
+              slotsMap={slotsMap}
+              onChangeSlot={handleSlotChange}
+              studentRegistry={studentRegistry}
+            />
+          ))}
+        </div>
+      </main>
 
-        <div className="relative z-10">
-          <div className="w-14 h-14 relative bg-white rounded-full p-1">
-            <Image src="/assets/brand/inter-iiit-logo.png" alt="Logo" fill className="object-contain p-1" />
+      {/* Floating Action Bar */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-40">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex-1">
+            {submitError && <div className="text-red-600 text-sm font-bold bg-red-50 px-3 py-1.5 rounded inline-block">{submitError}</div>}
+            {!isValid && !submitError && <div className="text-red-600 text-sm font-bold bg-red-50 px-3 py-1.5 rounded inline-block">{errors.length} Issue(s) found. See review modal.</div>}
+            {isValid && !submitError && <div className="text-green-700 text-sm font-bold bg-green-50 px-3 py-1.5 rounded inline-block">All validation rules passed</div>}
           </div>
-        </div>
-
-        <div className="relative z-10">
-          <div className="text-xs font-black tracking-[0.2em] uppercase mb-3" style={{ color: '#f5c518' }}>
-            9th Edition
+          <div className="flex items-center gap-4 w-full sm:w-auto">
+            <button 
+              onClick={() => setIsReviewOpen(true)}
+              className="w-full sm:w-auto px-8 py-3.5 bg-[#f5c518] text-[#0a2112] font-black rounded-xl shadow hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wide"
+            >
+              Review & Submit
+            </button>
           </div>
-          <h2 className="font-black text-white text-3xl leading-tight mb-4">
-            Inter-IIIT<br />Sports Meet<br />2026
-          </h2>
-          <div className="w-10 h-0.5 rounded-full mb-6" style={{ background: '#c9972f' }} />
-          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            19–23 December 2026<br />
-            IIITDM Kancheepuram, India
-          </p>
-        </div>
-
-        <div className="relative z-10 text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-          © 2026 Inter-IIIT Sports Meet
         </div>
       </div>
 
-      {/* Right panel - form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-sm">
-          {submitted ? (
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
-                style={{ background: '#1b5e20' }}>
-                <svg className="w-8 h-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                </svg>
-              </div>
-              <h2 className="font-black text-2xl mb-3" style={{ color: '#0a2112' }}>
-                {loggedInUser ? `Welcome, ${loggedInUser.iiitName || loggedInUser.username}!` : (isLogin ? 'Welcome back!' : 'You\'re registered!')}
-              </h2>
-              <p className="text-sm mb-6" style={{ color: '#666' }}>
-                {loggedInUser?.role === 'admin'
-                  ? 'You are logged in with administrator privileges.'
-                  : 'You are authenticated. You can now manage your contingent registration.'}
-              </p>
-
-              {loggedInUser?.role === 'admin' ? (
-                <Link
-                  href="/admin"
-                  className="block w-full py-3 rounded-xl font-bold text-sm text-center transition-all hover:-translate-y-0.5"
-                  style={{ background: '#f5c518', color: '#0a2112' }}>
-                  Go to Admin Console →
-                </Link>
-              ) : (
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="w-full py-3 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5"
-                  style={{ background: '#1b5e20', color: '#fff' }}>
-                  Continue Session
-                </button>
-              )}
-              <Link href="/" className="block mt-4 text-sm font-semibold" style={{ color: '#1b5e20' }}>
-                Return to Home
-              </Link>
-            </div>
-          ) : (
-            <>
-              <div className="mb-8">
-                <h1 className="font-black text-2xl" style={{ color: '#0a2112' }}>
-                  {isLogin ? 'Sign in' : 'Create account'}
-                </h1>
-                <p className="text-sm mt-1.5" style={{ color: '#777' }}>
-                  {isLogin ? 'Access your participant portal' : 'Register for Inter-IIIT Sports Meet 2026'}
-                </p>
-              </div>
-
-              {error && (
-                <div className="mb-4 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
-                  {error}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider mb-1.5" style={{ color: '#444' }}>
-                    Username / IIIT ID
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-                    placeholder="e.g. iiitdm-kancheepuram"
-                    style={{
-                      border: '1.5px solid rgba(27,94,32,0.2)',
-                      background: '#fff',
-                      color: '#0a2112',
-                    }}
-                    onFocus={e => { e.target.style.borderColor = '#1b5e20'; }}
-                    onBlur={e => { e.target.style.borderColor = 'rgba(27,94,32,0.2)'; }}
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-black uppercase tracking-wider mb-1.5" style={{ color: '#444' }}>
-                    Password
-                  </label>
-                  <input
-                    type="password"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-                    placeholder="Enter your password"
-                    style={{
-                      border: '1.5px solid rgba(27,94,32,0.2)',
-                      background: '#fff',
-                      color: '#0a2112',
-                    }}
-                    onFocus={e => { e.target.style.borderColor = '#1b5e20'; }}
-                    onBlur={e => { e.target.style.borderColor = 'rgba(27,94,32,0.2)'; }}
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="w-full py-3.5 rounded-xl font-black text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-md mt-2 disabled:opacity-50"
-                  style={{ background: '#f5c518', color: '#0a2112' }}>
-                  {loading ? 'Processing...' : (isLogin ? 'Sign In →' : 'Sign In / Authenticate →')}
-                </button>
-              </form>
-
-              <div className="mt-7 text-center text-sm" style={{ color: '#888' }}>
-                {isLogin ? "Don't have an account? " : "Already registered? "}
-                <button
-                  onClick={() => setIsLogin(!isLogin)}
-                  className="font-bold transition-colors"
-                  style={{ color: '#1b5e20' }}>
-                  {isLogin ? 'Register' : 'Sign in'}
-                </button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+      <ReviewModal 
+        isOpen={isReviewOpen}
+        onClose={() => setIsReviewOpen(false)}
+        onSubmit={handleFinalSubmit}
+        isSubmitting={isSubmitting}
+        payload={payload}
+        errors={errors}
+        uniqueStudentsCount={totalUniqueStudents}
+      />
     </div>
   );
 }
