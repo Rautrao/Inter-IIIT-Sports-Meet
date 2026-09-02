@@ -1,7 +1,31 @@
 "use client";
 
+/**
+ * Converts raw validation error strings into clean, human-readable messages.
+ * Business-rule errors from rules.js are already well-formed.
+ * Schema errors from Zod (e.g. "contactDetails.contactEmail: Invalid email") are cleaned up.
+ */
+function formatError(raw) {
+  // Zod schema path prefix cleanup
+  const schemaMap = {
+    "contactDetails.contactName:": "Contact Form — Name:",
+    "contactDetails.contactEmail:": "Contact Form — Email:",
+    "contactDetails.contactPhone:": "Contact Form — Phone:",
+    "students.": "Student roster —",
+    "entries.": "Event entry —",
+  };
+  for (const [prefix, label] of Object.entries(schemaMap)) {
+    if (raw.startsWith(prefix)) {
+      return label + " " + raw.slice(prefix.length).trim();
+    }
+  }
+  return raw;
+}
+
 export default function ReviewModal({ isOpen, onClose, onSubmit, isSubmitting, payload, errors, submitError, uniqueStudentsCount }) {
   if (!isOpen) return null;
+
+  const hasErrors = errors && errors.length > 0;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -15,26 +39,47 @@ export default function ReviewModal({ isOpen, onClose, onSubmit, isSubmitting, p
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
                 <h3 className="text-xl leading-6 font-black text-gray-900" id="modal-title">
-                  Review & Submit Registration
+                  Review &amp; Submit Registration
                 </h3>
                 <div className="mt-4">
+                  {/* API submission error */}
                   {submitError && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                      <h4 className="text-red-800 font-bold text-sm mb-1">Submission Failed</h4>
-                      <p className="text-sm text-red-700">{submitError}</p>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+                      <svg className="w-4 h-4 text-red-500 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                      </svg>
+                      <div>
+                        <h4 className="text-red-800 font-bold text-sm">Submission Failed</h4>
+                        <p className="text-sm text-red-700 mt-0.5">{submitError}</p>
+                      </div>
                     </div>
                   )}
-                  {errors && errors.length > 0 ? (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
-                      <h4 className="text-red-800 font-bold text-sm mb-2">Please fix the following errors before submitting:</h4>
-                      <ul className="list-disc pl-5 text-sm text-red-700 space-y-1">
+
+                  {hasErrors ? (
+                    /* Validation error list */
+                    <div className="bg-red-50 border border-red-200 rounded-xl overflow-hidden mb-2">
+                      <div className="flex items-center gap-2 px-4 py-3 border-b border-red-200 bg-red-100">
+                        <svg className="w-4 h-4 text-red-600 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                        </svg>
+                        <span className="text-red-800 font-bold text-sm">
+                          {errors.length} issue{errors.length !== 1 ? 's' : ''} must be fixed before submitting
+                        </span>
+                      </div>
+                      <ul className="divide-y divide-red-100 max-h-64 overflow-y-auto">
                         {errors.map((err, idx) => (
-                          <li key={idx}>{err}</li>
+                          <li key={idx} className="flex items-start gap-3 px-4 py-2.5">
+                            <span className="flex-shrink-0 w-5 h-5 rounded-full bg-red-200 text-red-700 text-[10px] font-black flex items-center justify-center mt-0.5">
+                              {idx + 1}
+                            </span>
+                            <span className="text-sm text-red-800 leading-snug">{formatError(err)}</span>
+                          </li>
                         ))}
                       </ul>
                     </div>
                   ) : (
                     <>
+                      {/* Permanent action warning */}
                       <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                         <div className="flex">
                           <div className="flex-shrink-0">
@@ -75,7 +120,7 @@ export default function ReviewModal({ isOpen, onClose, onSubmit, isSubmitting, p
             </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-200">
-            {(!errors || errors.length === 0) && (
+            {!hasErrors && (
               <button
                 type="button"
                 disabled={isSubmitting}
@@ -91,7 +136,7 @@ export default function ReviewModal({ isOpen, onClose, onSubmit, isSubmitting, p
               onClick={onClose}
               disabled={isSubmitting}
             >
-              Cancel & Continue Editing
+              {hasErrors ? "Close & Fix Issues" : "Cancel & Continue Editing"}
             </button>
           </div>
         </div>
