@@ -33,6 +33,7 @@ export default function RegisterPage() {
   const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   // Initialize and check auth/registration status
   useEffect(() => {
@@ -44,6 +45,10 @@ export default function RegisterPage() {
           return;
         }
         const authData = await authRes.json();
+        if (!authData || !authData.user) {
+          router.push("/login");
+          return;
+        }
         if (authData.user.role === "admin") {
           router.push("/admin");
           return;
@@ -53,15 +58,14 @@ export default function RegisterPage() {
         const regRes = await fetch("/api/registration");
         if (regRes.ok) {
           const regData = await regRes.json();
-          // Based on Prompt 1.5, any registration returned is submitted and locked
-          if (regData.registration) {
-            setLockedRegistrationData(regData);
+          if (regData.data && regData.data.submitted) {
+            setLockedRegistrationData(regData.data);
             setLoading(false);
             return;
           }
         }
         
-        // Not submitted -> Load drafts from localStorage
+        // Not submitted → load draft from localStorage
         const draftKey = `inter_iiit_registration_${authData.user.username}`;
         const saved = localStorage.getItem(draftKey);
         if (saved) {
@@ -95,6 +99,18 @@ export default function RegisterPage() {
     return () => clearTimeout(timer);
   }, [contactDetails, slotsMap, loading, lockedRegistrationData, user]);
 
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+    setIsLoggingOut(true);
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch (e) {
+      console.error("Logout error:", e);
+    }
+    // Do NOT clear localStorage — draft must survive logout/login cycle
+    router.push("/login");
+  };
+
   const handleSlotChange = useCallback((key, newSlotData) => {
     setSlotsMap(prev => ({
       ...prev,
@@ -106,35 +122,33 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     setSubmitError("");
     
-    const { payload, isValid, errors } = getLiveValidationErrors(contactDetails, slotsMap);
-    
-    if (!isValid) {
-      setSubmitError("Please fix validation errors before submitting.");
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
+      const { payload, isValid, errors } = getLiveValidationErrors(contactDetails, slotsMap);
+      
+      if (!isValid) {
+        setSubmitError("Please fix validation errors before submitting.");
+        setIsSubmitting(false);
+        return;
+      }
+
       const res = await fetch("/api/registration/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
       
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
       
       if (!res.ok) {
-        throw new Error(data.error || "Submission failed");
+        throw new Error((data && data.error) ? data.error : `Submission failed with status ${res.status}`);
       }
       
-      // Success! Clear localStorage
+      // Success — clear local draft and reload to show locked state
       localStorage.removeItem(`inter_iiit_registration_${user.username}`);
-      
-      // Reload page to show locked state
       window.location.reload();
       
     } catch (err) {
-      setSubmitError(err.message);
+      setSubmitError(err.message || "An unexpected error occurred during submission.");
       setIsSubmitting(false);
     }
   };
@@ -147,13 +161,27 @@ export default function RegisterPage() {
     );
   }
 
-  // If locked, render the readonly view
+  // If locked, show the readonly locked view
   if (lockedRegistrationData) {
     return <LockedRegistration iiitCode={user.username} registrationData={lockedRegistrationData} />;
   }
 
-  // Otherwise, render the active registration form
-  const { isValid, errors, totalUniqueStudents, payload } = getLiveValidationErrors(contactDetails, slotsMap);
+  // Compute live validation state for the form UI
+  let isValid = false;
+  let errors = [];
+  let totalUniqueStudents = 0;
+  let payload = null;
+  try {
+    const result = getLiveValidationErrors(contactDetails, slotsMap);
+    isValid = result.isValid;
+    errors = result.errors;
+    totalUniqueStudents = result.totalUniqueStudents;
+    payload = result.payload;
+  } catch (e) {
+    console.error("Render-time validation error:", e);
+    errors = ["Internal validation error — please refresh the page."];
+  }
+
   const studentRegistry = getStudentRegistry(slotsMap);
 
   return (
@@ -161,7 +189,9 @@ export default function RegisterPage() {
       <RegistrationHeader 
         iiitName={user.iiitName || user.username} 
         uniqueStudentsCount={totalUniqueStudents} 
-        lastSaved={lastSaved} 
+        lastSaved={lastSaved}
+        onLogout={handleLogout}
+        isLoggingOut={isLoggingOut}
       />
       
       <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
@@ -210,17 +240,32 @@ export default function RegisterPage() {
       {/* Floating Action Bar */}
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-40">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex-1">
-            {submitError && <div className="text-red-600 text-sm font-bold bg-red-50 px-3 py-1.5 rounded inline-block">{submitError}</div>}
-            {!isValid && !submitError && <div className="text-red-600 text-sm font-bold bg-red-50 px-3 py-1.5 rounded inline-block">{errors.length} Issue(s) found. See review modal.</div>}
-            {isValid && !submitError && <div className="text-green-700 text-sm font-bold bg-green-50 px-3 py-1.5 rounded inline-block">All validation rules passed</div>}
+          <div className="flex-1 min-w-0">
+            {submitError && (
+              <div className="text-red-600 text-sm font-bold bg-red-50 px-3 py-1.5 rounded inline-flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
+                {submitError}
+              </div>
+            )}
+            {!isValid && !submitError && (
+              <div className="text-red-600 text-sm bg-red-50 border border-red-200 px-3 py-1.5 rounded inline-flex items-center gap-1.5 max-w-full">
+                <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
+                <span><span className="font-black">{errors.length} issue{errors.length !== 1 ? 's' : ''}</span> — <span className="font-medium truncate">{errors[0]}</span>{errors.length > 1 ? <span className="font-bold"> (+{errors.length - 1} more — open Review)</span> : <span className="font-bold"> — open Review to fix</span>}</span>
+              </div>
+            )}
+            {isValid && !submitError && (
+              <div className="text-green-700 text-sm font-bold bg-green-50 px-3 py-1.5 rounded inline-flex items-center gap-1.5">
+                <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
+                All validation rules passed
+              </div>
+            )}
           </div>
           <div className="flex items-center gap-4 w-full sm:w-auto">
             <button 
               onClick={() => setIsReviewOpen(true)}
               className="w-full sm:w-auto px-8 py-3.5 bg-[#f5c518] text-[#0a2112] font-black rounded-xl shadow hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wide"
             >
-              Review & Submit
+              Review &amp; Submit
             </button>
           </div>
         </div>
@@ -233,6 +278,7 @@ export default function RegisterPage() {
         isSubmitting={isSubmitting}
         payload={payload}
         errors={errors}
+        submitError={submitError}
         uniqueStudentsCount={totalUniqueStudents}
       />
     </div>

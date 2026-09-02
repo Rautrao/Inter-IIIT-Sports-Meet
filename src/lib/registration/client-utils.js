@@ -1,5 +1,6 @@
 import { validateRegistrationRules } from "../validation/rules.js";
 import { GLOBAL_RULES } from "../sports/config.js";
+import { registrationSubmitSchema } from "../validation/schemas.js";
 
 /**
  * Parses a slot key into its components
@@ -126,6 +127,14 @@ export function getLiveValidationErrors(contactDetails, slotsMap) {
     if (!ruleResult.isValid) {
       errors.push(...ruleResult.errors);
     }
+  }
+
+  // 4. Validate schema (contact details, missing fields, etc)
+  const parsed = registrationSubmitSchema.safeParse(payload);
+  if (!parsed.success) {
+    parsed.error.issues.forEach(issue => {
+      errors.push(`${issue.path.join(".")}: ${issue.message}`);
+    });
   }
 
   return {
