@@ -141,6 +141,13 @@ export async function getAdminStats() {
     .innerJoin(registrations, eq(students.registrationId, registrations.id))
     .where(eq(registrations.status, "submitted"));
 
+  // 2b. Total event entries
+  const totalEntriesResult = await db
+    .select({ count: count() })
+    .from(studentEventParticipations)
+    .innerJoin(registrations, eq(studentEventParticipations.registrationId, registrations.id))
+    .where(eq(registrations.status, "submitted"));
+
   // 3. Gender breakdown
   const genderBreakdownResult = await db
     .select({
@@ -168,6 +175,7 @@ export async function getAdminStats() {
     totalIIITs: Number(totalIIITsResult[0]?.count || 0),
     submittedIIITs: Number(submittedIIITsResult[0]?.count || 0),
     totalStudents: Number(totalStudentsResult[0]?.count || 0),
+    totalEventEntries: Number(totalEntriesResult[0]?.count || 0),
     genderBreakdown: genderBreakdownResult.reduce((acc, curr) => {
       acc[curr.gender] = Number(curr.count);
       return acc;
