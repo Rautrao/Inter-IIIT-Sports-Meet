@@ -1,16 +1,16 @@
 "use client";
 
-export default function ReviewModal({ isOpen, onClose, onSubmit, isSubmitting, payload, errors, uniqueStudentsCount }) {
+export default function ReviewModal({ isOpen, onClose, onSubmit, isSubmitting, payload, errors, submitError, uniqueStudentsCount }) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={onClose}></div>
+          <div className="fixed inset-0 bg-gray-900 bg-opacity-75 transition-opacity" aria-hidden="true" onClick={onClose} style={{ pointerEvents: 'auto' }}></div>
 
-        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+          <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
 
-        <div className="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+          <div className="relative inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full" style={{ pointerEvents: 'auto' }}>
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <div className="sm:flex sm:items-start">
               <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
@@ -18,6 +18,12 @@ export default function ReviewModal({ isOpen, onClose, onSubmit, isSubmitting, p
                   Review & Submit Registration
                 </h3>
                 <div className="mt-4">
+                  {submitError && (
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                      <h4 className="text-red-800 font-bold text-sm mb-1">Submission Failed</h4>
+                      <p className="text-sm text-red-700">{submitError}</p>
+                    </div>
+                  )}
                   {errors && errors.length > 0 ? (
                     <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                       <h4 className="text-red-800 font-bold text-sm mb-2">Please fix the following errors before submitting:</h4>
@@ -48,7 +54,7 @@ export default function ReviewModal({ isOpen, onClose, onSubmit, isSubmitting, p
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
                           <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Unique Students</p>
-                          <p className="text-2xl font-black text-gray-900">{uniqueStudentsCount}</p>
+                          <p className="text-2xl font-black text-gray-900">{uniqueStudentsCount || 0}</p>
                         </div>
                         <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
                           <p className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Total Event Entries</p>

@@ -53,15 +53,14 @@ export default function RegisterPage() {
         const regRes = await fetch("/api/registration");
         if (regRes.ok) {
           const regData = await regRes.json();
-          // Based on Prompt 1.5, any registration returned is submitted and locked
-          if (regData.registration) {
-            setLockedRegistrationData(regData);
+          if (regData.data && regData.data.submitted) {
+            setLockedRegistrationData(regData.data);
             setLoading(false);
             return;
           }
         }
         
-        // Not submitted -> Load drafts from localStorage
+        // Not submitted → load draft from localStorage
         const draftKey = `inter_iiit_registration_${authData.user.username}`;
         const saved = localStorage.getItem(draftKey);
         if (saved) {
@@ -106,35 +105,33 @@ export default function RegisterPage() {
     setIsSubmitting(true);
     setSubmitError("");
     
-    const { payload, isValid, errors } = getLiveValidationErrors(contactDetails, slotsMap);
-    
-    if (!isValid) {
-      setSubmitError("Please fix validation errors before submitting.");
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
+      const { payload, isValid, errors } = getLiveValidationErrors(contactDetails, slotsMap);
+      
+      if (!isValid) {
+        setSubmitError("Please fix validation errors before submitting.");
+        setIsSubmitting(false);
+        return;
+      }
+
       const res = await fetch("/api/registration/submit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
       
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
       
       if (!res.ok) {
-        throw new Error(data.error || "Submission failed");
+        throw new Error((data && data.error) ? data.error : `Submission failed with status ${res.status}`);
       }
       
-      // Success! Clear localStorage
+      // Success — clear local draft and reload to show locked state
       localStorage.removeItem(`inter_iiit_registration_${user.username}`);
-      
-      // Reload page to show locked state
       window.location.reload();
       
     } catch (err) {
-      setSubmitError(err.message);
+      setSubmitError(err.message || "An unexpected error occurred during submission.");
       setIsSubmitting(false);
     }
   };
@@ -147,13 +144,27 @@ export default function RegisterPage() {
     );
   }
 
-  // If locked, render the readonly view
+  // If locked, show the readonly locked view
   if (lockedRegistrationData) {
     return <LockedRegistration iiitCode={user.username} registrationData={lockedRegistrationData} />;
   }
 
-  // Otherwise, render the active registration form
-  const { isValid, errors, totalUniqueStudents, payload } = getLiveValidationErrors(contactDetails, slotsMap);
+  // Compute live validation state for the form UI
+  let isValid = false;
+  let errors = [];
+  let totalUniqueStudents = 0;
+  let payload = null;
+  try {
+    const result = getLiveValidationErrors(contactDetails, slotsMap);
+    isValid = result.isValid;
+    errors = result.errors;
+    totalUniqueStudents = result.totalUniqueStudents;
+    payload = result.payload;
+  } catch (e) {
+    console.error("Render-time validation error:", e);
+    errors = ["Internal validation error — please refresh the page."];
+  }
+
   const studentRegistry = getStudentRegistry(slotsMap);
 
   return (
@@ -220,7 +231,7 @@ export default function RegisterPage() {
               onClick={() => setIsReviewOpen(true)}
               className="w-full sm:w-auto px-8 py-3.5 bg-[#f5c518] text-[#0a2112] font-black rounded-xl shadow hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wide"
             >
-              Review & Submit
+              Review &amp; Submit
             </button>
           </div>
         </div>
@@ -233,6 +244,7 @@ export default function RegisterPage() {
         isSubmitting={isSubmitting}
         payload={payload}
         errors={errors}
+        submitError={submitError}
         uniqueStudentsCount={totalUniqueStudents}
       />
     </div>
