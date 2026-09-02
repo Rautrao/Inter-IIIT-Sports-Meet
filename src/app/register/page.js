@@ -45,6 +45,10 @@ export default function RegisterPage() {
           return;
         }
         const authData = await authRes.json();
+        if (!authData || !authData.user) {
+          router.push("/login");
+          return;
+        }
         if (authData.user.role === "admin") {
           router.push("/admin");
           return;
