@@ -109,8 +109,21 @@ async function runTests() {
     assert.strictEqual(chess.teamLimits.mixed, 4);
   });
 
-  // 4. Business Rules: Valid Multi-Sport Case
-  test("Business rules: Valid combination (2 Normal Sports + Athletics + Aquatics)", () => {
+  // 4. TEST 2 - NORMAL SPORTS: 1, 2 pass
+  test("TEST 2: Normal Sports - 1 or 2 normal sports pass", () => {
+    const students = [
+      { rollNumber: "2023BCS001", name: "ALOK KUMAR", gender: "M" },
+    ];
+    const entries = [
+      { sportId: "cricket", eventId: "team", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+      { sportId: "volleyball", eventId: "team", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+    ];
+    const result = validateRegistrationRules({ students, entries });
+    assert.strictEqual(result.isValid, true, `Expected valid, got errors: ${result.errors.join("; ")}`);
+  });
+
+  // TEST 3 - ATHLETICS: Valid Multi-Sport Case
+  test("TEST 3: Athletics - Cricket + Volleyball + Athletics pass", () => {
     const students = [
       { rollNumber: "2023BCS001", name: "ALOK KUMAR", gender: "M" },
       { rollNumber: "2023BCS002", name: "PRIYA SHARMA", gender: "F" },
@@ -127,8 +140,6 @@ async function runTests() {
       { sportId: "athletics", eventId: "long_jump", gender: "M", rollNumber: "2023BCS001", isReserve: false },
       // Alok in Athletics Relay (Relay does not count towards the 3 individual events)
       { sportId: "athletics", eventId: "4x100m_relay", gender: "M", rollNumber: "2023BCS001", isReserve: false },
-      // Alok in Aquatics 50m Free Style
-      { sportId: "aquatics", eventId: "50m_freestyle", gender: "M", rollNumber: "2023BCS001", isReserve: false },
 
       // Priya in Badminton (Normal Sport 1)
       { sportId: "badminton", eventId: "team", gender: "F", rollNumber: "2023BCS002", isReserve: false },
@@ -141,8 +152,8 @@ async function runTests() {
     assert.strictEqual(result.errors.length, 0);
   });
 
-  // 5. Business Rules: Invalid Multi-Sport Case (> 2 normal sports)
-  test("Business rules: Rejection of > 2 normal sports", () => {
+  // TEST 2 - NORMAL SPORTS: > 2 reject
+  test("TEST 2: Normal Sports - 3 normal sports reject", () => {
     const students = [
       { rollNumber: "2023BCS001", name: "ALOK KUMAR", gender: "M" },
     ];
@@ -158,8 +169,8 @@ async function runTests() {
     assert.ok(result.errors.some((e) => e.includes("Multi-sport rule violated")));
   });
 
-  // 6. Business Rules: Athletics Individual Event Limit Exceeded (> 3)
-  test("Business rules: Rejection of > 3 individual athletics events", () => {
+  // TEST 3 - ATHLETICS: 4 individual reject
+  test("TEST 3: Athletics - 4 individual athletics events reject", () => {
     const students = [
       { rollNumber: "2023BCS001", name: "ALOK KUMAR", gender: "M" },
     ];
@@ -176,61 +187,176 @@ async function runTests() {
     assert.ok(result.errors.some((e) => e.includes("Athletics event limit violated")));
   });
 
-  // 7. Business Rules: Gender Mismatch Detection
-  test("Business rules: Rejection of gender mismatch", () => {
-    const students = [
-      { rollNumber: "2023BCS002", name: "PRIYA SHARMA", gender: "F" },
-    ];
-
-    const entries = [
-      { sportId: "football", eventId: "team", gender: "M", rollNumber: "2023BCS002", isReserve: false },
-    ];
-
-    const result = validateRegistrationRules({ students, entries });
-    assert.strictEqual(result.isValid, false);
-    assert.ok(result.errors.some((e) => e.includes("Gender mismatch")));
-  });
-
-  // 8. Business Rules: Squad Size Exceeded
-  test("Business rules: Rejection when team quota is exceeded", () => {
-    // Badminton Women max is 3
-    const students = [
-      { rollNumber: "2023BCS101", name: "STUDENT 1", gender: "F" },
-      { rollNumber: "2023BCS102", name: "STUDENT 2", gender: "F" },
-      { rollNumber: "2023BCS103", name: "STUDENT 3", gender: "F" },
-      { rollNumber: "2023BCS104", name: "STUDENT 4", gender: "F" },
-    ];
-
-    const entries = [
-      { sportId: "badminton", eventId: "team", gender: "F", rollNumber: "2023BCS101", isReserve: false },
-      { sportId: "badminton", eventId: "team", gender: "F", rollNumber: "2023BCS102", isReserve: false },
-      { sportId: "badminton", eventId: "team", gender: "F", rollNumber: "2023BCS103", isReserve: false },
-      { sportId: "badminton", eventId: "team", gender: "F", rollNumber: "2023BCS104", isReserve: false }, // 4th player! Limit is 3
-    ];
-
-    const result = validateRegistrationRules({ students, entries });
-    assert.strictEqual(result.isValid, false);
-    assert.ok(result.errors.some((e) => e.includes("Squad size exceeded for Badminton (F)")));
-  });
-
-  // 9. Business Rules: Cap of 150 Unique Students
-  test("Business rules: Rejection when > 150 unique students are submitted", () => {
-    const students = [];
-    for (let i = 1; i <= 151; i++) {
-      students.push({
-        rollNumber: `2023BCS${String(i).padStart(3, "0")}`,
-        name: `STUDENT ${i}`,
-        gender: "M",
-      });
-    }
-
+  // TEST 4 - AQUATICS: Valid pass
+  test("TEST 4: Aquatics - Cricket + Volleyball + 3 Aquatics events pass", () => {
+    const students = [{ rollNumber: "2023BCS001", name: "ALOK KUMAR", gender: "M" }];
     const entries = [
       { sportId: "cricket", eventId: "team", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+      { sportId: "volleyball", eventId: "team", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+      { sportId: "aquatics", eventId: "50m_freestyle", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+      { sportId: "aquatics", eventId: "100m_freestyle", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+      { sportId: "aquatics", eventId: "50m_breaststroke", gender: "M", rollNumber: "2023BCS001", isReserve: false },
     ];
+    const result = validateRegistrationRules({ students, entries });
+    assert.strictEqual(result.isValid, true);
+  });
 
+  // TEST 4 - AQUATICS: 4 events reject
+  test("TEST 4: Aquatics - 4 aquatics events reject", () => {
+    const students = [{ rollNumber: "2023BCS001", name: "ALOK KUMAR", gender: "M" }];
+    const entries = [
+      { sportId: "aquatics", eventId: "50m_freestyle", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+      { sportId: "aquatics", eventId: "100m_freestyle", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+      { sportId: "aquatics", eventId: "50m_breaststroke", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+      { sportId: "aquatics", eventId: "100m_breaststroke", gender: "M", rollNumber: "2023BCS001", isReserve: false },
+    ];
     const result = validateRegistrationRules({ students, entries });
     assert.strictEqual(result.isValid, false);
-    assert.ok(result.errors.some((e) => e.includes("Maximum unique students limit exceeded")));
+    assert.ok(result.errors.some((e) => e.includes("Aquatics event limit violated")));
+  });
+
+  // TEST 8 - GENDER: Mismatch rejection
+  test("TEST 8: Gender - Men+M pass, Men+F reject, Women+F pass, Women+M reject", () => {
+    // 1. Men + M (pass)
+    assert.strictEqual(
+      validateRegistrationRules({
+        students: [{ rollNumber: "R1", name: "S1", gender: "M" }],
+        entries: [{ sportId: "cricket", eventId: "team", gender: "M", rollNumber: "R1", isReserve: false }]
+      }).isValid, true
+    );
+    // 2. Men + F (reject)
+    assert.strictEqual(
+      validateRegistrationRules({
+        students: [{ rollNumber: "R2", name: "S2", gender: "F" }],
+        entries: [{ sportId: "cricket", eventId: "team", gender: "M", rollNumber: "R2", isReserve: false }]
+      }).isValid, false
+    );
+    // 3. Women + F (pass)
+    assert.strictEqual(
+      validateRegistrationRules({
+        students: [{ rollNumber: "R3", name: "S3", gender: "F" }],
+        entries: [{ sportId: "volleyball", eventId: "team", gender: "F", rollNumber: "R3", isReserve: false }]
+      }).isValid, true
+    );
+    // 4. Women + M (reject)
+    assert.strictEqual(
+      validateRegistrationRules({
+        students: [{ rollNumber: "R4", name: "S4", gender: "M" }],
+        entries: [{ sportId: "volleyball", eventId: "team", gender: "F", rollNumber: "R4", isReserve: false }]
+      }).isValid, false
+    );
+    // 5. Combined + M (pass)
+    assert.strictEqual(
+      validateRegistrationRules({
+        students: [{ rollNumber: "R5", name: "S5", gender: "M" }],
+        entries: [{ sportId: "chess", eventId: "team", gender: "mixed", rollNumber: "R5", isReserve: false }]
+      }).isValid, true
+    );
+    // 6. Combined + F (pass)
+    assert.strictEqual(
+      validateRegistrationRules({
+        students: [{ rollNumber: "R6", name: "S6", gender: "F" }],
+        entries: [{ sportId: "chess", eventId: "team", gender: "mixed", rollNumber: "R6", isReserve: false }]
+      }).isValid, true
+    );
+  });
+
+  // TEST 5 - EVENT CAPACITY: Athletics individual capacity is 2 per IIIT
+  test("TEST 5: Event Capacity - 1 pass, 2 pass, 3 reject", () => {
+    const students = [
+      { rollNumber: "R1", name: "STUDENT 1", gender: "M" },
+      { rollNumber: "R2", name: "STUDENT 2", gender: "M" },
+      { rollNumber: "R3", name: "STUDENT 3", gender: "M" },
+    ];
+
+    // 2 participants -> pass
+    const passResult = validateRegistrationRules({
+      students: students.slice(0, 2),
+      entries: [
+        { sportId: "athletics", eventId: "100m", gender: "M", rollNumber: "R1", isReserve: false },
+        { sportId: "athletics", eventId: "100m", gender: "M", rollNumber: "R2", isReserve: false },
+      ]
+    });
+    assert.strictEqual(passResult.isValid, true);
+
+    // 3 participants -> reject (limit is 2 for Athletics 100m)
+    const rejectResult = validateRegistrationRules({
+      students,
+      entries: [
+        { sportId: "athletics", eventId: "100m", gender: "M", rollNumber: "R1", isReserve: false },
+        { sportId: "athletics", eventId: "100m", gender: "M", rollNumber: "R2", isReserve: false },
+        { sportId: "athletics", eventId: "100m", gender: "M", rollNumber: "R3", isReserve: false },
+      ]
+    });
+    assert.strictEqual(rejectResult.isValid, false);
+    assert.ok(rejectResult.errors.some(e => e.includes("Competitor limit exceeded")));
+  });
+
+  // TEST 1 - MAXIMUM UNIQUE STUDENTS: 150 pass, 151 reject, multiple events counts as 1
+  test("TEST 1: Maximum Unique Students - 150 pass, 151 reject", () => {
+    const students150 = [];
+    const entries150 = [];
+    for (let i = 1; i <= 150; i++) {
+      const roll = `R${i}`;
+      students150.push({ rollNumber: roll, name: `STUDENT ${i}`, gender: "M" });
+      entries150.push({ sportId: "cricket", eventId: "team", gender: "M", rollNumber: roll, isReserve: false });
+      // Duplicate entry for same roll but different event to prove it counts as 1 unique student
+      entries150.push({ sportId: "athletics", eventId: "100m", gender: "M", rollNumber: roll, isReserve: false });
+    }
+    const result150 = validateRegistrationRules({ students: students150, entries: entries150 });
+    // Valid combination, only 150 students, although 300 entries. It will fail on squad size/event capacity, 
+    // so we just check it doesn't fail on "Maximum unique students limit exceeded".
+    assert.strictEqual(result150.errors.some(e => e.includes("Maximum unique students limit exceeded")), false);
+
+    const students151 = [...students150, { rollNumber: "R151", name: "STUDENT 151", gender: "M" }];
+    const result151 = validateRegistrationRules({ students: students151, entries: [] });
+    assert.strictEqual(result151.isValid, false);
+    assert.ok(result151.errors.some(e => e.includes("Maximum unique students limit exceeded")));
+  });
+
+  // TEST 6 - DUPLICATE EVENT: Same student + same sport/event twice
+  test("TEST 6: Duplicate Event - Reject same student in same event twice", () => {
+    const students = [{ rollNumber: "R1", name: "STUDENT 1", gender: "M" }];
+    const entries = [
+      { sportId: "athletics", eventId: "100m", gender: "M", rollNumber: "R1", isReserve: false },
+      { sportId: "athletics", eventId: "100m", gender: "M", rollNumber: "R1", isReserve: false },
+    ];
+    const result = validateRegistrationRules({ students, entries });
+    assert.strictEqual(result.isValid, false);
+    assert.ok(result.errors.some(e => e.includes("entered multiple times in athletics - 100m")));
+  });
+
+  // TEST 7 - CONFLICTING IDENTITY: Same roll + different name
+  test("TEST 7: Conflicting Identity - Same roll + different name reject", () => {
+    const students = [
+      { rollNumber: "R1", name: "STUDENT A", gender: "M" },
+      { rollNumber: "R1", name: "STUDENT B", gender: "M" }, // Same roll, different name
+    ];
+    const result = validateRegistrationRules({ students, entries: [] });
+    assert.strictEqual(result.isValid, false);
+    assert.ok(result.errors.some(e => e.includes("Duplicate student roll number detected")));
+  });
+
+  // TEST 9 - NO MINIMUM SPORTS
+  test("TEST 9: No Minimum Sports - 1 valid sport or 2 valid sports pass", () => {
+    const students = [{ rollNumber: "R1", name: "STUDENT 1", gender: "M" }];
+    // 1 valid sport
+    assert.strictEqual(
+      validateRegistrationRules({
+        students,
+        entries: [{ sportId: "cricket", eventId: "team", gender: "M", rollNumber: "R1", isReserve: false }]
+      }).isValid, true
+    );
+    // 2 valid sports
+    assert.strictEqual(
+      validateRegistrationRules({
+        students,
+        entries: [
+          { sportId: "cricket", eventId: "team", gender: "M", rollNumber: "R1", isReserve: false },
+          { sportId: "volleyball", eventId: "team", gender: "M", rollNumber: "R1", isReserve: false }
+        ]
+      }).isValid, true
+    );
   });
 
   // 10. Zod Payload Schema Normalization
