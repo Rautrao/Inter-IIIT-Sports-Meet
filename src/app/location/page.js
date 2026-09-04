@@ -5,18 +5,19 @@ import { eventInfo } from '@/data/info';
  * Location Page Component
  * 
  * Purpose:
- * Provides visiting sports contingents, officials, and attendees with complete
- * geographical, travel, and campus facility information for IIITDM Kancheepuram.
+ * Provides visiting sports contingents, officials, and attendees with verified
+ * geographical, travel, landmark, and campus facility information for IIITDM Kancheepuram.
  * 
  * Features:
  * - Direct "Get Directions" action integrating with Google Maps navigation
  * - Structured travel cards for Airport, Railway, Bus, and Local Cabs
+ * - Verified nearby regional landmarks with distance benchmarks
  * - Interactive embedded Google Map with pan/zoom and direct link to full app
  * - Campus sports facilities breakdown and contingent check-in instructions
  * - Fully responsive layout adhering to the warm ivory (#faf6ee) and brand green design system
  */
 export default function Location() {
-  const { location } = eventInfo;
+  const { location, hostInstitute, sportsFacilities } = eventInfo;
 
   return (
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
@@ -26,16 +27,16 @@ export default function Location() {
       <section className="py-16 px-4 sm:px-6 lg:px-8" style={{ background: '#0a2112' }}>
         <div className="max-w-7xl mx-auto">
           <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#f5c518' }}>
-            Venue & Connectivity Guide
+            Venue &amp; Travel Guide
           </span>
           <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
-            Location & How to Reach
+            Location &amp; How to Reach
           </h1>
           <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#c9972f' }} />
           
-          <p className="mt-6 text-base sm:text-lg max-w-3xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.75)' }}>
-            The 9th All India Inter-IIIT Sports Meet is proudly hosted at the scenic 51-acre green campus of{' '}
-            <strong className="text-white font-bold">{location.institute}</strong>.
+          <p className="mt-6 text-base sm:text-lg max-w-3xl leading-relaxed text-white/80">
+            The 9th All India Inter-IIIT Sports Meet is held at the {hostInstitute.campusArea} of{' '}
+            <strong className="text-white font-bold">{hostInstitute.name}</strong>, situated in Melakottaiyur, Chennai.
           </p>
 
           {/* Quick Actions & Coordinates Bar */}
@@ -66,8 +67,8 @@ export default function Location() {
             </div>
 
             {/* Address snippet */}
-            <span className="text-xs sm:text-sm font-medium" style={{ color: 'rgba(255,255,255,0.6)' }}>
-              Melakottaiyur, Chennai 600127, Tamil Nadu
+            <span className="text-xs sm:text-sm font-medium text-white/70">
+              {location.address}
             </span>
           </div>
         </div>
@@ -80,13 +81,13 @@ export default function Location() {
         <div className="mb-14">
           <div className="mb-8">
             <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>
-              Transit Options
+              How to Reach
             </span>
             <h2 className="mt-2 font-black text-2xl sm:text-3xl" style={{ color: '#0a2112' }}>
-              Travel & Distance Matrix
+              Travel &amp; Distance Matrix
             </h2>
-            <p className="mt-2 text-sm" style={{ color: '#555' }}>
-              Clear connectivity pathways from all major air, rail, and road transit terminals in the Chennai metropolitan area.
+            <p className="mt-2 text-sm text-gray-600">
+              Connectivity options from major air, rail, and bus transit terminals in the Chennai metropolitan area.
             </p>
           </div>
 
@@ -110,7 +111,7 @@ export default function Location() {
                 </div>
 
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-1" style={{ color: '#c9972f' }}>
-                  By Flight
+                  By Air
                 </div>
                 <h3 className="font-bold text-lg mb-2" style={{ color: '#0a2112' }}>
                   {location.airport.name}
@@ -118,15 +119,13 @@ export default function Location() {
                 <p className="text-xs font-semibold mb-4" style={{ color: '#1b5e20' }}>
                   Approx. {location.airport.time} drive via Vandalur-Kelambakkam Road
                 </p>
-                <p className="text-sm leading-relaxed" style={{ color: '#444' }}>
+                <p className="text-sm leading-relaxed text-gray-600">
                   {location.airport.details}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
-                <span className="text-xs font-semibold" style={{ color: '#666' }}>
-                  Recommended: Prepaid Airport Taxi or App Cabs (Uber/Ola)
-                </span>
+              <div className="mt-6 pt-4 border-t text-xs font-semibold text-gray-500" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+                Recommended: Airport prepaid taxi, Ola, Uber, or Fast Track.
               </div>
             </div>
 
@@ -156,7 +155,7 @@ export default function Location() {
 
                 <ul className="space-y-3">
                   {location.railway.stations.map((stn, idx) => (
-                    <li key={idx} className="text-xs leading-relaxed" style={{ color: '#444' }}>
+                    <li key={idx} className="text-xs leading-relaxed text-gray-600">
                       <span className="font-bold block text-sm" style={{ color: '#1b5e20' }}>
                         {stn.name} &bull; {stn.distance}
                       </span>
@@ -166,10 +165,8 @@ export default function Location() {
                 </ul>
               </div>
 
-              <div className="mt-6 pt-4 border-t" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
-                <span className="text-xs font-semibold" style={{ color: '#666' }}>
-                  Tambaram (TBM) is the most convenient station for arriving teams.
-                </span>
+              <div className="mt-6 pt-4 border-t text-xs font-semibold text-gray-500" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+                Tambaram (TBM) is the closest and most frequent suburban connecting station.
               </div>
             </div>
 
@@ -191,23 +188,21 @@ export default function Location() {
                 </div>
 
                 <div className="text-[10px] font-black uppercase tracking-[0.2em] mb-1" style={{ color: '#c9972f' }}>
-                  By Bus & Road
+                  By Bus &amp; Road
                 </div>
                 <h3 className="font-bold text-lg mb-2" style={{ color: '#0a2112' }}>
                   {location.bus.hub}
                 </h3>
                 <p className="text-xs font-semibold mb-4" style={{ color: '#1b5e20' }}>
-                  Direct interstate connection from all regions
+                  Interstate terminus for south-bound buses
                 </p>
-                <p className="text-sm leading-relaxed" style={{ color: '#444' }}>
+                <p className="text-sm leading-relaxed text-gray-600">
                   {location.bus.routes}
                 </p>
               </div>
 
-              <div className="mt-6 pt-4 border-t" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
-                <span className="text-xs font-semibold" style={{ color: '#666' }}>
-                  MTC Bus Stop: &quot;Melakottaiyur / IIITDM&quot; right at main entrance
-                </span>
+              <div className="mt-6 pt-4 border-t text-xs font-semibold text-gray-500" style={{ borderColor: 'rgba(0,0,0,0.06)' }}>
+                MTC Bus Stop: &quot;Melakottaiyur / IIITDM Gate&quot; located at the main entrance.
               </div>
             </div>
 
@@ -223,7 +218,7 @@ export default function Location() {
                 Interactive Campus Locator
               </span>
               <h2 className="mt-2 font-black text-2xl sm:text-3xl" style={{ color: '#0a2112' }}>
-                Campus Map & Navigation
+                Campus Map &amp; Navigation
               </h2>
             </div>
             
@@ -269,23 +264,19 @@ export default function Location() {
                   Sports Facilities Hub
                 </h3>
                 
-                <p className="text-xs leading-relaxed mb-6" style={{ color: '#555' }}>
-                  All sports arenas are centrally situated within the campus within short walking distance from student hostels.
+                <p className="text-xs leading-relaxed mb-6 text-gray-600">
+                  Outdoor and indoor facilities are located within the campus perimeter within walking distance of contingent hostels.
                 </p>
 
                 <div className="space-y-3.5">
-                  {[
-                    { icon: '🏟️', name: 'Main Athletic Ground', desc: 'Synthetic running track, field events & football stadium' },
-                    { icon: '🏀', name: 'Indoor Sports Arena', desc: 'Badminton courts, table tennis & basketball complex' },
-                    { icon: '🎾', name: 'Outdoor Courts', desc: 'Floodlit lawn tennis and volleyball arenas' },
-                    { icon: '🏊', name: 'Aquatics Complex', desc: 'Olympic-size competition swimming pool' },
-                    { icon: '🏏', name: 'Cricket Arena', desc: 'Full turf pitch with practice net facilities' },
-                  ].map((facility, i) => (
+                  {sportsFacilities.map((facility, i) => (
                     <div key={i} className="flex items-start gap-3">
-                      <span className="text-base shrink-0">{facility.icon}</span>
+                      <span className="text-base shrink-0">
+                        {i === 0 ? '🏟️' : i === 1 ? '🏀' : i === 2 ? '🎾' : i === 3 ? '🏊' : '🏏'}
+                      </span>
                       <div>
                         <div className="text-xs font-bold" style={{ color: '#0a2112' }}>{facility.name}</div>
-                        <div className="text-[11px]" style={{ color: '#777' }}>{facility.desc}</div>
+                        <div className="text-[11px] text-gray-500">{facility.desc}</div>
                       </div>
                     </div>
                   ))}
@@ -300,25 +291,67 @@ export default function Location() {
                 <div className="font-bold mb-1" style={{ color: '#1b5e20' }}>
                   ℹ️ Contingent Reporting Desk
                 </div>
-                Arriving IIIT teams must report directly to the Sports Council Desk located in the Admin Foyer for kit collection and room allocation.
+                Arriving IIIT delegations should report to the Sports Council Helpdesk in the Administrative Foyer for registration kits and hostel allocation.
               </div>
             </div>
 
           </div>
         </div>
 
-        {/* ─── 4. LOCAL TIPS & CONTACT FOOTNOTE ──────────────────────────── */}
+        {/* ─── 4. NEARBY LANDMARKS & POINTS OF INTEREST ───────────────────── */}
+        <div className="mb-14">
+          <div className="mb-8">
+            <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>
+              Surrounding Area
+            </span>
+            <h2 className="mt-2 font-black text-2xl sm:text-3xl" style={{ color: '#0a2112' }}>
+              Nearby Landmarks
+            </h2>
+            <p className="mt-2 text-sm text-gray-600">
+              Key regional transit, education, and cultural landmarks surrounding the Melakottaiyur campus.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {location.landmarks.map((landmark, idx) => (
+              <div
+                key={idx}
+                className="rounded-2xl p-6 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
+                style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.12)' }}
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-black px-2.5 py-1 rounded-full" style={{ background: 'rgba(27,94,32,0.08)', color: '#1b5e20' }}>
+                      {landmark.distance}
+                    </span>
+                    <span className="text-base">
+                      {idx === 0 ? '🦁' : idx === 1 ? '🎓' : idx === 2 ? '💻' : '🏛️'}
+                    </span>
+                  </div>
+                  <h3 className="font-bold text-sm mb-2" style={{ color: '#0a2112' }}>
+                    {landmark.name}
+                  </h3>
+                  <p className="text-xs leading-relaxed text-gray-600">
+                    {landmark.desc}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ─── 5. LOCAL TIPS & CONTACT FOOTNOTE ──────────────────────────── */}
         <div
           className="rounded-2xl p-8 sm:p-10 text-white flex flex-col md:flex-row items-center justify-between gap-6"
           style={{ background: '#0a2112' }}
         >
           <div>
             <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#f5c518' }}>
-              Support For Traveling Teams
+              Assistance for Traveling Teams
             </span>
-            <h3 className="mt-1 font-black text-2xl">Need Local Transport Assistance?</h3>
-            <p className="mt-2 text-sm max-w-xl leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
-              Dedicated student volunteer transport marshals will be stationed at Tambaram Railway Station and Kilambakkam Bus Terminus during peak arrival hours (18–19 Dec 2026).
+            <h3 className="mt-1 font-black text-2xl">Need Local Travel Coordination?</h3>
+            <p className="mt-2 text-sm max-w-xl leading-relaxed text-white/70">
+              Student volunteer transport marshals will coordinate assistance at Tambaram Railway Station and Kilambakkam Bus Terminus during peak arrival hours for the 9th Inter-IIIT Meet.
             </p>
           </div>
 

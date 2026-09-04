@@ -36,7 +36,30 @@ export const eventInfo = {
       hub: "Kalaignar Centenary Bus Terminus (KCBT / Kilambakkam)",
       distance: "10 km",
       routes: "MTC Bus routes 515, 555, 105, 55K run frequently between Tambaram/Kilambakkam and Thiruporur/Mamallapuram, stopping directly at Melakottaiyur (Campus Gate)."
-    }
-  }
+    },
+    landmarks: [
+      { name: "Arignar Anna Zoological Park (Vandalur Zoo)", distance: "~8 km", desc: "Major ecological landmark and transport junction connecting GST Road." },
+      { name: "VIT Chennai", distance: "~3 km", desc: "Prominent educational neighbor along the Vandalur-Kelambakkam corridor." },
+      { name: "Siruseri IT Park / SIPCOT OMR", distance: "~12 km", desc: "Major IT corridor connecting the Old Mahabalipuram Road." },
+      { name: "Mahabalipuram (Mamallapuram)", distance: "~28 km", desc: "Historic UNESCO World Heritage coastal site reachable via Kelambakkam." }
+    ]
+  },
+  hostInstitute: {
+    name: "Indian Institute of Information Technology, Design and Manufacturing, Kancheepuram",
+    shortName: "IIITDM Kancheepuram",
+    status: "Institute of National Importance (Ministry of Education, Govt. of India)",
+    established: "2007",
+    campusArea: "51-Acre Campus",
+    location: "Melakottaiyur, Off Vandalur-Kelambakkam Road, Chennai 600127",
+    description: "An Institute of National Importance established by the Government of India, IIITDM Kancheepuram is dedicated to design and manufacturing education and research. Alongside academic excellence, the campus supports an active sporting culture with modern outdoor grounds and indoor sports arenas."
+  },
+  sportsFacilities: [
+    { name: "Athletic Ground & Football Field", desc: "Standard running track and multi-purpose sports ground for field events and football matches." },
+    { name: "Indoor Sports Complex", desc: "Multi-court facility equipped for badminton, table tennis, and basketball." },
+    { name: "Outdoor Floodlit Courts", desc: "Hard courts for tennis and volleyball supporting day and evening fixtures." },
+    { name: "Swimming Pool", desc: "Campus aquatics facility hosting competitive swimming events." },
+    { name: "Cricket Arena & Practice Nets", desc: "Turf pitch for cricket matches alongside dedicated net practice bays." }
+  ]
 };
+
 
