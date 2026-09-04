@@ -54,6 +54,9 @@ export default function Contact() {
               {eventInfo.host}<br />
               <span style={{ color: '#777', fontWeight: 400 }}>Kancheepuram, Tamil Nadu</span>
             </p>
+            <Link href="/location" className="inline-flex items-center gap-1 text-xs font-bold mt-3 transition-colors hover:underline" style={{ color: '#1b5e20' }}>
+              View Travel Guide &amp; Map &rarr;
+            </Link>
           </div>
 
           {/* Dates */}

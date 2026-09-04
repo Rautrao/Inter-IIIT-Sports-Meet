@@ -56,9 +56,15 @@ export default function Home() {
                 <div className="font-black text-2xl" style={{ color: '#1b5e20' }}>
                   19 – 23 December 2026
                 </div>
-                <div className="text-sm font-semibold mt-0.5" style={{ color: '#0a2112', opacity: 0.65 }}>
-                  {eventInfo.host}, India
-                </div>
+                <Link
+                  href="/location"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold mt-0.5 hover:underline group"
+                  style={{ color: '#0a2112', opacity: 0.85 }}
+                  title="View Campus & Travel Guide"
+                >
+                  <span>{eventInfo.host}, India</span>
+                  <span className="text-xs group-hover:translate-x-0.5 transition-transform" style={{ color: '#1b5e20' }}>📍</span>
+                </Link>
               </div>
             </div>
 
