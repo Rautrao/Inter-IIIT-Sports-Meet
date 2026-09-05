@@ -10,8 +10,8 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-5">
-              <div className="w-11 h-11 relative bg-white rounded-full p-0.5 border border-amber-500/50">
-                <Image src="/assets/brand/inter-iiit-logo.png" alt="Logo" fill className="object-contain p-1" />
+              <div className="w-11 h-11 relative shrink-0">
+                <Image src="/assets/brand/inter-iiit-logo.png" alt="Logo" fill unoptimized className="object-contain" />
               </div>
               <div>
                 <div className="font-black text-base text-white tracking-wide">INTER IIIT</div>

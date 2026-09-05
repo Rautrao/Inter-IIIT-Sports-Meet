@@ -25,8 +25,8 @@ export default function Navbar() {
 
           {/* Logo + Brand */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-10 h-10 relative bg-white rounded-full p-0.5 border border-amber-400/60 flex items-center justify-center group-hover:border-amber-400 transition-colors">
-              <Image src="/assets/brand/inter-iiit-logo.png" alt="Inter-IIIT" fill className="object-contain p-1" />
+            <div className="w-11 h-11 relative shrink-0 overflow-hidden rounded-xl">
+              <Image src="/assets/brand/inter-iiit-logo.png" alt="Inter-IIIT" fill unoptimized className="object-contain" />
             </div>
             <div className="hidden sm:block leading-tight">
               <div className="text-white font-black text-base tracking-wide">INTER IIIT</div>

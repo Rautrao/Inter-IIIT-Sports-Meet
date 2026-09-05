@@ -5,6 +5,10 @@ import Footer from "@/components/Footer";
 export const metadata = {
   title: "9th Inter-IIIT Sports Meet 2026 | IIITDM Kancheepuram",
   description: "The 9th All India Inter-IIIT Sports Meet 2026, hosted by IIITDM Kancheepuram. 19–23 December 2026. 2,000+ athletes, 25+ IIITs, 15+ sporting disciplines.",
+  icons: {
+    icon: "/assets/brand/favicon.png",
+    shortcut: "/assets/brand/favicon.png",
+  },
 };
 
 export default function RootLayout({ children }) {

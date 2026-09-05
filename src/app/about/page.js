@@ -57,15 +57,15 @@ export default function About() {
         <div className="mt-20 rounded-3xl overflow-hidden"
           style={{ background: '#0a2112' }}>
           <div className="grid md:grid-cols-2">
-            <div className="p-12 md:p-16">
-              <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#f5c518' }}>Vision</span>
+            <div className="p-8 md:p-10">
+              <span className="text-xl font-black tracking-[0.2em] uppercase" style={{ color: '#f5c518' }}>Vision</span>
               <h2 className="mt-3 font-black text-3xl text-white mb-5">Beyond the Field</h2>
               <p className="text-base leading-relaxed" style={{ color: 'rgba(255,255,255,0.7)' }}>
                 Not just this, Inter IIIT transcends athletic competitions, fostering community through both Student and Employee Meets. These gatherings unite students, faculty, and staff, emphasizing active participation, teamwork, and friendly competition across disciplines.
               </p>
             </div>
-            <div className="relative min-h-[280px] md:min-h-0 opacity-40">
-              <Image src="/assets/gallery/gallery-06.jpg" alt="Beyond the field" fill className="object-cover" />
+            <div className="relative min-h-[180px] md:min-h-0 bg-white">
+              <Image src="/assets/brand/sports.png" alt="Athletes competing in sports" fill unoptimized className="object-contain p-4" />
             </div>
           </div>
         </div>

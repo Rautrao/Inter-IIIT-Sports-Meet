@@ -41,7 +41,9 @@ export default function Events() {
 
               {/* Bottom label */}
               <div className="absolute bottom-0 left-0 right-0 p-4">
-                <h3 className="font-black text-white text-base leading-tight">{sport.name}</h3>
+                <h3 className="font-serif text-lg font-bold leading-tight tracking-wide" style={{ color: '#fff8dc', textShadow: '0 1px 3px rgba(0,0,0,0.45)' }}>
+                  {sport.name}
+                </h3>
                 <div className="mt-1.5 h-0.5 w-6 rounded-full transition-all duration-300 group-hover:w-12"
                   style={{ background: '#f5c518' }} />
               </div>

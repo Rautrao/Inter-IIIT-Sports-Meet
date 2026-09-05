@@ -23,14 +23,13 @@ export default function Gallery() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         {/* Featured image */}
-        <div className="relative w-full overflow-hidden rounded-2xl mb-4 group" style={{ height: '420px' }}>
+        <div className="relative w-full aspect-[3/2] overflow-hidden rounded-2xl mb-4 group">
           <Image
             src={featured}
             alt="Gallery featured"
             fill
             className="object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,33,18,0.5) 0%, transparent 50%)' }} />
         </div>
 
         {/* Remaining grid */}
@@ -44,6 +43,7 @@ export default function Gallery() {
                 alt={`Gallery image ${idx + 2}`}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                style={{ objectPosition: img.includes('/gallery-10.') ? 'center 20%' : 'center' }}
               />
               <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                 style={{ background: 'rgba(10,33,18,0.3)' }} />

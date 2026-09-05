@@ -66,12 +66,12 @@ export default function LoginPage() {
         />
 
         <div className="relative z-10">
-          <div className="w-14 h-14 relative bg-white rounded-full p-1">
+          <div className="w-14 h-14 relative">
             <Image
               src="/assets/brand/inter-iiit-logo.png"
               alt="Logo"
               fill
-              className="object-contain p-1"
+              className="object-contain"
             />
           </div>
         </div>

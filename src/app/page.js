@@ -147,7 +147,7 @@ export default function Home() {
               <div className="absolute -bottom-4 -right-4 w-full h-full rounded-2xl"
                 style={{ background: '#f5c518', opacity: 0.25 }} />
               <div className="relative w-full h-[380px] rounded-2xl overflow-hidden shadow-lg">
-                <Image src="/assets/gallery/gallery-01.jpg" alt="About the meet" fill className="object-cover" />
+                <Image src="/assets/gallery/gallery-17.png" alt="About the meet" fill className="object-cover" />
               </div>
             </div>
           </div>
@@ -161,10 +161,10 @@ export default function Home() {
             <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>Participating Institutes</span>
             <h2 className="mt-3 font-black text-4xl" style={{ color: '#0a2112' }}>25+ IIITs · 1 Champion</h2>
           </div>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
+          <div className="flex flex-wrap justify-center gap-4">
             {iiits.map((iiit, idx) => (
               <div key={idx}
-                className="group flex flex-col items-center text-center p-3 rounded-xl border transition-all hover:-translate-y-0.5 hover:shadow-md cursor-default"
+                className="group flex basis-[calc(50%-8px)] flex-col items-center text-center rounded-xl border p-3 transition-all hover:-translate-y-0.5 hover:shadow-md cursor-default sm:basis-[calc(33.333%-11px)] md:basis-[calc(20%-13px)]"
                 style={{ background: '#faf6ee', borderColor: 'rgba(27,94,32,0.12)' }}>
                 <div className="relative w-12 h-12 mb-2">
                   <Image src={iiit.logo} alt={iiit.name} fill className="object-contain" />
@@ -248,12 +248,12 @@ export default function Home() {
             <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>Partners & Sponsors</span>
             <h2 className="mt-2 font-black text-2xl" style={{ color: '#0a2112' }}>Our Supporters</h2>
           </div>
-          <div className="flex flex-wrap justify-center gap-5 items-center">
-            {[1, 2, 3, 4, 5].map(num => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-5 items-center">
+            {Array.from({ length: 15 }, (_, index) => index + 1).map(num => (
               <div key={num}
-                className="relative h-16 w-36 rounded-xl flex items-center justify-center border transition-shadow hover:shadow-md"
+                className="relative h-20 w-full rounded-xl flex items-center justify-center border transition-shadow hover:shadow-md"
                 style={{ background: '#faf6ee', borderColor: 'rgba(201,151,47,0.25)' }}>
-                <Image src={`/assets/sponsors/sponsor-0${num}.png`} alt={`Sponsor ${num}`} fill className="object-contain p-3" />
+                <Image src={`/assets/sponsors/sponsor-${String(num).padStart(2, '0')}.png`} alt={`Sponsor ${num}`} fill className="object-contain p-3" />
               </div>
             ))}
           </div>
@@ -264,6 +264,17 @@ export default function Home() {
               style={{ background: '#1b5e20', color: '#fff' }}>
               Contact us → sports@iiitdm.ac.in
             </a>
+            <div className="mt-4">
+              <a
+                href="/brochure.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all hover:-translate-y-0.5 shadow-sm"
+                style={{ background: '#f5c518', color: '#0a2112' }}
+              >
+                View Brochure <span aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
           </div>
         </div>
       </section>
