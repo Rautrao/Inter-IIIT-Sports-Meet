@@ -120,7 +120,7 @@ function SportCard({ sport, idx }) {
           <h3
             className="font-bold text-white text-base tracking-tight leading-tight uppercase"
             style={{
-              fontFamily: "'Cinzel', serif",
+              fontFamily: "'Montserrat', sans-serif",
               color: '#ffffff',
               textShadow: '0 2px 8px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.8)',
             }}
@@ -138,7 +138,7 @@ function SportCard({ sport, idx }) {
 }
 
 function ParallaxGrid() {
-  const translateY = useParallaxScroll(0.25);
+  const translateY = useParallaxScroll(200);
   return (
     <div
       className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14"
@@ -221,11 +221,11 @@ export default function Events() {
         this.alpha = Math.random() * 0.25 + 0.15;
         const colorType = Math.random();
         if (colorType > 0.6) {
-          this.color = '245, 197, 24'; // Gold
+          this.color = '24, 91, 29'; // Green #185B1D
         } else if (colorType > 0.3) {
-          this.color = '110, 231, 183'; // Light emerald
+          this.color = '12, 60, 16'; // Darker green shade
         } else {
-          this.color = '255, 255, 255'; // Soft white
+          this.color = '36, 120, 42'; // Mid green shade
         }
       }
 
@@ -337,10 +337,10 @@ export default function Events() {
 
   return (
     <div style={{ background: '#F4F5EB', minHeight: '100vh', perspective: '1200px' }}>
-      {/* Google Font Cinzel & Cinzel Decorative */}
+      {/* Google Font Montserrat */}
       <link
         rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cinzel+Decorative:wght@700;900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap"
       />
 
       {/* Page header banner with falling & repelling particles and crisp boundary */}
@@ -350,9 +350,9 @@ export default function Events() {
         onTouchMove={handleHeaderTouchMove}
         onMouseLeave={handleHeaderLeave}
         onTouchEnd={handleHeaderLeave}
-        className="relative py-16 md:py-24 px-4 overflow-hidden border-b border-emerald-900/30"
+        className="relative py-6 md:py-10 px-4 overflow-hidden border-b border-[#185B1D]/20"
         style={{
-          background: '#0a2112',
+          background: '#F2D16D',
           willChange: 'transform, opacity',
           transformOrigin: '50% 0%',
           zIndex: 1,
@@ -364,15 +364,15 @@ export default function Events() {
           className="absolute inset-0 w-full h-full pointer-events-none z-10"
         />
 
-        <div className="relative max-w-7xl mx-auto z-20">
+        <div className="relative max-w-10xl mx-auto z-20 px-16">
           {/* Square Sticky Note Patch Tag */}
           <div
             className="relative inline-flex flex-col items-center justify-center w-24 h-24 -rotate-3 select-none mb-6 shadow-[4px_4px_14px_rgba(0,0,0,0.45)] hover:rotate-0 hover:scale-105 transition-all duration-300 ease-out cursor-default"
-            style={{ background: '#d7e6afff' }}
+            style={{ background: '#3d5a06ff' }}
           >
             {/* Tape strip at top */}
-            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-10 h-4 bg-white/50 backdrop-blur-[1px] rotate-1 border border-white/60 shadow-sm z-10" />
-            <span className="text-[10px] font-black tracking-widest uppercase text-[#0a2112] text-center leading-snug px-2">
+            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-10 h-4 bg-[#b8952b]/50 backdrop-blur-[1px] rotate-1 border border-[#F2D16D]/60 shadow-sm z-10" />
+            <span className="text-[10px] font-black tracking-widest uppercase text-[#b8952b] text-center leading-snug px-2">
               EXPLORE<br />
               <span className="text-2xl font-black leading-none">{sports.length}</span><br />
               EVENTS
@@ -380,7 +380,7 @@ export default function Events() {
           </div>
 
           <div className="block">
-            <span className="text-xs font-bold tracking-widest uppercase text-[#f5c518]/90">
+            <span className="text-xs font-bold tracking-widest uppercase text-[#74921a]">
               9th Inter-IIIT Sports Meet · 2026
             </span>
           </div>
@@ -390,9 +390,9 @@ export default function Events() {
             <InteractiveHeading text="SPORTING  EVENTS" />
           </div>
 
-          <div className="mt-4 w-14 h-1 rounded-full" style={{ background: '#c9972f' }} />
+          <div className="mt-4 w-14 h-1 rounded-full" style={{ background: '#185B1D' }} />
 
-          <p className="mt-4 text-sm sm:text-base max-w-xl text-white/70 font-normal leading-relaxed">
+          <p className="mt-4 text-sm sm:text-base max-w-xl font-normal leading-relaxed" style={{ color: 'rgba(9, 61, 12, 0.97)' }}>
             {sports.length} competitive events testing speed, skill, strength, and strategy.
           </p>
         </div>
@@ -404,7 +404,7 @@ export default function Events() {
         style={{ willChange: 'transform', position: 'relative', zIndex: 2 }}
       >
         {/* Circular Gallery Section */}
-        <div className="max-w-7xl mx-auto py-10 px-4">
+        <div className="max-w-30xl mx-auto py-20 md:py-28 px-4">
           <div className="w-full">
             <CircularGallery
               items={galleryItems}
@@ -412,8 +412,8 @@ export default function Events() {
               textColor="#ffffff"
               borderRadius={0.05}
               scrollEase={0.12}
-              fontUrl="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Cinzel+Decorative:wght@700;900&display=swap"
-              font="bold 24px 'Cinzel', serif"
+              fontUrl="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap"
+              font="800 24px 'Montserrat', sans-serif"
               scrollSpeed={1.5}
             />
           </div>
