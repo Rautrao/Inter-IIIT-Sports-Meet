@@ -5,15 +5,15 @@ export default function Contact() {
   return (
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
       {/* Page header */}
-      <div className="py-16 px-4" style={{ background: '#0a2112' }}>
+      <div className="py-16 px-4" style={{ background: '#f0d574' }}>
         <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#f5c518' }}>
+          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#020202' }}>
             Get In Touch
           </span>
           <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
             Contact Us
           </h1>
-          <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#c9972f' }} />
+          <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#020202' }} />
         </div>
       </div>
 
