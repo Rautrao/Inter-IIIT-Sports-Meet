@@ -2,25 +2,24 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { eventInfo } from '@/data/info';
 import { iiits } from '@/data/iiits';
+import CinematicIntro from '@/components/CinematicIntro';
 
 /**
  * Landing Page Component (Home)
  * 
  * Purpose:
  * Flagship entry point for the 9th All India Inter-IIIT Sports Meet 2026.
- * Provides high-impact event identity, key logistics, participating institutes showcase,
- * host institute spotlight (IIITDM Kancheepuram), and quick navigation to all sub-pages.
- * 
- * Design Standards:
- * - Built on the warm ivory (#faf6ee) primary surface
- * - Forest green (#0a2112 / #1b5e20) and athletic gold (#c9972f / #f5c518) accents
- * - Fully responsive with high-contrast, accessible typography
+ * Features a cinematic intro sequence on first session visit, high-impact hero,
+ * quick logistics information cards, host institute spotlight, and navigation to all pages.
  */
 export default function Home() {
   const { hostInstitute } = eventInfo;
 
   return (
     <div style={{ background: '#faf6ee' }}>
+      
+      {/* ─── 0. CINEMATIC ONE-TIME INTRO ────────────────────────────────── */}
+      <CinematicIntro />
 
       {/* ─── 1. HERO SECTION ────────────────────────────────────────────── */}
       <section className="relative w-full min-h-[92vh] flex items-center overflow-hidden"
@@ -34,7 +33,7 @@ export default function Home() {
           </div>
           {/* Hero logo centered in green panel */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="relative w-52 h-52 opacity-85">
+            <div className="relative w-52 h-52 opacity-85 transition-transform duration-700 hover:scale-105">
               <Image src="/assets/brand/inter-iiit-logo.png" alt="Inter-IIIT Logo" fill className="object-contain drop-shadow-2xl" />
             </div>
           </div>
@@ -85,14 +84,21 @@ export default function Home() {
             {/* CTAs */}
             <div className="animate-fadeUp animation-delay-300 flex flex-wrap gap-3">
               <Link href="/register"
-                className="px-8 py-3.5 font-black text-sm rounded-full transition-all hover:-translate-y-0.5 shadow-md"
+                className="group relative overflow-hidden px-8 py-3.5 font-black text-sm rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/20 shadow-md"
                 style={{ background: '#0a2112', color: '#f5c518', letterSpacing: '0.06em' }}>
-                REGISTER ROSTER
+                <span className="relative z-10 flex items-center gap-2">
+                  <span>REGISTER ROSTER</span>
+                </span>
+                <span className="absolute inset-0 bg-amber-400/20 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
-              <Link href="/location"
-                className="px-8 py-3.5 font-bold text-sm rounded-full border-2 transition-all hover:-translate-y-0.5"
+              <Link href="/events"
+                className="group relative overflow-hidden px-8 py-3.5 font-bold text-sm rounded-full border-2 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-950/15"
                 style={{ borderColor: '#1b5e20', color: '#1b5e20', background: 'transparent' }}>
-                Campus &amp; Directions &rarr;
+                <span className="relative z-10 flex items-center gap-2">
+                  <span>View Events</span>
+                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
+                </span>
+                <span className="absolute inset-0 bg-emerald-800/10 scale-x-0 origin-left transition-transform duration-300 group-hover:scale-x-100" />
               </Link>
             </div>
           </div>
