@@ -1,5 +1,5 @@
 export const sports = [
-  { name: "Aquatics", image: "/assets/events/aquatics.jpg" },
+  { name: "Aquatics", image: "/assets/events/aquatics.jpeg" },
   { name: "Athletics", image: "/assets/events/athletics.jpg" },
   { name: "Badminton", image: "/assets/events/badminton.jpg" },
   { name: "Basketball", image: "/assets/events/basketball.jpg" },
@@ -9,9 +9,11 @@ export const sports = [
   { name: "Football", image: "/assets/events/football.jpg" },
   { name: "Handball", image: "/assets/events/handball.jpg" },
   { name: "Kabaddi", image: "/assets/events/kabaddi.jpg" },
-  { name: "Kho Kho", image: "/assets/events/kho-kho.jpg" },
+  { name: "Kho Kho", image: "/assets/events/kho-kho.jpeg" },
   { name: "Powerlifting", image: "/assets/events/powerlifting.jpg" },
   { name: "Table Tennis", image: "/assets/events/table-tennis.jpg" },
   { name: "Tennis", image: "/assets/events/tennis.jpg" },
-  { name: "Volleyball", image: "/assets/events/volleyball.jpg" }
+  { name: "Volleyball", image: "/assets/events/volleyball.jpeg" },
+  { name: "Tug of War", image: "/assets/events/tug-of-war.jpeg" },
+  { name: "Squash", image: "/assets/events/squash.webp" }
 ];
