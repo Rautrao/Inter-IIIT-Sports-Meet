@@ -1,5 +1,5 @@
 {
-  "id": "c56da393-dfe0-4969-a824-2f6ea2f23bb3",
+  "id": "e1320689-c1fc-4f56-93d0-ce510352b5d0",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -31,37 +31,38 @@
           "type": "varchar(20)",
           "primaryKey": false,
           "notNull": true,
-          "default": "'draft'"
+          "default": "'submitted'"
         },
         "submitted_at": {
           "name": "submitted_at",
           "type": "timestamp with time zone",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true,
+          "default": "now()"
         },
         "submitted_by": {
           "name": "submitted_by",
           "type": "varchar(64)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "contact_name": {
           "name": "contact_name",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "contact_email": {
           "name": "contact_email",
           "type": "varchar(128)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "contact_phone": {
           "name": "contact_phone",
           "type": "varchar(32)",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "total_students_count": {
           "name": "total_students_count",

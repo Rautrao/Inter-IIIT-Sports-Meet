@@ -154,13 +154,6 @@ export default function AdminDashboardPage() {
             <span className="text-xs font-medium text-gray-300">
               Logged in as <strong className="text-white">{currentUser?.username}</strong>
             </span>
-            <button
-              onClick={handleLogout}
-              disabled={isLoggingOut}
-              className="text-xs font-bold px-3 py-1.5 rounded-lg border border-red-500/40 text-red-300 hover:bg-red-500/10 transition-colors disabled:opacity-50"
-            >
-              {isLoggingOut ? "Logging out..." : "Sign Out"}
-            </button>
           </div>
         </div>
       </header>

@@ -157,8 +157,8 @@ export default function LoginPage() {
               Sign In
             </h1>
 
-            <p className="text-sm mt-1.5" style={{ color: "#777" }}>
-              Access the IIIT Registration Portal or Admin Console
+            <p className="text-sm mt-1.5 " style={{ color: "#777" }}>
+              Access the IIIT Registration Portal.
             </p>
           </div>
 
@@ -175,7 +175,7 @@ export default function LoginPage() {
                 className="block text-xs font-black uppercase tracking-wider mb-1.5"
                 style={{ color: "#444" }}
               >
-                Username (IIIT Code or Admin)
+                Username (IIIT Code)
               </label>
 
               <input
