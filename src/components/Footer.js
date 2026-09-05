@@ -33,6 +33,7 @@ export default function Footer() {
               {[
                 { href: '/about', label: 'About the Meet' },
                 { href: '/events', label: 'All Events' },
+                { href: '/location', label: 'Venue & Location' },
                 { href: '/team', label: 'Core Team' },
                 { href: '/gallery', label: 'Gallery' },
                 { href: '/contact', label: 'Contact' },
