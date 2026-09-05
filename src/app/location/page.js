@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { eventInfo } from '@/data/info';
 
@@ -18,6 +21,44 @@ import { eventInfo } from '@/data/info';
  */
 export default function Location() {
   const { location, hostInstitute, sportsFacilities } = eventInfo;
+
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('[data-reveal]');
+
+    if (!revealItems.length) return;
+
+    const activate = (element) => {
+      element.classList.add('is-visible');
+      element.dataset.visible = 'true';
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => activate(item));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            activate(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    revealItems.forEach((item) => {
+      if (item.getBoundingClientRect().top < window.innerHeight + 120) {
+        activate(item);
+        return;
+      }
+      observer.observe(item);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
@@ -95,7 +136,8 @@ export default function Location() {
             
             {/* Card 1: Airport */}
             <div
-              className="rounded-2xl p-7 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
+              data-reveal
+              className="reveal travel-card rounded-2xl p-7 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
               style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.14)' }}
             >
               <div>
@@ -131,7 +173,8 @@ export default function Location() {
 
             {/* Card 2: Railway Stations */}
             <div
-              className="rounded-2xl p-7 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
+              data-reveal
+              className="reveal travel-card rounded-2xl p-7 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
               style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.14)' }}
             >
               <div>
@@ -172,7 +215,8 @@ export default function Location() {
 
             {/* Card 3: Bus & Interstate Terminus */}
             <div
-              className="rounded-2xl p-7 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
+              data-reveal
+              className="reveal travel-card rounded-2xl p-7 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
               style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.14)' }}
             >
               <div>
@@ -211,7 +255,7 @@ export default function Location() {
 
         {/* ─── 3. INTERACTIVE MAP SECTION ────────────────────────────────── */}
         {/* Full-width interactive Google Maps embed with location context panel */}
-        <div className="mb-14">
+        <div data-reveal className="reveal mb-14">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-6 gap-4">
             <div>
               <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>
@@ -235,7 +279,8 @@ export default function Location() {
           </div>
 
           <div
-            className="rounded-3xl overflow-hidden border shadow-sm grid grid-cols-1 lg:grid-cols-3"
+            data-reveal
+            className="reveal rounded-3xl overflow-hidden border shadow-sm grid grid-cols-1 lg:grid-cols-3"
             style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.15)' }}
           >
             {/* Interactive Map Iframe */}

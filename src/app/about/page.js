@@ -1,3 +1,6 @@
+'use client';
+
+import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { eventInfo } from '@/data/info';
@@ -18,6 +21,44 @@ import { eventInfo } from '@/data/info';
  */
 export default function About() {
   const { hostInstitute, sportsFacilities, stats } = eventInfo;
+
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('[data-reveal]');
+
+    if (!revealItems.length) return;
+
+    const activate = (element) => {
+      element.classList.add('is-visible');
+      element.dataset.visible = 'true';
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => activate(item));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            activate(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    revealItems.forEach((item) => {
+      if (item.getBoundingClientRect().top < window.innerHeight + 120) {
+        activate(item);
+        return;
+      }
+      observer.observe(item);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
@@ -41,7 +82,7 @@ export default function About() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         
         {/* ─── 2. HISTORY & THE INTER-IIIT TRADITION ──────────────────────── */}
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
+        <div data-reveal className="reveal grid md:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
           <div>
             <div className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
               style={{ background: 'rgba(27,94,32,0.1)', color: '#1b5e20' }}>
@@ -60,7 +101,7 @@ export default function About() {
             {/* Quick KPI Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
               {stats.map((stat, idx) => (
-                <div key={idx} className="rounded-xl p-4 border" style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.15)' }}>
+                <div key={idx} className="count-up rounded-xl p-4 border" style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.15)' }}>
                   <div className="font-black text-2xl" style={{ color: '#1b5e20' }}>{stat.value}</div>
                   <div className="text-[10px] font-bold uppercase tracking-wider mt-1 text-gray-500">{stat.label}</div>
                 </div>
@@ -70,17 +111,17 @@ export default function About() {
 
           {/* Editorial Photography (Natural, no green filter) */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="relative h-64 sm:h-80 rounded-2xl overflow-hidden shadow-md">
-              <Image src="/assets/gallery/gallery-04.jpg" alt="Athletic Relay" fill className="object-cover" />
+            <div className="info-card relative h-64 sm:h-80 rounded-2xl overflow-hidden shadow-md">
+              <Image src="/assets/gallery/gallery-04.jpg" alt="Athletic Relay" fill className="object-cover transition-transform duration-500 hover:scale-105" />
             </div>
-            <div className="relative h-64 sm:h-80 rounded-2xl overflow-hidden shadow-md mt-6">
-              <Image src="/assets/gallery/gallery-05.jpg" alt="Opening Ceremony" fill className="object-cover" />
+            <div className="info-card relative h-64 sm:h-80 rounded-2xl overflow-hidden shadow-md mt-6">
+              <Image src="/assets/gallery/gallery-05.jpg" alt="Opening Ceremony" fill className="object-cover transition-transform duration-500 hover:scale-105" />
             </div>
           </div>
         </div>
 
         {/* ─── 3. HOST INSTITUTE SPOTLIGHT: IIITDM KANCHEEPURAM ────────────── */}
-        <div className="rounded-3xl p-8 sm:p-12 lg:p-14 mb-20 border"
+        <div data-reveal className="reveal rounded-3xl p-8 sm:p-12 lg:p-14 mb-20 border"
           style={{ background: '#fff', borderColor: 'rgba(201,151,47,0.25)' }}>
           <div className="grid lg:grid-cols-3 gap-10 items-start">
             <div className="lg:col-span-2">
@@ -107,7 +148,7 @@ export default function About() {
             </div>
 
             {/* Quick Fact Box */}
-            <div className="rounded-2xl p-6 border flex flex-col justify-between"
+            <div className="info-card rounded-2xl p-6 border flex flex-col justify-between"
               style={{ background: '#faf6ee', borderColor: 'rgba(27,94,32,0.12)' }}>
               <div>
                 <h3 className="font-bold text-sm uppercase tracking-wider mb-4" style={{ color: '#0a2112' }}>
@@ -144,7 +185,7 @@ export default function About() {
         </div>
 
         {/* ─── 4. SPORTS INFRASTRUCTURE BREAKDOWN ─────────────────────────── */}
-        <div className="mb-20">
+        <div data-reveal className="reveal mb-20">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>
               Campus Facilities
@@ -161,7 +202,7 @@ export default function About() {
             {sportsFacilities.map((facility, idx) => (
               <div
                 key={idx}
-                className="rounded-2xl p-7 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
+                className="facility-card rounded-2xl p-7 border transition-all duration-300 hover:shadow-md flex flex-col justify-between"
                 style={{ background: '#fff', borderColor: 'rgba(27,94,32,0.14)' }}
               >
                 <div>
@@ -186,7 +227,7 @@ export default function About() {
         </div>
 
         {/* ─── 5. THE DUAL TRADITION: STUDENTS & EMPLOYEES ────────────────── */}
-        <div className="rounded-3xl overflow-hidden mb-20" style={{ background: '#0a2112' }}>
+        <div data-reveal className="reveal rounded-3xl overflow-hidden mb-20" style={{ background: '#0a2112' }}>
           <div className="grid md:grid-cols-2">
             <div className="p-10 md:p-14 text-white flex flex-col justify-center">
               <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#f5c518' }}>
@@ -210,7 +251,7 @@ export default function About() {
         </div>
 
         {/* ─── 6. CONTINGENT HOSPITALITY & CAMPUS LIFE ────────────────────── */}
-        <div className="rounded-2xl p-8 sm:p-10 border" style={{ background: '#f3ead8', borderColor: 'rgba(27,94,32,0.15)' }}>
+        <div data-reveal className="reveal rounded-2xl p-8 sm:p-10 border" style={{ background: '#f3ead8', borderColor: 'rgba(27,94,32,0.15)' }}>
           <div className="max-w-3xl">
             <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>
               Logistics &amp; Hospitality

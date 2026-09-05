@@ -29,6 +29,13 @@ export default function CinematicIntro() {
   const animFrameId = useRef(null);
 
   useEffect(() => {
+    const prefersReducedMotion = typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (prefersReducedMotion) {
+      setStage('done');
+      return;
+    }
+
     // 1. Session Storage Check
     try {
       const alreadyPlayed = sessionStorage.getItem('inter_iiit_intro_played');
@@ -48,14 +55,14 @@ export default function CinematicIntro() {
     setStage('playing');
 
     // 2. Timeline Progression
-    // Phase 1 -> 2: Text Reveal after 1.8s
-    const timer1 = setTimeout(() => setPhase(2), 1800);
-    // Phase 2 -> 3: Champions Trophy after 3.3s
-    const timer2 = setTimeout(() => setPhase(3), 3300);
-    // Phase 3 -> Fade out after 5.2s
-    const timer3 = setTimeout(() => setStage('fading'), 5200);
-    // Complete and unmount after 6.0s
-    const timer4 = setTimeout(() => setStage('done'), 6000);
+    // Phase 1 -> 2: Text Reveal after 1.2s
+    const timer1 = setTimeout(() => setPhase(2), 1200);
+    // Phase 2 -> 3: Champions Trophy after 2.2s
+    const timer2 = setTimeout(() => setPhase(3), 2200);
+    // Phase 3 -> Fade out after 3.9s
+    const timer3 = setTimeout(() => setStage('fading'), 3900);
+    // Complete and unmount after 4.5s
+    const timer4 = setTimeout(() => setStage('done'), 4500);
 
     // 3. Escape key to skip
     const handleKeyDown = (e) => {

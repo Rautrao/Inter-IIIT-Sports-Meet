@@ -1,5 +1,8 @@
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
+import { useEffect } from 'react';
 import { eventInfo } from '@/data/info';
 import { iiits } from '@/data/iiits';
 import CinematicIntro from '@/components/CinematicIntro';
@@ -14,6 +17,44 @@ import CinematicIntro from '@/components/CinematicIntro';
  */
 export default function Home() {
   const { hostInstitute } = eventInfo;
+
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('[data-reveal]');
+
+    if (!revealItems.length) return;
+
+    const activate = (element) => {
+      element.classList.add('is-visible');
+      element.dataset.visible = 'true';
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => activate(item));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            activate(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.14, rootMargin: '0px 0px -25px 0px' }
+    );
+
+    revealItems.forEach((item) => {
+      if (item.getBoundingClientRect().top < window.innerHeight + 120) {
+        activate(item);
+        return;
+      }
+      observer.observe(item);
+    });
+
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div style={{ background: '#faf6ee' }}>
@@ -69,15 +110,20 @@ export default function Home() {
                 <div className="font-black text-2xl" style={{ color: '#1b5e20' }}>
                   19 – 23 December 2026
                 </div>
-                <Link
-                  href="/location"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold mt-0.5 hover:underline group"
-                  style={{ color: '#0a2112', opacity: 0.85 }}
-                  title="View Campus & Travel Guide"
-                >
-                  <span>{eventInfo.host}, Chennai</span>
-                  <span className="text-xs group-hover:translate-x-0.5 transition-transform" style={{ color: '#1b5e20' }}>📍</span>
-                </Link>
+                <div className="mt-1.5 flex flex-wrap items-center gap-3">
+                  <span className="text-sm font-medium" style={{ color: '#0a2112', opacity: 0.85 }}>
+                    {eventInfo.host}, Chennai
+                  </span>
+                  <Link
+                    href="/events"
+                    className="inline-flex items-center gap-1.5 text-sm font-bold hover:underline group"
+                    style={{ color: '#1b5e20' }}
+                    title="View Events"
+                  >
+                    <span>View Events</span>
+                    <span className="text-xs group-hover:translate-x-0.5 transition-transform">→</span>
+                  </Link>
+                </div>
               </div>
             </div>
 
