@@ -10,7 +10,8 @@ export default function AdminDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState(null);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState("entries");
+  const [registrationsOverview, setRegistrationsOverview] = useState([]);
 
   // Entries search filters & data
   const [entriesData, setEntriesData] = useState({ rows: [], total: 0, page: 1, totalPages: 1 });
@@ -25,11 +26,20 @@ export default function AdminDashboardPage() {
   const [entriesLoading, setEntriesLoading] = useState(false);
 
   const sportsList = getAllSportsList();
-  
-  // Available events based on selected sport
-  const availableEvents = filters.sport 
-    ? sportsList.find(s => s.id === filters.sport)?.events || []
-    : [];
+
+  // sport.events is { M: [...], F: [...] } for individual sports, undefined for team sports.
+  // Flatten all gender sub-arrays and deduplicate by event id so .map() always gets an array.
+  const availableEvents = (() => {
+    if (!filters.sport) return [];
+    const sport = sportsList.find(s => s.id === filters.sport);
+    if (!sport?.events) return [];
+    const seen = new Set();
+    return Object.values(sport.events).flat().filter(ev => {
+      if (seen.has(ev.id)) return false;
+      seen.add(ev.id);
+      return true;
+    });
+  })();
 
 
   const loadEntries = useCallback(async (page = 1) => {
@@ -65,7 +75,7 @@ export default function AdminDashboardPage() {
           router.push("/login");
           return;
         }
-        
+
         const authData = await authRes.json();
 
         // Null-safe check and authorization
@@ -82,7 +92,14 @@ export default function AdminDashboardPage() {
           const sData = await statsRes.json();
           setStats(sData.data || null);
         }
-        
+
+        // Fetch registrations overview (for IIITs & Payments tab)
+        const regRes = await fetch("/api/admin/registrations");
+        if (regRes.ok) {
+          const regData = await regRes.json();
+          setRegistrationsOverview(regData.data || []);
+        }
+
         loadEntries(1);
       } catch (err) {
         console.error("Failed to load admin data:", err);
@@ -191,7 +208,32 @@ export default function AdminDashboardPage() {
           </div>
         )}
 
+        {/* Tab Nav */}
+        <div className="flex gap-2 mb-6 border-b border-gray-200">
+          <button
+            onClick={() => setActiveTab("entries")}
+            className={`px-4 py-2.5 text-sm font-bold border-b-2 transition-colors ${
+              activeTab === "entries"
+                ? "border-[#1b5e20] text-[#1b5e20]"
+                : "border-transparent text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            Registration Entries
+          </button>
+          <button
+            onClick={() => setActiveTab("payments")}
+            className={`px-4 py-2.5 text-sm font-bold border-b-2 transition-colors ${
+              activeTab === "payments"
+                ? "border-amber-500 text-amber-700"
+                : "border-transparent text-gray-500 hover:text-gray-700"
+            }`}
+          >
+            IIITs &amp; Payments
+          </button>
+        </div>
+
         {/* Filter Controls and Export */}
+        {activeTab === "entries" && (
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-gray-200 pb-4 mt-6">
           <div className="flex gap-2">
             <h2 className="text-lg font-black text-gray-900 tracking-wide">
@@ -210,12 +252,13 @@ export default function AdminDashboardPage() {
               className="px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-xs hover:-translate-y-0.5"
               style={{ background: "#f5c518", color: "#0a2112" }}
             >
-              Export Current Filter ↓
+              Export Current Filter â†“
             </button>
           </div>
         </div>
+        )}
 
-        {/* Filters */}
+        {activeTab === "entries" && (
         <div className="bg-white p-6 rounded-2xl border border-gray-200/80 shadow-xs mb-8">
           <form onSubmit={handleSearchSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
@@ -311,8 +354,10 @@ export default function AdminDashboardPage() {
             </div>
           </form>
         </div>
+        )}
 
         {/* Entries Table */}
+        {activeTab === "entries" && (
         <div className="bg-white rounded-2xl border border-gray-200/80 overflow-hidden shadow-xs">
           <div className="p-4 border-b border-gray-200 bg-gray-50/80 flex justify-between items-center text-xs text-gray-600">
             <span className="font-bold">Matching Entries: {entriesData.total || 0}</span>
@@ -387,6 +432,97 @@ export default function AdminDashboardPage() {
             </div>
           )}
         </div>
+        )}
+
+        {/* IIITs & Payments Tab */}
+        {activeTab === "payments" && (
+          <div className="bg-white rounded-2xl border border-gray-200/80 overflow-hidden shadow-xs">
+            <div className="p-4 border-b border-gray-200 bg-gray-50/80 flex items-center justify-between">
+              <span className="font-bold text-xs text-gray-600">{registrationsOverview.length} IIITs registered</span>
+              <span className="text-xs text-gray-400">{registrationsOverview.filter(r => r.isSubmitted).length} submitted</span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs border-collapse whitespace-nowrap">
+                <thead>
+                  <tr className="border-b border-gray-200 bg-gray-50/50 text-[11px] font-black text-gray-500 uppercase tracking-wider">
+                    <th className="px-4 py-3">IIIT</th>
+                    <th className="px-4 py-3 text-center">Status</th>
+                    <th className="px-4 py-3 text-center">Students</th>
+                    <th className="px-4 py-3 text-center">Amount</th>
+                    <th className="px-4 py-3">Mode</th>
+                    <th className="px-4 py-3 text-center">Payment</th>
+                    <th className="px-4 py-3">Transaction ID</th>
+                    <th className="px-4 py-3">Date</th>
+                    <th className="px-4 py-3">Bank</th>
+                    <th className="px-4 py-3 text-center">Proof</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {registrationsOverview.map((row) => (
+                    <tr key={row.iiitCode || row.iiitName} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="px-4 py-3 font-semibold text-gray-900 truncate max-w-[180px]" title={row.iiitName}>{row.iiitName}</td>
+                      <td className="px-4 py-3 text-center">
+                        {row.status === "submitted"
+                          ? <span className="px-2 py-1 rounded-full bg-green-100 text-green-800 text-[10px] font-black">Submitted</span>
+                          : row.status === "payment_pending"
+                          ? <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black">Payment Pending</span>
+                          : <span className="px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold">Draft</span>}
+                      </td>
+                      <td className="px-4 py-3 text-center font-bold text-gray-700">{row.isSubmitted ? row.totalStudentsCount : "â€”"}</td>
+                      <td className="px-4 py-3 text-center font-bold text-amber-700">
+                        {row.paymentAmount
+                          ? `â‚¹${Number(row.paymentAmount).toLocaleString("en-IN")}`
+                          : row.status === "payment_pending"
+                          ? `â‚¹${(row.totalStudentsCount * 2500).toLocaleString("en-IN")}`
+                          : "â€”"}
+                      </td>
+                      <td className="px-4 py-3 text-gray-800">
+                        {row.paymentMode === "OTHER" ? row.otherPaymentMode : (row.paymentMode || "â€”")}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {row.status === "submitted"
+                          ? <span className="px-2 py-1 rounded-full bg-green-100 text-green-800 text-[10px] font-black">Proof Submitted</span>
+                          : row.status === "payment_pending"
+                          ? <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black">Awaiting Proof</span>
+                          : <span className="text-gray-400 text-[10px]">â€”</span>}
+                      </td>
+                      <td className="px-4 py-3 font-mono text-gray-600 truncate max-w-[140px]">{row.paymentTransactionId || "â€”"}</td>
+                      <td className="px-4 py-3 text-gray-600">
+                        {row.paymentTransactionDate
+                          ? new Date(row.paymentTransactionDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
+                          : "â€”"}
+                      </td>
+                      <td className="px-4 py-3 text-gray-600 truncate max-w-[120px]">{row.paymentBankName || "â€”"}</td>
+                      <td className="px-4 py-3 text-center">
+                        {row.paymentProofPathname ? (
+                          <a
+                            href={`/api/payment/proof?iiitCode=${row.iiitCode}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-100 text-amber-800 text-[10px] font-bold hover:bg-amber-200 transition-colors"
+                          >
+                            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            View
+                          </a>
+                        ) : (
+                          <span className="text-gray-300 text-[10px]">â€”</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                  {registrationsOverview.length === 0 && (
+                    <tr>
+                      <td colSpan={9} className="text-center py-10 text-gray-400">No IIITs found.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );
