@@ -40,7 +40,7 @@ export default function Team() {
           <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#040404' }}>
             The People Behind It
           </span>
-          <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+          <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             Meet the Team
           </h1>
           <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#000000' }} />

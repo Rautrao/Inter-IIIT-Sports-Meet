@@ -403,7 +403,7 @@ export default function Events() {
           className="absolute inset-0 w-full h-full pointer-events-none z-10"
         />
 
-        <div className="relative max-w-10xl mx-auto z-20 px-16">
+        <div className="relative max-w-10xl mx-auto z-20 px-4 sm:px-6 lg:px-8">
           {/* Square Sticky Note Patch Tag */}
           <div
             className="relative inline-flex flex-col items-center justify-center w-24 h-24 -rotate-3 select-none mb-6 shadow-[4px_4px_14px_rgba(0,0,0,0.45)] hover:rotate-0 hover:scale-105 transition-all duration-300 ease-out cursor-default"
@@ -419,7 +419,7 @@ export default function Events() {
           </div>
 
           <div className="block">
-            <span className="text-xs font-bold tracking-widest uppercase text-[#74921a]">
+            <span className="text-xs font-bold tracking-widest uppercase text-[#0a2112]">
               9th Inter-IIIT Sports Meet · 2026
             </span>
           </div>
@@ -443,7 +443,7 @@ export default function Events() {
         style={{ willChange: 'transform', position: 'relative', zIndex: 2 }}
       >
         {/* Circular Gallery Section */}
-        <div className="max-w-30xl mx-auto py-20 md:py-28 px-4">
+        <div className="max-w-30xl mx-auto py-12 sm:py-20 md:py-28 px-4">
           <div className="w-full">
             <CircularGallery
               items={galleryItems}

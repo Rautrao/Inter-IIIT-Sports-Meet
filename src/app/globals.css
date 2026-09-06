@@ -34,6 +34,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
 }
 
 body {
@@ -42,6 +43,13 @@ body {
   font-family: var(--font-sans);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -246,6 +254,28 @@ h1, h2, h3, h4, h5, h6 {
   .section-pad {
     padding-top: 6rem;
     padding-bottom: 6rem;
+  }
+}
+
+@media (max-width: 639px) {
+  /* Keep form controls at iOS's native zoom-safe size and ensure tap targets
+     remain comfortable on compact screens. */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  .section-pad {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .sport-card:hover,
+  .travel-card:hover,
+  .info-card:hover,
+  .facility-card:hover {
+    transform: none;
   }
 }
 

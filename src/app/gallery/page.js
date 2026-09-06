@@ -14,7 +14,7 @@ export default function Gallery() {
           <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#000000' }}>
             Glimpses of Glory
           </span>
-          <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+          <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             Gallery
           </h1>
           <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#070706' }} />
@@ -23,7 +23,7 @@ export default function Gallery() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         {/* Featured image */}
-        <div className="relative w-full overflow-hidden rounded-2xl mb-4 group" style={{ height: '420px' }}>
+        <div className="relative w-full overflow-hidden rounded-2xl mb-4 group h-[260px] sm:h-[420px]">
           <Image
             src={featured}
             alt="Gallery featured"
@@ -37,8 +37,7 @@ export default function Gallery() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {rest.map((img, idx) => (
             <div key={idx}
-              className={`relative overflow-hidden rounded-xl group ${idx === 0 ? 'md:col-span-2' : ''}`}
-              style={{ height: '200px' }}>
+              className={`relative overflow-hidden rounded-xl group h-[140px] sm:h-[200px] ${idx === 0 ? 'md:col-span-2' : ''}`}>
               <Image
                 src={img}
                 alt={`Gallery image ${idx + 2}`}

@@ -64,20 +64,20 @@ export default function Location() {
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
       
       {/* ─── 1. PAGE HERO & HEADER ──────────────────────────────────────── */}
-      {/* Deep Forest Green header band matching the site's primary branding */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8" style={{ background: '#0a2112' }}>
+      {/* Gold header band with dark, high-contrast event information */}
+      <section className="py-16 px-4 sm:px-6 lg:px-8" style={{ background: '#f0d574' }}>
         <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#f5c518' }}>
+          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#0a2112' }}>
             Venue &amp; Travel Guide
           </span>
-          <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+          <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             Location &amp; How to Reach
           </h1>
           <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#c9972f' }} />
           
-          <p className="mt-6 text-base sm:text-lg max-w-3xl leading-relaxed text-white/80">
+          <p className="mt-6 text-base sm:text-lg max-w-3xl leading-relaxed" style={{ color: 'rgba(10,33,18,0.8)' }}>
             The 9th All India Inter-IIIT Sports Meet is held at the {hostInstitute.campusArea} of{' '}
-            <strong className="text-white font-bold">{hostInstitute.name}</strong>, situated in Melakottaiyur, Chennai.
+            <strong className="font-bold" style={{ color: '#0a2112' }}>{hostInstitute.name}</strong>, situated in Melakottaiyur, Chennai.
           </p>
 
           {/* Quick Actions & Coordinates Bar */}
@@ -101,14 +101,14 @@ export default function Location() {
             {/* GPS Coordinates Badge */}
             <div
               className="inline-flex items-center gap-2 px-4 py-3 rounded-full text-xs font-bold border"
-              style={{ background: 'rgba(255,255,255,0.06)', borderColor: 'rgba(255,255,255,0.15)', color: '#f5c518' }}
+              style={{ background: 'rgba(255,255,255,0.38)', borderColor: 'rgba(10,33,18,0.18)', color: '#0a2112' }}
             >
               <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
               GPS: {location.coordinates.latitude}, {location.coordinates.longitude}
             </div>
 
             {/* Address snippet */}
-            <span className="text-xs sm:text-sm font-medium text-white/70">
+            <span className="text-xs sm:text-sm font-medium" style={{ color: 'rgba(10,33,18,0.76)' }}>
               {location.address}
             </span>
           </div>

@@ -63,16 +63,16 @@ export default function About() {
   return (
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
       {/* ─── 1. PAGE HEADER ──────────────────────────────────────────────── */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8" style={{ background: '#0a2112' }}>
+      <section className="py-16 px-4 sm:px-6 lg:px-8" style={{ background: '#f0d574' }}>
         <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#f5c518' }}>
+          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#0a2112' }}>
             Our Legacy &amp; Host Institute
           </span>
-          <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+          <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             About the Meet
           </h1>
           <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#c9972f' }} />
-          <p className="mt-4 text-base sm:text-lg max-w-2xl text-white/70 leading-relaxed">
+          <p className="mt-4 text-base sm:text-lg max-w-2xl leading-relaxed" style={{ color: 'rgba(10,33,18,0.78)' }}>
             The flagship national sports gathering uniting 25+ Indian Institutes of Information Technology, hosted at IIITDM Kancheepuram.
           </p>
         </div>

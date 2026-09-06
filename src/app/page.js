@@ -85,7 +85,7 @@ export default function Home() {
           style={{ background: 'radial-gradient(circle, #fbc02d 0%, transparent 70%)' }} />
 
         {/* Hero Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-24">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-16 sm:py-24">
           <div className="max-w-xl">
             {/* Eyebrow */}
             <div className="animate-fadeUp flex items-center gap-3 mb-6">
@@ -241,7 +241,7 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-white/10">
             {eventInfo.stats.map((stat, idx) => (
-              <div key={idx} className="px-8 py-4 text-center">
+              <div key={idx} className="px-3 sm:px-8 py-4 text-center">
                 <div className="font-black text-white" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', lineHeight: 1 }}>
                   {stat.value}
                 </div>
@@ -257,7 +257,7 @@ export default function Home() {
       {/* ─── 4. ABOUT PREVIEW ────────────────────────────────────────────── */}
       <section className="section-pad" style={{ background: '#faf6ee' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-10 md:gap-16 items-center">
             <div>
               <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>About the Meet</span>
               <h2 className="mt-3 font-black leading-tight" style={{ fontSize: 'clamp(2rem, 4vw, 3.25rem)', color: '#0a2112' }}>
@@ -281,7 +281,7 @@ export default function Home() {
             <div className="relative">
               <div className="absolute -bottom-4 -right-4 w-full h-full rounded-2xl"
                 style={{ background: '#f5c518', opacity: 0.25 }} />
-              <div className="relative w-full h-[380px] rounded-2xl overflow-hidden shadow-lg">
+              <div className="relative w-full h-[260px] sm:h-[380px] rounded-2xl overflow-hidden shadow-lg">
                 <Image src="/assets/gallery/gallery-01.jpg" alt="Athletic championship meet" fill className="object-cover" />
               </div>
             </div>
@@ -335,7 +335,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>Participating Institutes</span>
-            <h2 className="mt-3 font-black text-4xl" style={{ color: '#0a2112' }}>25+ IIITs &bull; 1 Champion</h2>
+            <h2 className="mt-3 font-black text-3xl sm:text-4xl" style={{ color: '#0a2112' }}>25+ IIITs &bull; 1 Champion</h2>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
             {iiits.map((iiit, idx) => (
@@ -391,7 +391,7 @@ export default function Home() {
       {/* ─── 8. GALLERY PREVIEW ──────────────────────────────────────────── */}
       <section className="section-pad" style={{ background: '#faf6ee' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-10">
+          <div className="flex items-end justify-between gap-4 mb-10">
             <div>
               <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>Glimpses</span>
               <h2 className="mt-2 font-black text-3xl md:text-4xl" style={{ color: '#0a2112' }}>Gallery</h2>
@@ -402,7 +402,7 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
             {[4, 5, 6].map((num) => (
-              <div key={num} className="relative overflow-hidden rounded-xl group" style={{ height: '220px' }}>
+              <div key={num} className="relative overflow-hidden rounded-xl group" style={{ height: '160px' }}>
                 <Image
                   src={`/assets/gallery/gallery-0${num}.jpg`}
                   alt={`Gallery moment ${num}`}

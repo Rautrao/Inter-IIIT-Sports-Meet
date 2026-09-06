@@ -10,7 +10,7 @@ export default function Contact() {
           <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#020202' }}>
             Get In Touch
           </span>
-          <h1 className="mt-3 font-black text-white" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}>
+          <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             Contact Us
           </h1>
           <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#020202' }} />
