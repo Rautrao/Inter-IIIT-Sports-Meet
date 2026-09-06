@@ -7,6 +7,7 @@ import ContactForm from "@/components/registration/ContactForm";
 import SportSection from "@/components/registration/SportSection";
 import ReviewModal from "@/components/registration/ReviewModal";
 import LockedRegistration from "@/components/registration/LockedRegistration";
+import PaymentPending from "@/components/registration/PaymentPending";
 import { getAllSportsList } from "@/lib/sports/config";
 import { getLiveValidationErrors, getStudentRegistry } from "@/lib/registration/client-utils";
 
@@ -163,6 +164,9 @@ export default function RegisterPage() {
 
   // If locked, show the readonly locked view
   if (lockedRegistrationData) {
+    if (lockedRegistrationData.registration.status === 'payment_pending') {
+      return <PaymentPending iiitCode={user.username} registrationData={lockedRegistrationData} />;
+    }
     return <LockedRegistration iiitCode={user.username} registrationData={lockedRegistrationData} />;
   }
 
@@ -273,13 +277,14 @@ export default function RegisterPage() {
 
       <ReviewModal 
         isOpen={isReviewOpen}
-        onClose={() => setIsReviewOpen(false)}
+        onClose={() => { setIsReviewOpen(false); setSubmitError(""); }}
         onSubmit={handleFinalSubmit}
         isSubmitting={isSubmitting}
         payload={payload}
         errors={errors}
         submitError={submitError}
         uniqueStudentsCount={totalUniqueStudents}
+        iiitCode={user?.username}
       />
     </div>
   );

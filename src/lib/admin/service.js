@@ -1,9 +1,9 @@
 import { eq, and, ilike, sql, desc, count } from "drizzle-orm";
 import { getDb } from "../../db/index.js";
-import { users, registrations, students, studentEventParticipations } from "../../db/schema.js";
+import { users, registrations, students, studentEventParticipations, paymentTransactions } from "../../db/schema.js";
 
 /**
- * Get list of all IIIT registrations with submission status and counts
+ * Get list of all IIIT registrations with submission status, counts, and payment info
  */
 export async function getAdminRegistrationsOverview() {
   const db = getDb();
@@ -20,10 +20,21 @@ export async function getAdminRegistrationsOverview() {
       contactEmail: registrations.contactEmail,
       contactPhone: registrations.contactPhone,
       totalStudentsCount: sql`COALESCE(${registrations.totalStudentsCount}, 0)`,
+      status: registrations.status,
       updatedAt: registrations.updatedAt,
+      // Payment data
+      paymentAmount: paymentTransactions.amount,
+      paymentTransactionId: paymentTransactions.transactionId,
+      paymentTransactionDate: paymentTransactions.transactionDate,
+      paymentBankName: paymentTransactions.bankName,
+      paymentMode: paymentTransactions.paymentMode,
+      otherPaymentMode: paymentTransactions.otherPaymentMode,
+      paymentProofPathname: paymentTransactions.proofPathname,
+      paymentProofFileName: paymentTransactions.proofFileName,
     })
     .from(users)
     .leftJoin(registrations, eq(users.iiitCode, registrations.iiitCode))
+    .leftJoin(paymentTransactions, eq(registrations.id, paymentTransactions.registrationId))
     .where(eq(users.role, "iiit"))
     .orderBy(users.iiitName);
 

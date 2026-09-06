@@ -1,14 +1,16 @@
+import dotenv from "dotenv";
+dotenv.config({ path: ".env.local" });
 import assert from "assert";
 import { hashPassword, verifyPassword } from "../src/lib/auth/passwords.js";
 import { signSessionToken, verifySessionToken } from "../src/lib/auth/session.js";
 import { validateRegistrationRules } from "../src/lib/validation/rules.js";
-import { registrationSubmitSchema } from "../src/lib/validation/schemas.js";
+import { registrationSubmitSchema, paymentSubmitSchema } from "../src/lib/validation/schemas.js";
 import { SPORTS_CONFIG, GLOBAL_RULES, getSportConfig } from "../src/lib/sports/config.js";
 import { formatCsv } from "../src/lib/csv/generator.js";
 
 async function runTests() {
   console.log("=========================================");
-  console.log("🧪 RUNNING BACKEND FOUNDATION TESTS");
+  console.log("ðŸ§ª RUNNING BACKEND FOUNDATION TESTS");
   console.log("=========================================\n");
 
   let passed = 0;
@@ -17,10 +19,10 @@ async function runTests() {
   function test(name, fn) {
     try {
       fn();
-      console.log(`✅ PASS: ${name}`);
+      console.log(`âœ… PASS: ${name}`);
       passed++;
     } catch (err) {
-      console.error(`❌ FAIL: ${name}`);
+      console.error(`âŒ FAIL: ${name}`);
       console.error(err);
       failed++;
     }
@@ -29,10 +31,10 @@ async function runTests() {
   async function testAsync(name, fn) {
     try {
       await fn();
-      console.log(`✅ PASS: ${name}`);
+      console.log(`âœ… PASS: ${name}`);
       passed++;
     } catch (err) {
-      console.error(`❌ FAIL: ${name}`);
+      console.error(`âŒ FAIL: ${name}`);
       console.error(err);
       failed++;
     }
@@ -304,7 +306,7 @@ async function runTests() {
       entries150.push({ sportId: "athletics", eventId: "100m", gender: "M", rollNumber: roll, isReserve: false });
     }
     const result150 = validateRegistrationRules({ students: students150, entries: entries150 });
-    // Valid combination, only 150 students, although 300 entries. It will fail on squad size/event capacity, 
+    // Valid combination, only 150 students, although 300 entries. It will fail on squad size/event capacity,
     // so we just check it doesn't fail on "Maximum unique students limit exceeded".
     assert.strictEqual(result150.errors.some(e => e.includes("Maximum unique students limit exceeded")), false);
 
@@ -373,7 +375,7 @@ async function runTests() {
       ],
       entries: [
         { sportId: "CRICKET", eventId: "TEAM", gender: "M", rollNumber: "  2023bcs001  ", isReserve: false },
-      ],
+      ]
     };
 
     const parsed = registrationSubmitSchema.parse(rawPayload);
@@ -398,8 +400,153 @@ async function runTests() {
     assert.ok(csv.includes("IIIT Allahabad,PRIYA VERMA,Normal arrival"));
   });
 
+  // 12. Payment Validation Zod Tests
+  test("TEST PAYMENT SCHEMA: Valid details accepted, missing rejected", () => {
+    const basePayload = {
+      paymentDetails: {
+        transactionDate: new Date().toISOString().split("T")[0],
+        transactionId: "TX123",
+        paymentMode: "NEFT",
+        proofPathname: "payment-proofs/test/1.pdf",
+      }
+    };
+
+    // Valid details accepted
+    assert.strictEqual(paymentSubmitSchema.safeParse(basePayload).success, true, "Valid payment details accepted");
+
+    // Bank name optional
+    const withBank = JSON.parse(JSON.stringify(basePayload));
+    withBank.paymentDetails.bankName = "SBI";
+    assert.strictEqual(paymentSubmitSchema.safeParse(withBank).success, true, "Bank name optional");
+
+    // Missing TX ID rejected
+    const noTx = JSON.parse(JSON.stringify(basePayload));
+    delete noTx.paymentDetails.transactionId;
+    assert.strictEqual(paymentSubmitSchema.safeParse(noTx).success, false, "Missing transaction ID rejected");
+
+    // Missing paymentMode rejected
+    const noMode = JSON.parse(JSON.stringify(basePayload));
+    delete noMode.paymentDetails.paymentMode;
+    assert.strictEqual(paymentSubmitSchema.safeParse(noMode).success, false, "Missing payment mode rejected");
+
+    // Invalid paymentMode rejected
+    const invalidMode = JSON.parse(JSON.stringify(basePayload));
+    invalidMode.paymentDetails.paymentMode = "CASH";
+    assert.strictEqual(paymentSubmitSchema.safeParse(invalidMode).success, false, "Invalid payment mode rejected");
+
+    // OTHER with otherPaymentMode succeeds
+    const otherModeSuccess = JSON.parse(JSON.stringify(basePayload));
+    otherModeSuccess.paymentDetails.paymentMode = "OTHER";
+    otherModeSuccess.paymentDetails.otherPaymentMode = "Demand Draft";
+    assert.strictEqual(paymentSubmitSchema.safeParse(otherModeSuccess).success, true, "OTHER with otherPaymentMode succeeds");
+
+    // OTHER without otherPaymentMode fails
+    const otherModeFail = JSON.parse(JSON.stringify(basePayload));
+    otherModeFail.paymentDetails.paymentMode = "OTHER";
+    assert.strictEqual(paymentSubmitSchema.safeParse(otherModeFail).success, false, "OTHER without otherPaymentMode fails");
+
+    // Missing Date rejected
+    const noDate = JSON.parse(JSON.stringify(basePayload));
+    delete noDate.paymentDetails.transactionDate;
+    assert.strictEqual(paymentSubmitSchema.safeParse(noDate).success, false, "Missing transaction date rejected");
+
+    // Future Date rejected
+    const futureDate = JSON.parse(JSON.stringify(basePayload));
+    futureDate.paymentDetails.transactionDate = new Date(Date.now() + 86400000 * 2).toISOString().split("T")[0]; // 2 days future
+    assert.strictEqual(paymentSubmitSchema.safeParse(futureDate).success, false, "Future transaction date rejected");
+
+    // Invalid Calendar Date rejected
+    const invalidDate = JSON.parse(JSON.stringify(basePayload));
+    invalidDate.paymentDetails.transactionDate = "2026-99-99";
+    assert.strictEqual(paymentSubmitSchema.safeParse(invalidDate).success, false, "Invalid calendar date rejected");
+
+    // Missing Proof rejected
+    const noProof = JSON.parse(JSON.stringify(basePayload));
+    delete noProof.paymentDetails.proofPathname;
+    assert.strictEqual(paymentSubmitSchema.safeParse(noProof).success, false, "Missing proof rejected");
+  });
+
+  // Database Integration Tests
+  await testAsync("DATABASE TESTS: Submit Registration and Payment", async () => {
+    process.env.NODE_ENV = "test";
+
+    const { submitRegistration, submitPayment } = await import("../src/lib/registration/service.js");
+    const { getDb } = await import("../src/db/index.js");
+    const { registrations, users } = await import("../src/db/schema.js");
+    const { eq } = await import("drizzle-orm");
+
+    const db = getDb();
+
+    // Ensure test user exists
+    await db.insert(users).values({ username: "test-payment-iiit", iiitCode: "test-payment-iiit", iiitName: "Test Payment IIIT", passwordHash: "dummy", role: "iiit" }).onConflictDoNothing();
+
+    // Cleanup prior test run data
+    await db.delete(registrations).where(eq(registrations.iiitCode, "test-payment-iiit"));
+
+    const regPayload = {
+      contactDetails: { contactName: "A", contactEmail: "a@a.com", contactPhone: "123456" },
+      students: [
+        { rollNumber: "R1", name: "STUDENT 1", gender: "M" },
+        { rollNumber: "R2", name: "STUDENT 2", gender: "M" }
+      ],
+      entries: [
+        { sportId: "cricket", eventId: "team", gender: "M", rollNumber: "R1", isReserve: false },
+        { sportId: "volleyball", eventId: "team", gender: "M", rollNumber: "R1", isReserve: false }, // Same student, multiple events
+        { sportId: "cricket", eventId: "team", gender: "M", rollNumber: "R2", isReserve: false },
+      ]
+    };
+
+    const paymentPayload = {
+      paymentDetails: {
+        transactionDate: new Date().toISOString().split("T")[0],
+        transactionId: "TX123",
+        paymentMode: "UPI",
+        proofPathname: "payment-proofs/test-payment-iiit/proof.pdf",
+      }
+    };
+
+    // First submit registration
+    const regResult = await submitRegistration("test-payment-iiit", regPayload, "admin");
+    assert.strictEqual(regResult.status, "payment_pending", "Registration should be payment_pending");
+
+    // Invalid Proof (Type) during payment
+    const invalidType = JSON.parse(JSON.stringify(paymentPayload));
+    invalidType.paymentDetails.proofPathname = "payment-proofs/test-payment-iiit/invalid-type.txt";
+    try {
+      await submitPayment("test-payment-iiit", invalidType, "admin");
+      throw new Error("Should have rejected");
+    } catch (e) {
+      if (!e.message.match(/Payment proof must be a PDF, JPG, or PNG/)) {
+        console.error("ACTUAL ERROR:", e.message);
+        throw e;
+      }
+    }
+
+    // Too Large
+    const tooLarge = JSON.parse(JSON.stringify(paymentPayload));
+    tooLarge.paymentDetails.proofPathname = "payment-proofs/test-payment-iiit/too-large.pdf";
+    await assert.rejects(submitPayment("test-payment-iiit", tooLarge, "admin"), /exceeds 5MB limit/, ">5 MB proof rejected");
+
+    // Cross-IIIT tampering
+    const crossIiit = JSON.parse(JSON.stringify(paymentPayload));
+    crossIiit.paymentDetails.proofPathname = "payment-proofs/other-iiit/proof.pdf";
+    await assert.rejects(submitPayment("test-payment-iiit", crossIiit, "admin"), /does not belong to your IIIT/, "IIIT cannot access another IIIT's proof during submit");
+
+    // Successful Submit Payment
+    const result = await submitPayment("test-payment-iiit", paymentPayload, "admin");
+    assert.strictEqual(result.amountPaid, 5000, "Amount calculated correctly from saved registration");
+    assert.strictEqual(result.status, "submitted", "Payment should permanently lock to submitted");
+
+    // Duplicate Payment Rejected
+    await assert.rejects(submitPayment("test-payment-iiit", paymentPayload, "admin"), /Payment has already been submitted/, "Duplicate final submission rejected");
+
+    // Cleanup
+    await db.delete(registrations).where(eq(registrations.iiitCode, "test-payment-iiit"));
+    process.env.NODE_ENV = "development";
+  });
+
   console.log("\n=========================================");
-  console.log(`🏁 TEST SUMMARY: ${passed} PASSED, ${failed} FAILED`);
+  console.log(`ðŸ TEST SUMMARY: ${passed} PASSED, ${failed} FAILED`);
   console.log("=========================================\n");
 
   if (failed > 0) {
