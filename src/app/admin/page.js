@@ -27,10 +27,19 @@ export default function AdminDashboardPage() {
 
   const sportsList = getAllSportsList();
 
-  // Available events based on selected sport
-  const availableEvents = filters.sport
-    ? sportsList.find(s => s.id === filters.sport)?.events || []
-    : [];
+  // sport.events is { M: [...], F: [...] } for individual sports, undefined for team sports.
+  // Flatten all gender sub-arrays and deduplicate by event id so .map() always gets an array.
+  const availableEvents = (() => {
+    if (!filters.sport) return [];
+    const sport = sportsList.find(s => s.id === filters.sport);
+    if (!sport?.events) return [];
+    const seen = new Set();
+    return Object.values(sport.events).flat().filter(ev => {
+      if (seen.has(ev.id)) return false;
+      seen.add(ev.id);
+      return true;
+    });
+  })();
 
 
   const loadEntries = useCallback(async (page = 1) => {
