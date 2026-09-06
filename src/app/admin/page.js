@@ -252,7 +252,7 @@ export default function AdminDashboardPage() {
               className="px-4 py-2 text-xs font-black uppercase tracking-wider rounded-xl transition-all shadow-xs hover:-translate-y-0.5"
               style={{ background: "#f5c518", color: "#0a2112" }}
             >
-              Export Current Filter â†“
+              Export Current Filter →
             </button>
           </div>
         </div>
@@ -468,31 +468,31 @@ export default function AdminDashboardPage() {
                           ? <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black">Payment Pending</span>
                           : <span className="px-2 py-1 rounded-full bg-gray-100 text-gray-500 text-[10px] font-bold">Draft</span>}
                       </td>
-                      <td className="px-4 py-3 text-center font-bold text-gray-700">{row.isSubmitted ? row.totalStudentsCount : "â€”"}</td>
+                      <td className="px-4 py-3 text-center font-bold text-gray-700">{row.isSubmitted ? row.totalStudentsCount : "—"}</td>
                       <td className="px-4 py-3 text-center font-bold text-amber-700">
                         {row.paymentAmount
-                          ? `â‚¹${Number(row.paymentAmount).toLocaleString("en-IN")}`
+                          ? `₹${Number(row.paymentAmount).toLocaleString("en-IN")}`
                           : row.status === "payment_pending"
-                          ? `â‚¹${(row.totalStudentsCount * 2500).toLocaleString("en-IN")}`
-                          : "â€”"}
+                          ? `₹${(row.totalStudentsCount * 2500).toLocaleString("en-IN")}`
+                          : "—"}
                       </td>
                       <td className="px-4 py-3 text-gray-800">
-                        {row.paymentMode === "OTHER" ? row.otherPaymentMode : (row.paymentMode || "â€”")}
+                        {row.paymentMode === "OTHER" ? row.otherPaymentMode : (row.paymentMode || "—")}
                       </td>
                       <td className="px-4 py-3 text-center">
                         {row.status === "submitted"
                           ? <span className="px-2 py-1 rounded-full bg-green-100 text-green-800 text-[10px] font-black">Proof Submitted</span>
                           : row.status === "payment_pending"
                           ? <span className="px-2 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-black">Awaiting Proof</span>
-                          : <span className="text-gray-400 text-[10px]">â€”</span>}
+                          : <span className="text-gray-400 text-[10px]">—</span>}
                       </td>
-                      <td className="px-4 py-3 font-mono text-gray-600 truncate max-w-[140px]">{row.paymentTransactionId || "â€”"}</td>
+                      <td className="px-4 py-3 font-mono text-gray-600 truncate max-w-[140px]">{row.paymentTransactionId || "—"}</td>
                       <td className="px-4 py-3 text-gray-600">
                         {row.paymentTransactionDate
                           ? new Date(row.paymentTransactionDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })
-                          : "â€”"}
+                          : "—"}
                       </td>
-                      <td className="px-4 py-3 text-gray-600 truncate max-w-[120px]">{row.paymentBankName || "â€”"}</td>
+                      <td className="px-4 py-3 text-gray-600 truncate max-w-[120px]">{row.paymentBankName || "—"}</td>
                       <td className="px-4 py-3 text-center">
                         {row.paymentProofPathname ? (
                           <a
@@ -508,7 +508,7 @@ export default function AdminDashboardPage() {
                             View
                           </a>
                         ) : (
-                          <span className="text-gray-300 text-[10px]">â€”</span>
+                          <span className="text-gray-300 text-[10px]">—</span>
                         )}
                       </td>
                     </tr>
