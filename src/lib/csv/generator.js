@@ -41,10 +41,13 @@ export async function generateIIITRegistrationCSV(iiitCode) {
       eventGender: studentEventParticipations.gender,
       isReserve: studentEventParticipations.isReserve,
       submittedAt: registrations.submittedAt,
+      paymentMode: paymentTransactions.paymentMode,
+      otherPaymentMode: paymentTransactions.otherPaymentMode,
     })
     .from(studentEventParticipations)
     .innerJoin(students, eq(studentEventParticipations.studentId, students.id))
     .innerJoin(registrations, eq(studentEventParticipations.registrationId, registrations.id))
+    .leftJoin(paymentTransactions, eq(registrations.id, paymentTransactions.registrationId))
     .where(
       and(
         eq(registrations.iiitCode, iiitCode),
@@ -63,6 +66,8 @@ export async function generateIIITRegistrationCSV(iiitCode) {
     "Event Category",
     "Slot Type",
     "Submission Date",
+    "Payment Mode",
+    "Other Payment Mode",
   ];
 
   const rows = entries.map((entry) => {
@@ -128,10 +133,13 @@ export async function generateAdminMasterCSV(filters = {}) {
       eventGender: studentEventParticipations.gender,
       isReserve: studentEventParticipations.isReserve,
       submittedAt: registrations.submittedAt,
+      paymentMode: paymentTransactions.paymentMode,
+      otherPaymentMode: paymentTransactions.otherPaymentMode,
     })
     .from(studentEventParticipations)
     .innerJoin(students, eq(studentEventParticipations.studentId, students.id))
     .innerJoin(registrations, eq(studentEventParticipations.registrationId, registrations.id))
+    .leftJoin(paymentTransactions, eq(registrations.id, paymentTransactions.registrationId))
     .where(and(...conditions))
     .orderBy(registrations.iiitName, students.rollNumber, studentEventParticipations.sportId);
 
@@ -146,6 +154,8 @@ export async function generateAdminMasterCSV(filters = {}) {
     "Event Category",
     "Slot Type",
     "Submission Date",
+    "Payment Mode",
+    "Other Payment Mode",
   ];
 
   const rows = entries.map((entry) => {
@@ -171,6 +181,8 @@ export async function generateAdminMasterCSV(filters = {}) {
       entry.eventGender === "M" ? "Men" : entry.eventGender === "F" ? "Women" : "Mixed/Open",
       entry.isReserve ? "Reserve" : "Main",
       entry.submittedAt ? new Date(entry.submittedAt).toISOString() : "",
+      entry.paymentMode || "",
+      entry.otherPaymentMode || "",
     ];
   });
 

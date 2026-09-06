@@ -10,11 +10,11 @@ export async function POST(request) {
       body,
       request,
       onBeforeGenerateToken: async (pathname, clientPayload) => {
-        // Authenticate the user (must be logged in)
-        const session = await requireAuth(["iiit", "admin"]);
+        // Authenticate the user (must be logged in as an IIIT to upload proofs)
+        const session = await requireAuth(["iiit"]);
         
         // Generate a safe, structured pathname: payment-proofs/{iiitCode}/{timestamp}-{random}.{extension}
-        const iiitCode = session.iiitCode || "admin";
+        const iiitCode = session.iiitCode;
         const extension = pathname.split('.').pop().toLowerCase();
         
         // Allowed extensions: pdf, jpg, jpeg, png
@@ -33,11 +33,6 @@ export async function POST(request) {
           pathname: safePathname,
           access: 'private', // BLOB is strictly private
         };
-      },
-      onUploadCompleted: async ({ blob, tokenPayload }) => {
-        // Triggered by Vercel Blob webhook after successful upload
-        // The blob reference will be returned to the client and later saved in PostgreSQL during final submission
-        console.log('Blob upload completed', blob, tokenPayload);
       },
     });
 
