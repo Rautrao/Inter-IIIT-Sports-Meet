@@ -85,15 +85,15 @@ export default function LockedRegistration({ iiitCode, registrationData }) {
                 <div className="space-y-3">
                   <div>
                     <span className="block text-xs font-bold text-gray-500 uppercase">Faculty In-Charge</span>
-                    <span className="font-bold text-gray-900 text-sm">{registration.contactName || "â€”"}</span>
+                    <span className="font-bold text-gray-900 text-sm">{registration.contactName || "—"}</span>
                   </div>
                   <div>
                     <span className="block text-xs font-bold text-gray-500 uppercase">Email</span>
-                    <span className="font-bold text-gray-900 text-sm">{registration.contactEmail || "â€”"}</span>
+                    <span className="font-bold text-gray-900 text-sm">{registration.contactEmail || "—"}</span>
                   </div>
                   <div>
                     <span className="block text-xs font-bold text-gray-500 uppercase">Phone</span>
-                    <span className="font-bold text-gray-900 text-sm">{registration.contactPhone || "â€”"}</span>
+                    <span className="font-bold text-gray-900 text-sm">{registration.contactPhone || "—"}</span>
                   </div>
                 </div>
               </div>
@@ -111,11 +111,11 @@ export default function LockedRegistration({ iiitCode, registrationData }) {
                     </div>
                     <div className="flex justify-between items-center mb-2">
                       <span className="text-xs font-bold text-amber-600 uppercase tracking-wider">Rate</span>
-                      <span className="font-bold text-gray-700">â‚¹2,500</span>
+                      <span className="font-bold text-gray-700">₹2,500</span>
                     </div>
                     <div className="flex justify-between items-center pt-2 border-t border-amber-200">
                       <span className="text-xs font-bold text-amber-700 uppercase tracking-wider">Amount Payable</span>
-                      <span className="font-black text-amber-800 text-lg">â‚¹{payment.amount?.toLocaleString("en-IN")}</span>
+                      <span className="font-black text-amber-800 text-lg">₹{payment.amount?.toLocaleString("en-IN")}</span>
                     </div>
                   </div>
                   <div className="space-y-3">
@@ -126,7 +126,7 @@ export default function LockedRegistration({ iiitCode, registrationData }) {
                     <div>
                       <span className="block text-xs font-bold text-gray-500 uppercase">Transaction Date</span>
                       <span className="font-bold text-gray-900 text-sm">
-                        {payment.transactionDate ? new Date(payment.transactionDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "â€”"}
+                        {payment.transactionDate ? new Date(payment.transactionDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" }) : "—"}
                       </span>
                     </div>
                     <div>

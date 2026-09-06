@@ -1,6 +1,6 @@
 import { eq, and, sql } from "drizzle-orm";
 import { getDb } from "../../db/index.js";
-import { registrations, students, studentEventParticipations } from "../../db/schema.js";
+import { registrations, students, studentEventParticipations, paymentTransactions } from "../../db/schema.js";
 import { getSportConfig } from "../sports/config.js";
 
 /**
@@ -92,6 +92,8 @@ export async function generateIIITRegistrationCSV(iiitCode) {
       entry.eventGender === "M" ? "Men" : entry.eventGender === "F" ? "Women" : "Mixed/Open",
       entry.isReserve ? "Reserve" : "Main",
       entry.submittedAt ? new Date(entry.submittedAt).toISOString() : "",
+      entry.paymentMode || "",
+      entry.otherPaymentMode || "",
     ];
   });
 

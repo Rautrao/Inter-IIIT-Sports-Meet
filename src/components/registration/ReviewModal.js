@@ -5,11 +5,11 @@
  */
 function formatError(raw) {
   const schemaMap = {
-    "contactDetails.contactName:": "Contact Form â€” Name:",
-    "contactDetails.contactEmail:": "Contact Form â€” Email:",
-    "contactDetails.contactPhone:": "Contact Form â€” Phone:",
-    "students.": "Student roster â€”",
-    "entries.": "Event entry â€”",
+    "contactDetails.contactName:": "Contact Form — Name:",
+    "contactDetails.contactEmail:": "Contact Form — Email:",
+    "contactDetails.contactPhone:": "Contact Form — Phone:",
+    "students.": "Student roster —",
+    "entries.": "Event entry —",
   };
   for (const [prefix, label] of Object.entries(schemaMap)) {
     if (raw.startsWith(prefix)) {
@@ -125,7 +125,7 @@ export default function ReviewModal({
                 className="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-[#f5c518] text-[#0a2112] text-base font-black hover:bg-amber-400 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-colors"
                 onClick={onSubmit}
               >
-                {isSubmitting ? "Submitting..." : "Submit Registration â†’"}
+                {isSubmitting ? "Submitting..." : "Submit Registration →"}
               </button>
             )}
             <button
