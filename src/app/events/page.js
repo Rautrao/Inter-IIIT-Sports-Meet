@@ -6,6 +6,7 @@ import CircularGallery from './CircularGallery';
 import InteractiveHeading from './InteractiveHeading';
 import { sports } from '@/data/sports';
 import Image from 'next/image';
+import Link from 'next/link';
 
 // Lightweight scroll-driven parallax hook
 function useParallaxScroll(speed = 0.18) {
@@ -288,6 +289,44 @@ export default function Events() {
     };
   }, []);
 
+  useEffect(() => {
+    const revealItems = document.querySelectorAll('[data-reveal]');
+
+    if (!revealItems.length) return undefined;
+
+    const activate = (element) => {
+      element.classList.add('is-visible');
+      element.dataset.visible = 'true';
+    };
+
+    if (!('IntersectionObserver' in window)) {
+      revealItems.forEach((item) => activate(item));
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            activate(entry.target);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.16 }
+    );
+
+    revealItems.forEach((item) => {
+      if (item.getBoundingClientRect().top < window.innerHeight + 120) {
+        activate(item);
+        return;
+      }
+      observer.observe(item);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   // ── 3D Perspective Scroll ──────────────────────────────────────────────────
   const headerBannerRef = useRef(null);
   const contentSectionRef = useRef(null);
@@ -364,7 +403,7 @@ export default function Events() {
           className="absolute inset-0 w-full h-full pointer-events-none z-10"
         />
 
-        <div className="relative max-w-10xl mx-auto z-20 px-16">
+        <div className="relative max-w-10xl mx-auto z-20 px-4 sm:px-6 lg:px-8">
           {/* Square Sticky Note Patch Tag */}
           <div
             className="relative inline-flex flex-col items-center justify-center w-24 h-24 -rotate-3 select-none mb-6 shadow-[4px_4px_14px_rgba(0,0,0,0.45)] hover:rotate-0 hover:scale-105 transition-all duration-300 ease-out cursor-default"
@@ -380,7 +419,7 @@ export default function Events() {
           </div>
 
           <div className="block">
-            <span className="text-xs font-bold tracking-widest uppercase text-[#74921a]">
+            <span className="text-xs font-bold tracking-widest uppercase text-[#0a2112]">
               9th Inter-IIIT Sports Meet · 2026
             </span>
           </div>
@@ -404,7 +443,7 @@ export default function Events() {
         style={{ willChange: 'transform', position: 'relative', zIndex: 2 }}
       >
         {/* Circular Gallery Section */}
-        <div className="max-w-30xl mx-auto py-20 md:py-28 px-4">
+        <div className="max-w-30xl mx-auto py-12 sm:py-20 md:py-28 px-4">
           <div className="w-full">
             <CircularGallery
               items={galleryItems}
@@ -418,6 +457,30 @@ export default function Events() {
             />
           </div>
         </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-4">
+        <div data-reveal className="reveal rulebook-panel rounded-[28px] border p-6 sm:p-8 md:p-10 shadow-sm"
+          style={{ background: 'linear-gradient(135deg, rgba(245,197,24,0.12), rgba(255,255,255,0.9)), #fff', borderColor: 'rgba(27,94,32,0.14)' }}>
+          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+            <div className="max-w-2xl">
+              <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: '#c9972f' }}>
+                Rule Book
+              </span>
+              <h2 className="mt-3 font-black text-2xl sm:text-3xl" style={{ color: '#0a2112' }}>
+                Competition rules, eligibility criteria, event regulations, and participation guidelines will be published here.
+              </h2>
+            </div>
+            <Link
+              href="/assets/docs/rulebook.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center justify-center px-7 py-3.5 rounded-full text-sm font-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
+              style={{ background: '#0a2112', color: '#f5c518', letterSpacing: '0.04em' }}
+            >
+              View Rule Book
+            </Link>
+          </div>
+        </div>
+      </div>
       </div>
     </div>
   );

@@ -114,7 +114,7 @@ export default function PaymentSection({ uniqueStudentsCount, iiitCode, paymentD
       </div>
 
       {/* Amount Summary */}
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
         <div className="bg-gray-50 rounded-xl p-3 border border-gray-100 text-center">
           <p className="text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">Unique Students</p>
           <p className="text-2xl font-black text-gray-900">{uniqueStudentsCount}</p>
