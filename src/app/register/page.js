@@ -7,6 +7,7 @@ import ContactForm from "@/components/registration/ContactForm";
 import SportSection from "@/components/registration/SportSection";
 import ReviewModal from "@/components/registration/ReviewModal";
 import LockedRegistration from "@/components/registration/LockedRegistration";
+import PaymentPending from "@/components/registration/PaymentPending";
 import { getAllSportsList } from "@/lib/sports/config";
 import { getLiveValidationErrors, getStudentRegistry } from "@/lib/registration/client-utils";
 
@@ -163,6 +164,9 @@ export default function RegisterPage() {
 
   // If locked, show the readonly locked view
   if (lockedRegistrationData) {
+    if (lockedRegistrationData.registration.status === 'payment_pending') {
+      return <PaymentPending iiitCode={user.username} registrationData={lockedRegistrationData} />;
+    }
     return <LockedRegistration iiitCode={user.username} registrationData={lockedRegistrationData} />;
   }
 
@@ -185,7 +189,7 @@ export default function RegisterPage() {
   const studentRegistry = getStudentRegistry(slotsMap);
 
   return (
-    <div className="min-h-screen bg-[#faf6ee] font-sans pb-32">
+    <div className="min-h-screen bg-[#faf6ee] font-sans pb-48 sm:pb-32">
       <RegistrationHeader 
         iiitName={user.iiitName || user.username} 
         uniqueStudentsCount={totalUniqueStudents} 
@@ -201,7 +205,7 @@ export default function RegisterPage() {
         />
         
         {/* Navigation Tabs for Gender Sections */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 mb-6 flex flex-wrap sm:flex-nowrap gap-2">
+        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 mb-6 grid grid-cols-1 sm:flex sm:flex-nowrap gap-2">
           <button 
             onClick={() => setActiveTab("M")}
             className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "M" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
@@ -273,13 +277,14 @@ export default function RegisterPage() {
 
       <ReviewModal 
         isOpen={isReviewOpen}
-        onClose={() => setIsReviewOpen(false)}
+        onClose={() => { setIsReviewOpen(false); setSubmitError(""); }}
         onSubmit={handleFinalSubmit}
         isSubmitting={isSubmitting}
         payload={payload}
         errors={errors}
         submitError={submitError}
         uniqueStudentsCount={totalUniqueStudents}
+        iiitCode={user?.username}
       />
     </div>
   );

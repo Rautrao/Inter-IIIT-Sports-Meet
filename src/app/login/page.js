@@ -68,7 +68,7 @@ export default function LoginPage() {
           className="absolute inset-0 z-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(10,33,18,0.7) 0%, rgba(10,33,18,0.95) 100%)",
+              "linear-gradient(to bottom, rgba(240,213,116,0.78) 0%, rgba(240,213,116,0.96) 100%)",
           }}
         />
 
@@ -88,7 +88,7 @@ export default function LoginPage() {
         <div className="relative z-10">
           <div
             className="text-xs font-black tracking-[0.2em] uppercase mb-3"
-            style={{ color: "#f5c518" }}
+            style={{ color: "#0a2112" }}
           >
             9th Edition
           </div>
@@ -111,7 +111,7 @@ export default function LoginPage() {
 
           <p
             className="text-sm leading-relaxed"
-            style={{ color: "rgba(255,255,255,0.6)" }}
+            style={{ color: "rgba(10,33,18,0.76)" }}
           >
             19–23 December 2026
             <br />
@@ -123,7 +123,7 @@ export default function LoginPage() {
 
         <div
           className="relative z-10 text-xs"
-          style={{ color: "rgba(255,255,255,0.35)" }}
+          style={{ color: "rgba(10,33,18,0.6)" }}
         >
           © 2026 Inter-IIIT Sports Meet
         </div>

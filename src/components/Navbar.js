@@ -13,6 +13,7 @@ export default function Navbar() {
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About' },
     { href: '/events', label: 'Events' },
+    { href: '/location', label: 'Location' },
     { href: '/team', label: 'Team' },
     { href: '/gallery', label: 'Gallery' },
     { href: '/contact', label: 'Contact' },
@@ -21,16 +22,16 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full" style={{ background: 'rgba(10,33,18,0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-[68px]">
+        <div className="flex justify-between items-center h-[60px] sm:h-[68px]">
 
           {/* Logo + Brand */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
             <div className="w-10 h-10 relative bg-white rounded-full p-0.5 border border-amber-400/60 flex items-center justify-center group-hover:border-amber-400 transition-colors">
               <Image src="/assets/brand/inter-iiit-logo.png" alt="Inter-IIIT" fill className="object-contain p-1" />
             </div>
-            <div className="hidden sm:block leading-tight">
-              <div className="text-white font-black text-base tracking-wide">INTER IIIT</div>
-              <div className="text-amber-400 font-semibold text-[10px] tracking-[0.18em] uppercase opacity-90">Sports Meet 2026</div>
+            <div className="block leading-tight">
+              <div className="text-white font-black text-sm sm:text-base tracking-wide">INTER IIIT</div>
+              <div className="text-amber-400 font-semibold text-[8px] sm:text-[10px] tracking-[0.14em] sm:tracking-[0.18em] uppercase opacity-90">Sports Meet 2026</div>
             </div>
           </Link>
 
@@ -67,8 +68,10 @@ export default function Navbar() {
             </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
+              className="md:hidden -mr-2 p-3 text-gray-300 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-400 transition-colors"
               aria-label="Toggle menu"
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-navigation"
             >
               {mobileOpen ? (
                 <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
@@ -82,13 +85,13 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-brand-dark border-t border-white/5 px-4 py-4 space-y-1">
+        <div id="mobile-navigation" className="md:hidden max-h-[calc(100dvh-60px)] overflow-y-auto bg-brand-dark border-t border-white/5 px-4 py-4 space-y-1">
           {links.map(({ href, label }) => (
             <Link
               key={href}
               href={href}
               onClick={() => setMobileOpen(false)}
-              className={`block px-4 py-3 rounded-lg text-sm font-semibold transition-colors ${
+              className={`block px-4 py-3.5 rounded-lg text-sm font-semibold transition-colors ${
                 pathname === href
                   ? 'bg-brand-primary/40 text-amber-400'
                   : 'text-gray-300 hover:bg-white/5 hover:text-white'

@@ -66,10 +66,46 @@ export const contactDetailsSchema = z.object({
 });
 
 /**
+ * Payment Details Schema
+ */
+export const paymentDetailsSchema = z.object({
+  transactionDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Transaction date must be in YYYY-MM-DD format").refine((val) => {
+    const date = new Date(val);
+    if (isNaN(date.getTime())) return false; // Not a valid calendar date
+    const today = new Date();
+    // Allow dates up to the end of today
+    today.setHours(23, 59, 59, 999);
+    return date <= today;
+  }, "Transaction date cannot be in the future or invalid"),
+  transactionId: z.string().min(5, "Transaction ID/UTR must be at least 5 characters").max(64),
+  bankName: z.string().max(128).optional().nullable(),
+  paymentMode: z.enum(["NEFT", "RTGS", "IMPS", "UPI", "OTHER"], {
+    errorMap: () => ({ message: "Payment Mode must be NEFT, RTGS, IMPS, UPI, or OTHER" }),
+  }),
+  otherPaymentMode: z.string().max(128).optional().nullable(),
+  proofPathname: z.string().min(5, "Payment proof is required"),
+}).refine((data) => {
+  if (data.paymentMode === "OTHER") {
+    return data.otherPaymentMode && data.otherPaymentMode.trim().length > 0;
+  }
+  return true;
+}, {
+  message: "Other Payment Mode is required when Payment Mode is OTHER",
+  path: ["otherPaymentMode"]
+});
+
+/**
  * Full Registration Submission Payload Schema
  */
 export const registrationSubmitSchema = z.object({
   contactDetails: contactDetailsSchema,
   students: z.array(studentRecordSchema).min(1, "At least one student must be registered"),
   entries: z.array(eventEntrySchema).min(1, "At least one event entry must be submitted"),
+});
+
+/**
+ * Payment Submission Payload Schema
+ */
+export const paymentSubmitSchema = z.object({
+  paymentDetails: paymentDetailsSchema,
 });

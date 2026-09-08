@@ -64,13 +64,13 @@ export default function SportSection({ sportConfig, gender, slotsMap, onChangeSl
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-4">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full px-6 py-4 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
+        className="w-full px-4 sm:px-6 py-4 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
       >
         <div className="flex items-center gap-3">
           <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${filledCount > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'}`}>
             {sportConfig.name.substring(0, 1)}
           </div>
-          <h3 className="font-bold text-gray-900 text-lg text-left">{sportConfig.name}</h3>
+          <h3 className="font-bold text-gray-900 text-base sm:text-lg text-left">{sportConfig.name}</h3>
         </div>
         <div className="flex items-center gap-4">
           {filledCount > 0 && (
@@ -85,7 +85,7 @@ export default function SportSection({ sportConfig, gender, slotsMap, onChangeSl
       </button>
       
       {isOpen && (
-        <div className="px-6 pb-6 pt-2 border-t border-gray-100 bg-gray-50/30">
+        <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-gray-100 bg-gray-50/30">
           {content}
         </div>
       )}

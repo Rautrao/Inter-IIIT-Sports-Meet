@@ -24,7 +24,7 @@ export const registrations = pgTable("registrations", {
   id: serial("id").primaryKey(),
   iiitCode: varchar("iiit_code", { length: 64 }).notNull().unique().references(() => users.iiitCode, { onDelete: "cascade" }),
   iiitName: varchar("iiit_name", { length: 128 }).notNull(),
-  status: varchar("status", { length: 20 }).default("submitted").notNull(), // 'submitted'
+  status: varchar("status", { length: 20 }).default("payment_pending").notNull(), // 'payment_pending' | 'submitted'
   submittedAt: timestamp("submitted_at", { withTimezone: true }).defaultNow().notNull(),
   submittedBy: varchar("submitted_by", { length: 64 }).notNull(),
   contactName: varchar("contact_name", { length: 128 }).notNull(),
@@ -74,3 +74,25 @@ export const studentEventParticipations = pgTable("student_event_participations"
   index("participation_sport_event_idx").on(table.sportId, table.eventId),
   index("participation_student_idx").on(table.studentId),
 ]);
+
+/**
+ * 5. PAYMENT TRANSACTIONS TABLE
+ * Represents the payment proof and transaction details for a registration.
+ * One-to-one relationship with the registrations table.
+ */
+export const paymentTransactions = pgTable("payment_transactions", {
+  id: serial("id").primaryKey(),
+  registrationId: integer("registration_id").notNull().unique().references(() => registrations.id, { onDelete: "cascade" }),
+  uniqueStudentCount: integer("unique_student_count").notNull(),
+  amount: integer("amount").notNull(),
+  transactionDate: timestamp("transaction_date", { withTimezone: true }).notNull(),
+  transactionId: varchar("transaction_id", { length: 128 }).notNull(), // UTR / Transaction ID
+  bankName: varchar("bank_name", { length: 128 }),
+  paymentMode: varchar("payment_mode", { length: 20 }), // NEFT, RTGS, IMPS, UPI, OTHER
+  otherPaymentMode: varchar("other_payment_mode", { length: 128 }),
+  proofPathname: varchar("proof_pathname", { length: 255 }).notNull(), // Vercel Blob pathname or key
+  proofFileName: varchar("proof_file_name", { length: 255 }).notNull(),
+  proofContentType: varchar("proof_content_type", { length: 64 }).notNull(),
+  proofSize: integer("proof_size").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+});
