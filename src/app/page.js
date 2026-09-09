@@ -5,15 +5,14 @@ import Image from 'next/image';
 import { useEffect } from 'react';
 import { eventInfo } from '@/data/info';
 import { iiits } from '@/data/iiits';
-import CinematicIntro from '@/components/CinematicIntro';
 
 /**
  * Landing Page Component (Home)
  * 
  * Purpose:
  * Flagship entry point for the 9th All India Inter-IIIT Sports Meet 2026.
- * Features a cinematic intro sequence on first session visit, high-impact hero,
- * quick logistics information cards, host institute spotlight, and navigation to all pages.
+ * Features a high-impact hero, quick logistics information cards, host institute
+ * spotlight, and navigation to all pages.
  */
 export default function Home() {
   const { hostInstitute } = eventInfo;
@@ -58,10 +57,6 @@ export default function Home() {
 
   return (
     <div style={{ background: '#faf6ee' }}>
-      
-      {/* ─── 0. CINEMATIC ONE-TIME INTRO ────────────────────────────────── */}
-      <CinematicIntro />
-
       {/* ─── 1. HERO SECTION ────────────────────────────────────────────── */}
       <section className="relative w-full min-h-[92vh] flex items-center overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #f5c518 0%, #fcd958 30%, #faf6ee 60%, #faf6ee 100%)' }}>
