@@ -54,23 +54,6 @@ export default function RegistrationHeader({ iiitName, uniqueStudentsCount, last
                 />
               </svg>
             </div>
-<<<<<<< HEAD
-
-            {/* Logout button */}
-            {onLogout && (
-              <button
-                onClick={onLogout}
-                disabled={isLoggingOut}
-                className="ml-1 sm:ml-2 text-xs font-bold text-gray-500 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 border border-gray-200 rounded-lg px-2.5 py-2 hover:border-red-200 hover:bg-red-50"
-              >
-                <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                <span className="hidden sm:inline">{isLoggingOut ? "Logging out…" : "Log out"}</span>
-              </button>
-            )}
-=======
->>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
           </div>
         </div>
       </div>

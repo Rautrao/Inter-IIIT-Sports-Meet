@@ -64,19 +64,12 @@ export default function SportSection({ sportConfig, gender, slotsMap, onChangeSl
     <div className={`bg-white rounded-xl shadow-sm border transition-all overflow-hidden mb-4 ${filledCount > 0 ? 'border-green-200/90 ring-1 ring-green-700/10' : 'border-gray-200/80 hover:border-gray-300'}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-<<<<<<< HEAD
-        className="w-full px-4 sm:px-6 py-4 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
-=======
         className="w-full px-6 py-4 flex items-center justify-between bg-white hover:bg-gray-50/80 transition-colors"
->>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
       >
         <div className="flex items-center gap-3">
           <div className={`w-9 h-9 rounded-lg flex items-center justify-center font-black text-sm transition-colors ${filledCount > 0 ? 'bg-[#1b5e20] text-white shadow-xs' : 'bg-gray-100 text-gray-600'}`}>
             {sportConfig.name.substring(0, 1)}
           </div>
-<<<<<<< HEAD
-          <h3 className="font-bold text-gray-900 text-base sm:text-lg text-left">{sportConfig.name}</h3>
-=======
           <div>
             <h3 className="font-bold text-gray-900 text-base sm:text-lg text-left leading-tight">{sportConfig.name}</h3>
             {sportConfig.type === 'team' || sportConfig.type === 'combined_team' ? (
@@ -85,7 +78,6 @@ export default function SportSection({ sportConfig, gender, slotsMap, onChangeSl
               <span className="text-[11px] font-semibold text-gray-400 block justify-self-start">{sportConfig.events[actualGender]?.length || 0} Events</span>
             )}
           </div>
->>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
         </div>
         <div className="flex items-center gap-3 sm:gap-4">
           {filledCount > 0 && (
@@ -101,11 +93,7 @@ export default function SportSection({ sportConfig, gender, slotsMap, onChangeSl
       </button>
       
       {isOpen && (
-<<<<<<< HEAD
-        <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-gray-100 bg-gray-50/30">
-=======
         <div className="px-4 sm:px-6 pb-6 pt-4 border-t border-gray-100 bg-gray-50/40">
->>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
           {content}
         </div>
       )}

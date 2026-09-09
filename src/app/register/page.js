@@ -207,29 +207,6 @@ export default function RegisterPage() {
           onChange={setContactDetails} 
         />
         
-<<<<<<< HEAD
-        {/* Navigation Tabs for Gender Sections */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 mb-6 grid grid-cols-1 sm:flex sm:flex-nowrap gap-2">
-          <button 
-            onClick={() => setActiveTab("M")}
-            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "M" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
-          >
-            Men&apos;s Events
-          </button>
-          <button 
-            onClick={() => setActiveTab("F")}
-            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "F" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
-          >
-            Women&apos;s Events
-          </button>
-          <button 
-            onClick={() => setActiveTab("mixed")}
-            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "mixed" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
-          >
-            Combined Events
-          </button>
-        </div>
-=======
         {(() => {
           let mCount = 0;
           let fCount = 0;
@@ -292,7 +269,6 @@ export default function RegisterPage() {
             </div>
           );
         })()}
->>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
         
         {/* Render sports for the active tab */}
         <div className="space-y-4">

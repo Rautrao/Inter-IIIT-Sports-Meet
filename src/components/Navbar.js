@@ -61,20 +61,6 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full" style={{ background: 'rgba(10,33,18,0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-<<<<<<< HEAD
-        <div className="flex justify-between items-center h-[60px] sm:h-[68px]">
-
-          {/* Logo + Brand */}
-          <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-10 h-10 relative bg-white rounded-full p-0.5 border border-amber-400/60 flex items-center justify-center group-hover:border-amber-400 transition-colors">
-              <Image src="/assets/brand/inter-iiit-logo.png" alt="Inter-IIIT" fill className="object-contain p-1" />
-            </div>
-            <div className="block leading-tight">
-              <div className="text-white font-black text-sm sm:text-base tracking-wide">INTER IIIT</div>
-              <div className="text-amber-400 font-semibold text-[8px] sm:text-[10px] tracking-[0.14em] sm:tracking-[0.18em] uppercase opacity-90">Sports Meet 2026</div>
-            </div>
-          </Link>
-=======
         <div className="flex justify-between items-center h-17">
 
           {/* Logo + Brand */}
@@ -89,7 +75,6 @@ export default function Navbar() {
               </div>
             </Link>
           </div>
->>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
 
           {/* Desktop nav */}
           <div className="hidden md:flex items-center justify-center gap-1 shrink-0">
