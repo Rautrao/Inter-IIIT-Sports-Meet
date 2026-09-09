@@ -144,3 +144,66 @@ export function getLiveValidationErrors(contactDetails, slotsMap) {
     totalUniqueStudents: payload.students.length
   };
 }
+
+/**
+ * Formats raw validation error strings into short, single-line messages.
+ */
+export function formatValidationError(raw) {
+  if (!raw) return "";
+
+  // Contact details Zod schema paths
+  if (raw.includes("contactDetails.contactName") || raw.includes("contactName")) {
+    return "Contact Name: Faculty in-charge name required";
+  }
+  if (raw.includes("contactDetails.contactEmail") || raw.includes("contactEmail")) {
+    return "Contact Email: Valid email required (e.g. sports@iiit.ac.in)";
+  }
+  if (raw.includes("contactDetails.contactPhone") || raw.includes("contactPhone")) {
+    return "Contact Phone: Phone number required";
+  }
+
+  // Student roster schema & business rule paths
+  if (raw.includes("At least one student must be registered") || raw.includes("students: At least one student")) {
+    return "Roster: At least 1 student required";
+  }
+  if (raw.includes("Maximum 150 unique students allowed") || raw.includes("Maximum unique students limit exceeded")) {
+    const match = raw.match(/\d+/g);
+    if (match && match.length >= 2) {
+      return `Roster: Max 150 unique students limit exceeded (${match[1]} entered)`;
+    }
+    return "Roster: Max 150 unique students limit exceeded";
+  }
+  if (raw.includes("Duplicate student roll number detected")) {
+    const roll = raw.split(":").pop()?.trim() || "";
+    return `Roster: Duplicate roll number ${roll}`;
+  }
+  if (raw.includes("Conflicting names for roll number")) {
+    const match = raw.match(/roll number ([\w-]+)/i);
+    const roll = match ? match[1] : "";
+    return `Roster: Conflicting names for roll ${roll}`;
+  }
+
+  // Gender mismatch
+  if (raw.toLowerCase().includes("gender mismatch")) {
+    const match = raw.match(/Student (.*?) \((.*?)\) is (.*?) but registered in (.*)/i);
+    if (match) {
+      return `Gender Mismatch: ${match[2]} (${match[1]}) in ${match[4]}`;
+    }
+    return raw.replace(/Gender mismatch:\s*/i, "Gender Mismatch: ");
+  }
+
+  // Squad size
+  if (raw.toLowerCase().includes("squad size exceeded")) {
+    const match = raw.match(/squad size exceeded for (.*?): (\d+) .*?\(maximum limit is (\d+)\)/i);
+    if (match) {
+      return `Limit Exceeded: ${match[1]} (${match[2]}/${match[3]} max)`;
+    }
+  }
+
+  // Clean fallback
+  return raw
+    .replace(/^students[:\.]\s*/i, "Roster: ")
+    .replace(/^entries[:\.]\s*/i, "Events: ")
+    .replace(/^contactDetails[:\.]\s*/i, "Contact: ")
+    .trim();
+}

@@ -54,6 +54,7 @@ export default function RegistrationHeader({ iiitName, uniqueStudentsCount, last
                 />
               </svg>
             </div>
+<<<<<<< HEAD
 
             {/* Logout button */}
             {onLogout && (
@@ -68,6 +69,8 @@ export default function RegistrationHeader({ iiitName, uniqueStudentsCount, last
                 <span className="hidden sm:inline">{isLoggingOut ? "Logging out…" : "Log out"}</span>
               </button>
             )}
+=======
+>>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
           </div>
         </div>
       </div>

@@ -61,31 +61,51 @@ export default function SportSection({ sportConfig, gender, slotsMap, onChangeSl
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-4">
+    <div className={`bg-white rounded-xl shadow-sm border transition-all overflow-hidden mb-4 ${filledCount > 0 ? 'border-green-200/90 ring-1 ring-green-700/10' : 'border-gray-200/80 hover:border-gray-300'}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
+<<<<<<< HEAD
         className="w-full px-4 sm:px-6 py-4 flex items-center justify-between bg-white hover:bg-gray-50 transition-colors"
+=======
+        className="w-full px-6 py-4 flex items-center justify-between bg-white hover:bg-gray-50/80 transition-colors"
+>>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
       >
         <div className="flex items-center gap-3">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${filledCount > 0 ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-500'}`}>
+          <div className={`w-9 h-9 rounded-lg flex items-center justify-center font-black text-sm transition-colors ${filledCount > 0 ? 'bg-[#1b5e20] text-white shadow-xs' : 'bg-gray-100 text-gray-600'}`}>
             {sportConfig.name.substring(0, 1)}
           </div>
+<<<<<<< HEAD
           <h3 className="font-bold text-gray-900 text-base sm:text-lg text-left">{sportConfig.name}</h3>
+=======
+          <div>
+            <h3 className="font-bold text-gray-900 text-base sm:text-lg text-left leading-tight">{sportConfig.name}</h3>
+            {sportConfig.type === 'team' || sportConfig.type === 'combined_team' ? (
+              <span className="text-[11px] font-semibold text-gray-400 block">Team Discipline</span>
+            ) : (
+              <span className="text-[11px] font-semibold text-gray-400 block justify-self-start">{sportConfig.events[actualGender]?.length || 0} Events</span>
+            )}
+          </div>
+>>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3 sm:gap-4">
           {filledCount > 0 && (
-            <span className="text-xs font-bold text-green-700 bg-green-50 px-2.5 py-1 rounded-full">
-              {filledCount} Entries
+            <span className="text-xs font-bold text-green-800 bg-green-100/80 border border-green-200 px-3 py-1 rounded-full flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-green-600"></span>
+              {filledCount} {filledCount === 1 ? 'Entry' : 'Entries'}
             </span>
           )}
-          <svg className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${isOpen ? 'rotate-180 text-green-700' : ''}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </button>
       
       {isOpen && (
+<<<<<<< HEAD
         <div className="px-4 sm:px-6 pb-6 pt-2 border-t border-gray-100 bg-gray-50/30">
+=======
+        <div className="px-4 sm:px-6 pb-6 pt-4 border-t border-gray-100 bg-gray-50/40">
+>>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
           {content}
         </div>
       )}

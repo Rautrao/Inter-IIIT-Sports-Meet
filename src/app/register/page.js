@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import RegistrationHeader from "@/components/registration/RegistrationHeader";
 import ContactForm from "@/components/registration/ContactForm";
@@ -9,7 +9,7 @@ import ReviewModal from "@/components/registration/ReviewModal";
 import LockedRegistration from "@/components/registration/LockedRegistration";
 import PaymentPending from "@/components/registration/PaymentPending";
 import { getAllSportsList } from "@/lib/sports/config";
-import { getLiveValidationErrors, getStudentRegistry } from "@/lib/registration/client-utils";
+import { getLiveValidationErrors, getStudentRegistry, formatValidationError } from "@/lib/registration/client-utils";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -35,6 +35,9 @@ export default function RegisterPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isErrorsOpen, setIsErrorsOpen] = useState(false);
+  const [hasAttemptedReview, setHasAttemptedReview] = useState(false);
+  const errorsPopupRef = useRef(null);
 
   // Initialize and check auth/registration status
   useEffect(() => {
@@ -204,6 +207,7 @@ export default function RegisterPage() {
           onChange={setContactDetails} 
         />
         
+<<<<<<< HEAD
         {/* Navigation Tabs for Gender Sections */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 mb-6 grid grid-cols-1 sm:flex sm:flex-nowrap gap-2">
           <button 
@@ -225,6 +229,70 @@ export default function RegisterPage() {
             Combined Events
           </button>
         </div>
+=======
+        {(() => {
+          let mCount = 0;
+          let fCount = 0;
+          let mixedCount = 0;
+          for (const [k, v] of Object.entries(slotsMap)) {
+            if (v?.rollNumber?.trim()) {
+              if (k.includes("|M|")) mCount++;
+              else if (k.includes("|F|")) fCount++;
+              else if (k.includes("|mixed|")) mixedCount++;
+            }
+          }
+
+          return (
+            <div className="bg-white rounded-xl shadow-sm border border-gray-200/80 p-2 mb-6 flex flex-wrap sm:flex-nowrap gap-2">
+              <button 
+                onClick={() => setActiveTab("M")}
+                className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                  activeTab === "M" 
+                    ? "bg-[#1b5e20] text-white shadow-sm" 
+                    : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <span>Men&apos;s Events</span>
+                {mCount > 0 && (
+                  <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${activeTab === "M" ? "bg-white/20 text-white" : "bg-green-100 text-green-800"}`}>
+                    {mCount}
+                  </span>
+                )}
+              </button>
+              <button 
+                onClick={() => setActiveTab("F")}
+                className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                  activeTab === "F" 
+                    ? "bg-[#1b5e20] text-white shadow-sm" 
+                    : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <span>Women&apos;s Events</span>
+                {fCount > 0 && (
+                  <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${activeTab === "F" ? "bg-white/20 text-white" : "bg-green-100 text-green-800"}`}>
+                    {fCount}
+                  </span>
+                )}
+              </button>
+              <button 
+                onClick={() => setActiveTab("mixed")}
+                className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-all flex items-center justify-center gap-2 ${
+                  activeTab === "mixed" 
+                    ? "bg-[#1b5e20] text-white shadow-sm" 
+                    : "bg-gray-50 text-gray-700 hover:bg-gray-100"
+                }`}
+              >
+                <span>Combined Events</span>
+                {mixedCount > 0 && (
+                  <span className={`text-[11px] font-black px-2 py-0.5 rounded-full ${activeTab === "mixed" ? "bg-white/20 text-white" : "bg-green-100 text-green-800"}`}>
+                    {mixedCount}
+                  </span>
+                )}
+              </button>
+            </div>
+          );
+        })()}
+>>>>>>> 267a1c23dd61dcf6fbf4cd14d774ca5d2c82ff42
         
         {/* Render sports for the active tab */}
         <div className="space-y-4">
@@ -251,13 +319,74 @@ export default function RegisterPage() {
                 {submitError}
               </div>
             )}
-            {!isValid && !submitError && (
-              <div className="text-red-600 text-sm bg-red-50 border border-red-200 px-3 py-1.5 rounded inline-flex items-center gap-1.5 max-w-full">
-                <svg className="w-3.5 h-3.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/></svg>
-                <span><span className="font-black">{errors.length} issue{errors.length !== 1 ? 's' : ''}</span> — <span className="font-medium truncate">{errors[0]}</span>{errors.length > 1 ? <span className="font-bold"> (+{errors.length - 1} more — open Review)</span> : <span className="font-bold"> — open Review to fix</span>}</span>
+            {hasAttemptedReview && !isValid && !submitError && (
+              <div className="relative inline-block" ref={errorsPopupRef}>
+                {/* Click-outside handler overlay */}
+                {isErrorsOpen && (
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setIsErrorsOpen(false)}
+                  />
+                )}
+
+                {/* Popup */}
+                {isErrorsOpen && (
+                  <div className="absolute bottom-full left-0 mb-2 w-80 sm:w-[440px] z-50">
+                    <div className="bg-white rounded-2xl shadow-2xl border border-red-200/90 overflow-hidden">
+                      <div className="bg-[#0a2112] px-4 py-2.5 flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                          <span className="font-black text-white text-xs uppercase tracking-wider">
+                            {errors.length} {errors.length === 1 ? 'Issue' : 'Issues'} to Fix
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Live Check</span>
+                      </div>
+                      <div className="p-2.5 space-y-1.5 bg-gray-50/50">
+                        {errors.map((err, idx) => (
+                          <div key={idx} className="px-3 py-2 rounded-xl bg-white border border-red-100/90 flex items-center gap-2.5 text-xs text-red-900 shadow-2xs">
+                            <span className="shrink-0 w-4.5 h-4.5 rounded-full bg-red-100 text-red-700 text-[10px] font-black flex items-center justify-center">
+                              {idx + 1}
+                            </span>
+                            <span className="font-semibold truncate flex-1 min-w-0" title={formatValidationError(err)}>
+                              {formatValidationError(err)}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Multi-segment Pill Trigger */}
+                <div
+                  onClick={() => setIsErrorsOpen(prev => !prev)}
+                  className={`cursor-pointer bg-red-50/90 hover:bg-red-100/90 border rounded-full p-1.5 pr-4 flex items-center gap-2.5 shadow-xs transition-all duration-200 ${
+                    isErrorsOpen ? 'border-red-300 bg-red-100/90' : 'border-red-200/90'
+                  }`}
+                >
+                  <div className="bg-red-600 text-white font-black text-xs px-3 py-1 rounded-full flex items-center gap-1.5 shadow-2xs">
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd"/>
+                    </svg>
+                    <span>{errors.length} {errors.length === 1 ? 'Issue' : 'Issues'}</span>
+                  </div>
+                  <span className="text-xs font-bold text-red-900 tracking-wide hidden sm:inline">Action Required</span>
+                  <span className="text-[11px] font-semibold text-red-700 bg-white/90 border border-red-200/80 px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-2xs transition-all">
+                    <span>View details</span>
+                    <svg
+                      className={`w-3 h-3 text-red-500 transition-transform ${
+                        isErrorsOpen ? 'rotate-180' : ''
+                      }`}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 15l7-7 7 7" />
+                    </svg>
+                  </span>
+                </div>
               </div>
             )}
-            {isValid && !submitError && (
+            {hasAttemptedReview && isValid && !submitError && (
               <div className="text-green-700 text-sm font-bold bg-green-50 px-3 py-1.5 rounded inline-flex items-center gap-1.5">
                 <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/></svg>
                 All validation rules passed
@@ -266,7 +395,10 @@ export default function RegisterPage() {
           </div>
           <div className="flex items-center gap-4 w-full sm:w-auto">
             <button 
-              onClick={() => setIsReviewOpen(true)}
+              onClick={() => {
+                setHasAttemptedReview(true);
+                setIsReviewOpen(true);
+              }}
               className="w-full sm:w-auto px-8 py-3.5 bg-[#f5c518] text-[#0a2112] font-black rounded-xl shadow hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wide"
             >
               Review &amp; Submit

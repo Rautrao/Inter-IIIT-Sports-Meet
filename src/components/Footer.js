@@ -1,8 +1,11 @@
+'use client';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { eventInfo } from '@/data/info';
 
 export default function Footer() {
+  const pathname = usePathname();
   return (
     <footer style={{ background: '#0a2112', borderTop: '3px solid #c9972f' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
@@ -61,11 +64,13 @@ export default function Footer() {
                 sports@iiitdm.ac.in
               </a>
             </div>
-            <Link href="/register"
-              className="inline-flex px-5 py-2.5 rounded-full text-sm font-black transition-all hover:-translate-y-0.5"
-              style={{ background: '#f5c518', color: '#0a2112' }}>
-              Register Now
-            </Link>
+            {!pathname?.startsWith('/register') && !pathname?.startsWith('/admin') && (
+              <Link href="/register"
+                className="inline-flex px-5 py-2.5 rounded-full text-sm font-black transition-all hover:-translate-y-0.5"
+                style={{ background: '#f5c518', color: '#0a2112' }}>
+                Register Now
+              </Link>
+            )}
           </div>
         </div>
 

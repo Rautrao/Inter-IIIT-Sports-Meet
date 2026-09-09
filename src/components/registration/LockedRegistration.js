@@ -36,9 +36,6 @@ export default function LockedRegistration({ iiitCode, registrationData }) {
               <span className="font-bold text-white text-lg">{registration.iiitName}</span>
             </div>
           </div>
-          <button onClick={handleLogout} className="text-sm font-bold hover:text-[#f5c518] transition-colors">
-            Log out
-          </button>
         </div>
       </div>
 
