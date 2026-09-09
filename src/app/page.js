@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { useEffect } from 'react';
 import { eventInfo } from '@/data/info';
 import { iiits } from '@/data/iiits';
-import CinematicIntro from '@/components/CinematicIntro';
 
 /**
  * Landing Page Component (Home)
@@ -58,10 +57,6 @@ export default function Home() {
 
   return (
     <div style={{ background: '#faf6ee' }}>
-      
-      {/* ─── 0. CINEMATIC ONE-TIME INTRO ────────────────────────────────── */}
-      <CinematicIntro />
-
       {/* ─── 1. HERO SECTION ────────────────────────────────────────────── */}
       <section className="relative w-full min-h-[92vh] flex items-center overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #f5c518 0%, #fcd958 30%, #faf6ee 60%, #faf6ee 100%)' }}>
