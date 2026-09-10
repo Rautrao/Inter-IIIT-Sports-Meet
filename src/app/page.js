@@ -6,6 +6,32 @@ import { useEffect, useRef } from 'react';
 import { eventInfo } from '@/data/info';
 import { iiits } from '@/data/iiits';
 
+const eventStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'SportsEvent',
+  name: '9th All India Inter-IIIT Sports Meet 2026',
+  description: 'The 9th All India Inter-IIIT Sports Meet hosted by IIITDM Kancheepuram.',
+  startDate: '2026-12-19',
+  endDate: '2026-12-23',
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  location: {
+    '@type': 'Place',
+    name: 'IIITDM Kancheepuram',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Kancheepuram',
+      addressRegion: 'Tamil Nadu',
+      addressCountry: 'IN',
+    },
+  },
+  organizer: {
+    '@type': 'Organization',
+    name: 'IIITDM Kancheepuram',
+  },
+  image: '/assets/brand/inter-iiit-logo.png',
+};
+
 const homeGallery = [
   { src: '/assets/gallery/gallery-01.jpg', alt: 'Athletes competing on the track' },
   { src: '/assets/gallery/gallery-02.jpg', alt: 'Students celebrating together' },
@@ -129,6 +155,10 @@ export default function Home() {
 
   return (
     <div style={{ background: '#faf6ee' }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(eventStructuredData) }}
+      />
       {/* ─── 1. HERO SECTION ────────────────────────────────────────────── */}
       <section className="relative w-full min-h-[92vh] flex items-center overflow-hidden"
         style={{ background: 'linear-gradient(135deg, #f5c518 0%, #fcd958 30%, #faf6ee 60%, #faf6ee 100%)' }}>
