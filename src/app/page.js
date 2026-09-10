@@ -2,17 +2,89 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { eventInfo } from '@/data/info';
 import { iiits } from '@/data/iiits';
+
+const homeGallery = [
+  { src: '/assets/gallery/gallery-01.jpg', alt: 'Athletes competing on the track' },
+  { src: '/assets/gallery/gallery-02.jpg', alt: 'Students celebrating together' },
+  { src: '/assets/gallery/gallery-03.jpg', alt: 'Team sports in action' },
+  { src: '/assets/gallery/gallery-04.jpg', alt: 'Relay competition' },
+  { src: '/assets/gallery/gallery-05.jpg', alt: 'Inter-IIIT opening ceremony' },
+  { src: '/assets/gallery/gallery-06.jpg', alt: 'Championship atmosphere' },
+];
+
+function HomeGalleryScroller() {
+  const scrollerRef = useRef(null);
+
+  const scrollByAmount = (direction) => {
+    scrollerRef.current?.scrollBy({
+      left: direction * Math.min(scrollerRef.current.clientWidth * 0.72, 560),
+      behavior: 'smooth',
+    });
+  };
+
+  return (
+    <div className="relative">
+      <div
+        ref={scrollerRef}
+        className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-none"
+        aria-label="Event gallery photos"
+      >
+        {homeGallery.map((photo, index) => (
+          <div
+            key={photo.src}
+            className={`group relative h-56 shrink-0 snap-start overflow-hidden rounded-2xl ${
+              index === 0 ? 'w-[78vw] sm:w-[48vw] md:w-[40vw]' : 'w-[70vw] sm:w-[34vw] md:w-[27vw]'
+            }`}
+          >
+            <Image
+              src={photo.src}
+              alt={photo.alt}
+              fill
+              sizes="(max-width: 640px) 78vw, (max-width: 768px) 48vw, 40vw"
+              className="object-cover transition-transform duration-700 group-hover:scale-105"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/65 via-transparent to-transparent" />
+            <span className="absolute bottom-4 left-4 text-[10px] font-black uppercase tracking-[0.2em] text-white">
+              0{index + 1} / Meet moments
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className="mt-2 flex items-center justify-between">
+        <p className="text-xs font-semibold text-brand-dark/55">Swipe or drag to explore the meet</p>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => scrollByAmount(-1)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-primary/20 text-brand-primary transition-colors hover:bg-brand-primary hover:text-white"
+            aria-label="Previous gallery photos"
+          >
+            &larr;
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollByAmount(1)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-brand-primary/20 text-brand-primary transition-colors hover:bg-brand-primary hover:text-white"
+            aria-label="Next gallery photos"
+          >
+            &rarr;
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 /**
  * Landing Page Component (Home)
  * 
  * Purpose:
  * Flagship entry point for the 9th All India Inter-IIIT Sports Meet 2026.
- * Features a cinematic intro sequence on first session visit, high-impact hero,
- * quick logistics information cards, host institute spotlight, and navigation to all pages.
+ * Features a high-impact hero, quick logistics information cards, host institute
+ * spotlight, and navigation to all pages.
  */
 export default function Home() {
   const { hostInstitute } = eventInfo;
@@ -62,7 +134,7 @@ export default function Home() {
         style={{ background: 'linear-gradient(135deg, #f5c518 0%, #fcd958 30%, #faf6ee 60%, #faf6ee 100%)' }}>
 
         {/* Green right-side slab */}
-        <div className="absolute right-0 top-0 h-full w-[45%] hidden md:block"
+        <div className="dark-surface absolute right-0 top-0 h-full w-[45%] hidden md:block"
           style={{ background: '#0d3b1a', clipPath: 'polygon(12% 0, 100% 0, 100% 100%, 0% 100%)' }}>
           <div className="absolute inset-0 opacity-30">
             <Image src="/assets/hero/hero-placeholder.png" alt="" fill className="object-cover" />
@@ -125,7 +197,7 @@ export default function Home() {
             {/* CTAs */}
             <div className="animate-fadeUp animation-delay-300 flex flex-wrap gap-3">
               <Link href="/register"
-                className="group relative overflow-hidden px-8 py-3.5 font-black text-sm rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/20 shadow-md"
+                className="dark-surface group relative overflow-hidden px-8 py-3.5 font-black text-sm rounded-full transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-950/20 shadow-md"
                 style={{ background: '#0a2112', color: '#f5c518', letterSpacing: '0.06em' }}>
                 <span className="relative z-10 flex items-center gap-2">
                   <span>REGISTER ROSTER</span>
@@ -151,7 +223,7 @@ export default function Home() {
         </div>
 
         {/* Scrolling Marquee Ticker */}
-        <div className="absolute bottom-0 w-full py-2.5 overflow-hidden z-20"
+        <div className="dark-surface absolute bottom-0 w-full py-2.5 overflow-hidden z-20"
           style={{ background: '#0a2112', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
           <div className="flex whitespace-nowrap" style={{ animation: 'marquee 28s linear infinite' }}>
             {[...Array(8)].map((_, i) => (
@@ -232,7 +304,7 @@ export default function Home() {
       </section>
 
       {/* ─── 3. STATS BAND ──────────────────────────────────────────────── */}
-      <section style={{ background: '#1b5e20' }} className="py-10">
+      <section style={{ background: '#1b5e20' }} className="dark-surface py-10">
         <div className="max-w-5xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-0 divide-x divide-white/10">
             {eventInfo.stats.map((stat, idx) => (
@@ -309,7 +381,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row items-center gap-4 shrink-0 w-full lg:w-auto">
             <Link
               href="/location"
-              className="w-full sm:w-auto text-center px-7 py-3.5 rounded-full text-xs font-black transition-all hover:-translate-y-0.5 shadow-sm"
+              className="dark-surface w-full sm:w-auto text-center px-7 py-3.5 rounded-full text-xs font-black transition-all hover:-translate-y-0.5 shadow-sm"
               style={{ background: '#1b5e20', color: '#fff' }}
             >
               View Campus &amp; Travel Guide &rarr;
@@ -352,14 +424,16 @@ export default function Home() {
       {/* ─── 7. STUDENTS' & EMPLOYEES' MEET ──────────────────────────────── */}
       <section className="flex flex-col md:flex-row">
         {/* Students */}
-        <div className="flex-1 relative min-h-[380px] flex items-end" style={{ background: '#0a2112' }}>
+        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#0a2112' }}>
           <div className="absolute inset-0 opacity-25">
             <Image src="/assets/gallery/gallery-02.jpg" alt="Students Meet" fill className="object-cover" />
           </div>
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,33,18,0.95) 0%, rgba(10,33,18,0.3) 100%)' }} />
           <div className="relative z-10 p-10 md:p-14">
-            <div className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
-              style={{ background: '#f5c518', color: '#0a2112' }}>Students</div>
+            {/* <div className="students-badge inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
+              style={{ background: '#f5c518', color: '#1b5e20' }}>
+              Students
+            </div> */}
             <h2 className="font-black text-white text-3xl md:text-4xl leading-tight mb-3">Students&apos; <br />Sports Meet</h2>
             <p className="text-sm leading-relaxed max-w-sm text-white/75">
               2,000+ student-athletes from 25+ IIITs competing across 15+ disciplines over 5 championship days.
@@ -367,14 +441,14 @@ export default function Home() {
           </div>
         </div>
         {/* Employees */}
-        <div className="flex-1 relative min-h-[380px] flex items-end" style={{ background: '#1b5e20' }}>
+        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#1b5e20' }}>
           <div className="absolute inset-0 opacity-25">
             <Image src="/assets/gallery/gallery-03.jpg" alt="Employees Meet" fill className="object-cover" />
           </div>
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,60,20,0.95) 0%, rgba(10,60,20,0.3) 100%)' }} />
           <div className="relative z-10 p-10 md:p-14">
-            <div className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
-              style={{ background: '#c9972f', color: '#fff' }}>Faculty &amp; Staff</div>
+            {/* <div className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
+              style={{ background: '#c9972f', color: '#fff' }}>Faculty &amp; Staff</div> */}
             <h2 className="font-black text-white text-3xl md:text-4xl leading-tight mb-3">Employees&apos; <br />Sports Meet</h2>
             <p className="text-sm leading-relaxed max-w-sm text-white/75">
               Faculty and staff from IIITs unite in friendly competition, camaraderie, and community health.
@@ -395,20 +469,7 @@ export default function Home() {
               View All Photos <span className="group-hover:translate-x-1 transition-transform inline-block">&rarr;</span>
             </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-            {[4, 5, 6].map((num) => (
-              <div key={num} className="relative overflow-hidden rounded-xl group" style={{ height: '160px' }}>
-                <Image
-                  src={`/assets/gallery/gallery-0${num}.jpg`}
-                  alt={`Gallery moment ${num}`}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  style={{ background: 'rgba(10,33,18,0.35)' }} />
-              </div>
-            ))}
-          </div>
+          <HomeGalleryScroller />
         </div>
       </section>
 
@@ -431,8 +492,9 @@ export default function Home() {
           <div className="mt-12 text-center">
             <p className="text-sm mb-4 text-gray-600">Interested in supporting the 9th Inter-IIIT Sports Meet?</p>
             <a href="mailto:sports@iiitdm.ac.in"
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all hover:-translate-y-0.5 shadow-sm"
-              style={{ background: '#1b5e20', color: '#fff' }}>
+              className="dark-surface inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-bold transition-all hover:-translate-y-0.5 shadow-sm"
+              style={{ background: '#1b5e20', color: '#fff' }}
+              aria-label="Email the Inter-IIIT Sports Meet organising team">
               Contact us &rarr; sports@iiitdm.ac.in
             </a>
           </div>
