@@ -45,6 +45,50 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Keep content readable whenever a section uses a dark surface. */
+.dark-surface,
+.dark-surface * {
+  color: #fff !important;
+}
+
+.dark-surface :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--color-brand-highlight) !important;
+}
+
+.dark-surface .students-badge {
+  color: var(--color-brand-primary) !important;
+}
+
+.dark-surface .location-email-link {
+  color: var(--color-brand-highlight) !important;
+}
+
+.yellow-button {
+  color: var(--color-brand-dark) !important;
+}
+
+.green-page-header {
+  background: var(--color-brand-dark);
+  color: #fff;
+}
+
+.green-page-header .page-eyebrow {
+  color: var(--color-brand-highlight) !important;
+}
+
+.green-page-header h1 {
+  color: #fff !important;
+}
+
+.green-page-header p,
+.green-page-header strong {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.green-page-header .page-rule {
+  background: var(--color-brand-highlight) !important;
+}
+
 button,
 input,
 select,
@@ -55,7 +99,7 @@ textarea {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--foreground);
+  color: inherit;
 }
 
 /* Custom Scrollbar */
@@ -160,6 +204,12 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.02);
 }
 
+/* Photo overlays need a stable high-contrast text color. */
+.sport-card h2,
+.sport-card p {
+  color: #fff !important;
+}
+
 .rulebook-panel {
   position: relative;
   overflow: hidden;
@@ -261,4 +311,3 @@ h1, h2, h3, h4, h5, h6 {
     transform: none !important;
   }
 }
-
