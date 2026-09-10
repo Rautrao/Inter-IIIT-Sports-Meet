@@ -88,13 +88,13 @@ const teamSections = [
       },
       {
         name: "Lankalapalli Guna",
-        role: "Software Wing Core",
+        role: "Core",
         initial: "L",
         image: "/assets/team/Lankalapalli Guna_CS Club Software Wing Core.jpeg"
       },
       {
         name: "Ambadas Rautrao",
-        role: "Software Wing Core 2",
+        role: "Core",
         initial: "A",
         image: "/assets/team/Ambadas Rautrao_CS Club Software Wing Core.jpeg"
       }
