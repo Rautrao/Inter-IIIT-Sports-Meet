@@ -5,15 +5,18 @@ export default function Contact() {
   return (
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
       {/* Page header */}
-      <div className="py-16 px-4" style={{ background: '#f0d574' }}>
+      <div className="green-page-header py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#020202' }}>
+          <span className="page-eyebrow text-xs font-black tracking-[0.25em] uppercase">
             Get In Touch
           </span>
           <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             Contact Us
           </h1>
-          <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#020202' }} />
+          <div className="page-rule mt-3 w-12 h-1 rounded-full" />
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/80">
+            Reach the organising team for event enquiries, travel support, registration assistance, and sponsorship opportunities.
+          </p>
         </div>
       </div>
 
@@ -35,7 +38,8 @@ export default function Contact() {
             <h3 className="font-bold text-base mb-3" style={{ color: '#0a2112' }}>Drop us a message</h3>
             <a href="mailto:sports@iiitdm.ac.in"
               className="text-sm font-bold transition-colors hover:underline"
-              style={{ color: '#1b5e20' }}>
+              style={{ color: '#1b5e20' }}
+              aria-label="Email the Inter-IIIT Sports Meet organising team">
               sports@iiitdm.ac.in
             </a>
           </div>
@@ -76,14 +80,15 @@ export default function Contact() {
         </div>
 
         {/* Sponsor CTA */}
-        <div className="mt-12 rounded-2xl p-10 text-center" style={{ background: '#0a2112' }}>
+          <div className="dark-surface mt-12 rounded-2xl p-10 text-center" style={{ background: '#0a2112' }}>
           <h3 className="font-black text-xl text-white mb-2">Interested in Sponsoring?</h3>
           <p className="text-sm mb-6" style={{ color: 'rgba(255,255,255,0.6)' }}>
             Join us in powering the biggest inter-collegiate sports event among IIITs.
           </p>
           <a href="mailto:sports@iiitdm.ac.in"
-            className="inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold transition-all hover:-translate-y-0.5"
-            style={{ background: '#f5c518', color: '#0a2112' }}>
+            className="yellow-button inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-bold transition-all hover:-translate-y-0.5"
+            style={{ background: '#f5c518', color: '#0a2112' }}
+            aria-label="Email the Inter-IIIT Sports Meet organising team about sponsorship">
             sports@iiitdm.ac.in
           </a>
         </div>
