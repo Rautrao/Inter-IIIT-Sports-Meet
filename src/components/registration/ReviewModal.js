@@ -122,7 +122,7 @@ export default function ReviewModal({
             {canProceed && (
               <button
                 type="button"
-                className="w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-[#f5c518] text-[#0a2112] text-base font-black hover:bg-amber-400 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-colors"
+                className="yellow-button w-full inline-flex justify-center rounded-lg border border-transparent shadow-sm px-4 py-2 bg-[#f5c518] text-[#0a2112] text-base font-black hover:bg-amber-400 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm transition-colors"
                 onClick={onSubmit}
               >
                 {isSubmitting ? "Submitting..." : "Submit Registration →"}

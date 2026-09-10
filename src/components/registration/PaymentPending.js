@@ -89,7 +89,7 @@ export default function PaymentPending({ iiitCode, registrationData }) {
 
   return (
     <div className="min-h-screen bg-[#faf6ee] font-sans pb-20">
-      <div className="bg-[#0a2112] text-white">
+      <div className="dark-surface bg-[#0a2112] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div>
@@ -111,7 +111,7 @@ export default function PaymentPending({ iiitCode, registrationData }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
               </svg>
             </div>
-            <h1 className="text-3xl font-black text-gray-900 mb-2">Registration Locked — Payment Pending</h1>
+            <h1 className="text-3xl font-black text-gray-900 mb-2">Already Registered — Payment Pending</h1>
             <p className="text-amber-800 font-medium">Your student registration has already been submitted and cannot be changed.</p>
           </div>
 
@@ -191,7 +191,7 @@ export default function PaymentPending({ iiitCode, registrationData }) {
               <button
                 type="button"
                 disabled={!canFinalSubmit}
-                className="w-full sm:w-auto inline-flex justify-center rounded-lg border border-transparent shadow-sm px-6 py-3 bg-[#1b5e20] text-base font-black text-white hover:bg-green-800 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                className="dark-surface w-full sm:w-auto inline-flex justify-center rounded-lg border border-transparent shadow-sm px-6 py-3 bg-[#1b5e20] text-base font-black text-white hover:bg-green-800 focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 onClick={handleFinalSubmit}
               >
                 {isSubmitting

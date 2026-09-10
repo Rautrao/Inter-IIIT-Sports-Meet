@@ -63,15 +63,15 @@ export default function About() {
   return (
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
       {/* ─── 1. PAGE HEADER ──────────────────────────────────────────────── */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8" style={{ background: '#f0d574' }}>
+      <section className="green-page-header py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#0a2112' }}>
+          <span className="page-eyebrow text-xs font-black tracking-[0.25em] uppercase">
             Our Legacy &amp; Host Institute
           </span>
           <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             About the Meet
           </h1>
-          <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#c9972f' }} />
+          <div className="page-rule mt-3 w-12 h-1 rounded-full" />
           <p className="mt-4 text-base sm:text-lg max-w-2xl leading-relaxed" style={{ color: 'rgba(10,33,18,0.78)' }}>
             The flagship national sports gathering uniting 25+ Indian Institutes of Information Technology, hosted at IIITDM Kancheepuram.
           </p>
@@ -226,7 +226,7 @@ export default function About() {
         </div>
 
         {/* ─── 5. THE DUAL TRADITION: STUDENTS & EMPLOYEES ────────────────── */}
-        <div data-reveal className="reveal rounded-3xl overflow-hidden mb-20" style={{ background: '#0a2112' }}>
+        <div data-reveal className="dark-surface reveal rounded-3xl overflow-hidden mb-20" style={{ background: '#0a2112' }}>
           <div className="grid md:grid-cols-2">
             <div className="p-10 md:p-14 text-white flex flex-col justify-center">
               <span className="text-[10px] font-black tracking-[0.2em] uppercase" style={{ color: '#f5c518' }}>
@@ -264,7 +264,7 @@ export default function About() {
             <div className="mt-6 flex flex-wrap gap-4">
               <Link
                 href="/location"
-                className="px-6 py-2.5 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 shadow-sm"
+                className="dark-surface px-6 py-2.5 rounded-full text-xs font-bold transition-all hover:-translate-y-0.5 shadow-sm"
                 style={{ background: '#1b5e20', color: '#fff' }}
               >
                 View Travel &amp; Location Guide &rarr;

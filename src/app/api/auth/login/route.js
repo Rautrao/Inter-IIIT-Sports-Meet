@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { eq, ilike, or } from "drizzle-orm";
 import { getDb } from "@/db/index";
 import { users } from "@/db/schema";
 import { verifyPassword } from "@/lib/auth/passwords";
@@ -22,12 +22,18 @@ export async function POST(request) {
     }
 
     const { username, password } = parsed.data;
+    const normalizedUsername = username.trim().toLowerCase();
     const db = getDb();
 
     const userList = await db
       .select()
       .from(users)
-      .where(eq(users.username, username.toLowerCase()))
+      .where(
+        or(
+          eq(users.username, normalizedUsername),
+          ilike(users.iiitName, normalizedUsername)
+        )
+      )
       .limit(1);
 
     if (userList.length === 0) {

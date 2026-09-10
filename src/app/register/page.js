@@ -208,19 +208,19 @@ export default function RegisterPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-2 mb-6 grid grid-cols-1 sm:flex sm:flex-nowrap gap-2">
           <button 
             onClick={() => setActiveTab("M")}
-            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "M" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
+            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "M" ? "dark-surface bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
           >
             Men&apos;s Events
           </button>
           <button 
             onClick={() => setActiveTab("F")}
-            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "F" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
+            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "F" ? "dark-surface bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
           >
             Women&apos;s Events
           </button>
           <button 
             onClick={() => setActiveTab("mixed")}
-            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "mixed" ? "bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
+            className={`flex-1 py-3 px-4 rounded-lg font-bold text-sm transition-colors ${activeTab === "mixed" ? "dark-surface bg-[#1b5e20] text-white" : "bg-gray-50 text-gray-600 hover:bg-gray-100"}`}
           >
             Combined Events
           </button>
@@ -267,7 +267,7 @@ export default function RegisterPage() {
           <div className="flex items-center gap-4 w-full sm:w-auto">
             <button 
               onClick={() => setIsReviewOpen(true)}
-              className="w-full sm:w-auto px-8 py-3.5 bg-[#f5c518] text-[#0a2112] font-black rounded-xl shadow hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wide"
+              className="yellow-button w-full sm:w-auto px-8 py-3.5 bg-[#f5c518] text-[#0a2112] font-black rounded-xl shadow hover:-translate-y-0.5 transition-all text-sm uppercase tracking-wide"
             >
               Review &amp; Submit
             </button>

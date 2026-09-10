@@ -10,7 +10,7 @@ export default function ContactForm({ contactDetails, onChange }) {
 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mb-8">
-      <div className="bg-[#0a2112] px-6 py-4">
+      <div className="dark-surface bg-[#0a2112] px-6 py-4">
         <h2 className="font-black text-white text-lg tracking-wide uppercase">Contingent Contact Details</h2>
       </div>
       <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">

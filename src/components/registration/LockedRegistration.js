@@ -28,7 +28,7 @@ export default function LockedRegistration({ iiitCode, registrationData }) {
 
   return (
     <div className="min-h-screen bg-[#faf6ee] font-sans pb-20">
-      <div className="bg-[#0a2112] text-white">
+      <div className="dark-surface bg-[#0a2112] text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div>
@@ -50,7 +50,7 @@ export default function LockedRegistration({ iiitCode, registrationData }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <h1 className="text-3xl font-black text-gray-900 mb-2">Registration & Payment Submitted</h1>
+            <h1 className="text-3xl font-black text-gray-900 mb-2">Already Registered — You Are Already Logged In</h1>
             <p className="text-green-800 font-medium">Your registration and payment details have been successfully submitted and are now permanently locked.</p>
           </div>
 
@@ -187,7 +187,7 @@ export default function LockedRegistration({ iiitCode, registrationData }) {
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <button
                 onClick={downloadCsv}
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#1b5e20] text-white rounded-full font-bold text-sm shadow-md hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700"
+                className="dark-surface inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#1b5e20] text-white rounded-full font-bold text-sm shadow-md hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-700"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />

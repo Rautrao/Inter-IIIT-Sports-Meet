@@ -33,7 +33,16 @@ export default function LoginPage() {
       if (data.user?.role === "admin") {
         router.push("/admin");
       } else {
-        router.push("/register");
+        const registrationRes = await fetch("/api/registration");
+        const registrationData = registrationRes.ok
+          ? await registrationRes.json()
+          : null;
+
+        if (registrationData?.data?.submitted) {
+          router.push("/register?status=already-registered");
+        } else {
+          router.push("/register");
+        }
       }
     } catch (err) {
       setError(err.message || "An unexpected error occurred during login.");
@@ -144,7 +153,7 @@ export default function LoginPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl text-sm outline-none transition-all"
-                placeholder="e.g. iiitdm-kancheepuram or admin"
+                placeholder="e.g. iiitdm-kancheepuram or IIITDM Kancheepuram"
                 style={{
                   border: "1.5px solid rgba(27,94,32,0.2)",
                   background: "#fff",
@@ -189,7 +198,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 rounded-xl font-black text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-md mt-2 disabled:opacity-50"
+              className="yellow-button w-full py-3.5 rounded-xl font-black text-sm tracking-wide transition-all hover:-translate-y-0.5 hover:shadow-md mt-2 disabled:opacity-50"
               style={{ background: "#f5c518", color: "#0a2112" }}
             >
               {loading ? "Signing In..." : "Sign In →"}

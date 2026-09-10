@@ -65,15 +65,15 @@ export default function Location() {
       
       {/* ─── 1. PAGE HERO & HEADER ──────────────────────────────────────── */}
       {/* Gold header band with dark, high-contrast event information */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8" style={{ background: '#f0d574' }}>
+      <section className="green-page-header py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#0a2112' }}>
+          <span className="page-eyebrow text-xs font-black tracking-[0.25em] uppercase">
             Venue &amp; Travel Guide
           </span>
           <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             Location &amp; How to Reach
           </h1>
-          <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#c9972f' }} />
+          <div className="page-rule mt-3 w-12 h-1 rounded-full" />
           
           <p className="mt-6 text-base sm:text-lg max-w-3xl leading-relaxed" style={{ color: 'rgba(10,33,18,0.8)' }}>
             The 9th All India Inter-IIIT Sports Meet is held at the {hostInstitute.campusArea} of{' '}
@@ -87,7 +87,7 @@ export default function Location() {
               href={location.googleMapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-black transition-all hover:-translate-y-0.5 shadow-lg"
+              className="yellow-button inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full text-sm font-black transition-all hover:-translate-y-0.5 shadow-lg"
               style={{ background: '#f5c518', color: '#0a2112' }}
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -100,10 +100,10 @@ export default function Location() {
 
             {/* GPS Coordinates Badge */}
             <div
-              className="inline-flex items-center gap-2 px-4 py-3 rounded-full text-xs font-bold border"
-              style={{ background: 'rgba(255,255,255,0.38)', borderColor: 'rgba(10,33,18,0.18)', color: '#0a2112' }}
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-full text-xs font-bold border shadow-sm"
+              style={{ background: 'transparent', borderColor: '#f5c518', color: '#f5c518' }}
             >
-              <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-[#f5c518] animate-pulse" />
               GPS: {location.coordinates.latitude}, {location.coordinates.longitude}
             </div>
 
@@ -184,7 +184,7 @@ export default function Location() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
                     </svg>
                   </div>
-                  <span className="px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider" style={{ background: '#1b5e20', color: '#fff' }}>
+                  <span className="dark-surface px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider" style={{ background: '#1b5e20', color: '#fff' }}>
                     Rail Hubs
                   </span>
                 </div>
@@ -387,7 +387,7 @@ export default function Location() {
 
         {/* ─── 5. LOCAL TIPS & CONTACT FOOTNOTE ──────────────────────────── */}
         <div
-          className="rounded-2xl p-8 sm:p-10 text-white flex flex-col md:flex-row items-center justify-between gap-6"
+          className="dark-surface rounded-2xl p-8 sm:p-10 text-white flex flex-col md:flex-row items-center justify-between gap-6"
           style={{ background: '#0a2112' }}
         >
           <div>
@@ -403,15 +403,17 @@ export default function Location() {
           <div className="flex flex-wrap items-center gap-4 shrink-0">
             <Link
               href="/contact"
-              className="px-6 py-3 rounded-full text-sm font-bold transition-all hover:-translate-y-0.5"
+              className="yellow-button px-6 py-3 rounded-full text-sm font-bold transition-all hover:-translate-y-0.5"
               style={{ background: '#f5c518', color: '#0a2112' }}
+              aria-label="Open the Inter-IIIT Sports Meet contact page"
             >
               Contact Sports Cell
             </Link>
             <a
               href="mailto:sports@iiitdm.ac.in"
-              className="px-6 py-3 rounded-full text-sm font-bold border transition-all hover:bg-white/10"
-              style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff' }}
+              className="location-email-link px-6 py-3 rounded-full text-sm font-bold border transition-all hover:bg-white/10"
+              style={{ background: 'transparent', color: '#f5c518' }}
+              aria-label="Email the Inter-IIIT Sports Meet organising team"
             >
               sports@iiitdm.ac.in
             </a>

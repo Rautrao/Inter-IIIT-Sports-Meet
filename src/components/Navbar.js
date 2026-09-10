@@ -20,13 +20,13 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full" style={{ background: 'rgba(10,33,18,0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+    <nav className="dark-surface sticky top-0 z-50 w-full" style={{ background: 'rgba(10,33,18,0.97)', backdropFilter: 'blur(12px)', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-[60px] sm:h-[68px]">
 
           {/* Logo + Brand */}
           <Link href="/" className="flex items-center gap-3 group shrink-0">
-            <div className="w-10 h-10 relative bg-white rounded-full p-0.5 border border-amber-400/60 flex items-center justify-center group-hover:border-amber-400 transition-colors">
+            <div className="w-10 h-10 relative rounded-full p-1 border-amber-400/70 flex items-center justify-center group-hover:bg-white/10 group-hover:border-amber-300 transition-colors">
               <Image src="/assets/brand/inter-iiit-logo.png" alt="Inter-IIIT" fill className="object-contain p-1" />
             </div>
             <div className="block leading-tight">
@@ -62,7 +62,7 @@ export default function Navbar() {
           <div className="flex items-center gap-3">
             <Link
               href="/register"
-              className="hidden md:inline-flex items-center px-5 py-2 text-[13px] font-bold text-brand-dark bg-brand-highlight hover:bg-amber-300 rounded-full transition-colors shadow-sm"
+                className="yellow-button hidden md:inline-flex items-center px-5 py-2 text-[13px] font-bold text-brand-dark bg-brand-highlight hover:bg-amber-300 rounded-full transition-colors shadow-sm"
             >
               Register
             </Link>
@@ -103,7 +103,7 @@ export default function Navbar() {
           <Link
             href="/register"
             onClick={() => setMobileOpen(false)}
-            className="block mt-3 px-4 py-3 text-center text-sm font-bold text-brand-dark bg-brand-highlight hover:bg-amber-300 rounded-full transition-colors"
+            className="yellow-button block mt-3 px-4 py-3 text-center text-sm font-bold text-brand-dark bg-brand-highlight hover:bg-amber-300 rounded-full transition-colors"
           >
             Register Now
           </Link>

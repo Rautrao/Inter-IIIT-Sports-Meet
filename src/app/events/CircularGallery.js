@@ -613,7 +613,7 @@ export default function CircularGallery({
           onClick={() => setZoomedItem(null)} // Dismiss / shrink on outside click
         >
           <div
-            className="relative max-w-xl w-full bg-[#1C2E24] border-2 border-[#f5c518] rounded-2xl overflow-hidden shadow-2xl transition-transform duration-300"
+            className="dark-surface relative max-w-xl w-full bg-[#1C2E24] border-2 border-[#f5c518] rounded-2xl overflow-hidden shadow-2xl transition-transform duration-300"
             style={{
               animation: 'lightboxZoom 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
             }}

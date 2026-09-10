@@ -1,487 +1,128 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import SectionHeading from '@/components/SectionHeading';
-import CircularGallery from './CircularGallery';
-import InteractiveHeading from './InteractiveHeading';
-import { sports } from '@/data/sports';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { sports } from '@/data/sports';
 
-// Lightweight scroll-driven parallax hook
-function useParallaxScroll(speed = 0.18) {
-  const [offset, setOffset] = useState(0);
-  useEffect(() => {
-    const onScroll = () => setOffset(window.scrollY);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-  return -offset * speed;
-}
-
-// Hook: drives a smooth 0→1 progress value as user scrolls through the header
-function use3DScrollProgress(headerRef) {
-  const progressRef = useRef(0);
-  const rafRef = useRef(null);
-
-  useEffect(() => {
-    const update = () => {
-      const el = headerRef.current;
-      if (!el) return;
-      const headerH = el.offsetHeight;
-      const raw = Math.min(Math.max(window.scrollY / (headerH * 0.8), 0), 1);
-      progressRef.current = raw;
-    };
-
-    const onScroll = () => {
-      if (rafRef.current) return;
-      rafRef.current = requestAnimationFrame(() => {
-        update();
-        rafRef.current = null;
-      });
-    };
-
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [headerRef]);
-
-  return progressRef; // a ref so we can read it in rAF without re-renders
-}
-
-function SportCard({ sport, idx }) {
-  const [spotlight, setSpotlight] = useState({ x: 0, y: 0, active: false });
-
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setSpotlight({
-      x: Math.round(e.clientX - rect.left),
-      y: Math.round(e.clientY - rect.top),
-      active: true,
-    });
-  };
-
-  const handleTouchMove = (e) => {
-    if (e.touches && e.touches[0]) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      setSpotlight({
-        x: Math.round(e.touches[0].clientX - rect.left),
-        y: Math.round(e.touches[0].clientY - rect.top),
-        active: true,
-      });
-    }
-  };
-
-  const handleLeave = () => {
-    setSpotlight((prev) => ({ ...prev, active: false }));
-  };
-
+function EventCard({ sport, index, featured = false }) {
   return (
-    <div
-      onMouseMove={handleMouseMove}
-      onTouchMove={handleTouchMove}
-      onMouseLeave={handleLeave}
-      onTouchEnd={handleLeave}
-      className="group relative overflow-hidden rounded-xl cursor-pointer border border-transparent hover:border-[#f5c518] hover:ring-2 hover:ring-[#f5c518] hover:shadow-[0_0_25px_rgba(245,197,24,0.5)] transition-all duration-300 ease-out hover:scale-[1.06] transition-transform active:scale-95 shadow-lg"
-      style={{ height: '220px' }}
+    <article
+      data-reveal
+      className={`reveal sport-card group relative overflow-hidden rounded-2xl border border-brand-dark/10 bg-brand-dark ${
+        featured ? 'min-h-[26rem] md:min-h-[34rem]' : 'min-h-[15rem] sm:min-h-[18rem]'
+      }`}
     >
-      {/* Natural image with smooth scale-up on card hover */}
       <Image
         src={sport.image}
-        alt={sport.name}
+        alt={`${sport.name} event`}
         fill
-        sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-        className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+        priority={featured}
+        sizes={featured ? '(max-width: 768px) 100vw, 58vw' : '(max-width: 768px) 100vw, 30vw'}
+        className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
       />
-
-      {/* Increased bottom dark gradient overlay contrast beneath text */}
-      <div
-        className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent transition-opacity duration-300 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 40%, transparent 100%)',
-        }}
-      />
-
-      {/* Dynamic cursor/touch radial spotlight overlay with light, subtle glow */}
-      <div
-        className="absolute inset-0 pointer-events-none transition-opacity duration-200 z-10"
-        style={{
-          opacity: spotlight.active ? 1 : 0,
-          background: `radial-gradient(circle at ${spotlight.x}px ${spotlight.y}px, rgba(245, 197, 24, 0.12), transparent 70%)`,
-        }}
-      />
-
-      {/* Bottom label with glassmorphism blur and expanding gold line */}
-      <div className="absolute bottom-0 left-0 right-0 p-4 z-20 transition-all duration-300 group-hover:backdrop-blur-[2px]">
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-[2px] pointer-events-none" />
-        <div className="relative z-10">
-          <h3
-            className="font-bold text-white text-base tracking-tight leading-tight uppercase"
-            style={{
-              fontFamily: "'Montserrat', sans-serif",
-              color: '#ffffff',
-              textShadow: '0 2px 8px rgba(0,0,0,0.9), 0 1px 4px rgba(0,0,0,0.8)',
-            }}
-          >
-            {sport.name}
-          </h3>
-          <div
-            className="mt-1.5 h-0.5 w-6 rounded-full transition-all duration-300 ease-out group-hover:w-16"
-            style={{ background: '#72751dff' }}
-          />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#07150c]/95 via-[#07150c]/25 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-5 sm:p-6">
+        <div className="mb-3 flex items-center gap-3 text-[10px] font-black uppercase tracking-[0.2em] text-brand-highlight">
+          <span className="h-px w-7 bg-brand-highlight" />
+          Event {String(index + 1).padStart(2, '0')}
         </div>
+        <h2 className={`${featured ? 'text-3xl sm:text-5xl' : 'text-xl sm:text-2xl'} font-black tracking-tight text-white`}>
+          {sport.name}
+        </h2>
+        {featured && (
+          <p className="mt-3 max-w-md text-sm leading-relaxed text-white/80">
+            Speed, skill and strategy take center stage at the 9th Inter-IIIT Sports Meet.
+          </p>
+        )}
       </div>
-    </div>
+    </article>
   );
 }
-
-function ParallaxGrid() {
-  const translateY = useParallaxScroll(200);
-  return (
-    <div
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14"
-      style={{
-        transform: `translateY(${translateY}px)`,
-        willChange: 'transform',
-      }}
-    >
-      <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-        {sports.map((sport, idx) => (
-          <SportCard key={idx} sport={sport} idx={idx} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-const galleryItems = sports.map((sport) => ({
-  image: sport.image,
-  text: sport.name,
-}));
 
 export default function Events() {
-  const canvasRef = useRef(null);
-  const mouseRef = useRef({ x: -1000, y: -1000, isHovered: false });
-
-  const handleHeaderMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    mouseRef.current = {
-      x: e.clientX - rect.left,
-      y: e.clientY - rect.top,
-      isHovered: true,
-    };
-  };
-
-  const handleHeaderTouchMove = (e) => {
-    if (e.touches && e.touches[0]) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      mouseRef.current = {
-        x: e.touches[0].clientX - rect.left,
-        y: e.touches[0].clientY - rect.top,
-        isHovered: true,
-      };
-    }
-  };
-
-  const handleHeaderLeave = () => {
-    mouseRef.current = { x: -1000, y: -1000, isHovered: false };
-  };
-
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    let animationId;
-    let width = (canvas.width = canvas.parentElement.offsetWidth);
-    let height = (canvas.height = canvas.parentElement.offsetHeight);
-
-    const handleResize = () => {
-      if (!canvas || !canvas.parentElement) return;
-      width = canvas.width = canvas.parentElement.offsetWidth;
-      height = canvas.height = canvas.parentElement.offsetHeight;
-    };
-    window.addEventListener('resize', handleResize);
-
-    class Particle {
-      constructor() {
-        this.reset(true);
-      }
-
-      reset(initial = false) {
-        this.x = Math.random() * width;
-        this.y = initial ? Math.random() * height : -10;
-        this.radius = Math.random() * 1.5 + 0.8;
-        this.baseVy = Math.random() * 0.4 + 0.25;
-        this.vy = this.baseVy;
-        this.vx = (Math.random() - 0.5) * 0.2;
-        this.alpha = Math.random() * 0.25 + 0.15;
-        const colorType = Math.random();
-        if (colorType > 0.6) {
-          this.color = '24, 91, 29'; // Green #185B1D
-        } else if (colorType > 0.3) {
-          this.color = '12, 60, 16'; // Darker green shade
-        } else {
-          this.color = '36, 120, 42'; // Mid green shade
-        }
-      }
-
-      update(mouse) {
-        // Slow downward float
-        this.y += this.vy;
-        this.x += this.vx;
-
-        // Smooth cursor repulsion / dispersion
-        const dx = mouse.x - this.x;
-        const dy = mouse.y - this.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        const repelRadius = 110;
-
-        if (dist < repelRadius && mouse.isHovered) {
-          const force = (repelRadius - dist) / repelRadius;
-          const dirX = (dx / dist) * force * 1.8;
-          const dirY = (dy / dist) * force * 1.8;
-          this.vx -= dirX;
-          this.vy -= dirY;
-        } else {
-          // Smooth return to normal downward drift
-          this.vx *= 0.96;
-          this.vy = this.vy * 0.95 + this.baseVy * 0.05;
-        }
-
-        // Screen boundary wrapping
-        if (this.y > height + 10) this.reset();
-        if (this.x < -10) this.x = width + 10;
-        if (this.x > width + 10) this.x = -10;
-      }
-
-      draw() {
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
-        ctx.fill();
-      }
-    }
-
-    const count = Math.min(60, Math.max(30, Math.floor(width / 22)));
-    const particles = Array.from({ length: count }, () => new Particle());
-
-    const animate = () => {
-      ctx.clearRect(0, 0, width, height);
-
-      for (let i = 0; i < particles.length; i++) {
-        particles[i].update(mouseRef.current);
-        particles[i].draw();
-      }
-
-      animationId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(animationId);
-    };
-  }, []);
-
-  useEffect(() => {
-    const revealItems = document.querySelectorAll('[data-reveal]');
-
-    if (!revealItems.length) return undefined;
-
-    const activate = (element) => {
-      element.classList.add('is-visible');
-      element.dataset.visible = 'true';
+    const items = document.querySelectorAll('[data-reveal]');
+    const activate = (item) => {
+      item.classList.add('is-visible');
+      item.dataset.visible = 'true';
     };
 
     if (!('IntersectionObserver' in window)) {
-      revealItems.forEach((item) => activate(item));
+      items.forEach(activate);
       return undefined;
     }
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            activate(entry.target);
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.16 }
+      (entries) => entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          activate(entry.target);
+          observer.unobserve(entry.target);
+        }
+      }),
+      { threshold: 0.12 }
     );
 
-    revealItems.forEach((item) => {
-      if (item.getBoundingClientRect().top < window.innerHeight + 120) {
-        activate(item);
-        return;
-      }
-      observer.observe(item);
-    });
-
+    items.forEach((item) => observer.observe(item));
     return () => observer.disconnect();
   }, []);
 
-  // ── 3D Perspective Scroll ──────────────────────────────────────────────────
-  const headerBannerRef = useRef(null);
-  const contentSectionRef = useRef(null);
-  const scrollRafRef = useRef(null);
-
-  useEffect(() => {
-    const lerp = (a, b, t) => a + (b - a) * t;
-    let currentProgress = 0;
-
-    const tick = () => {
-      const header = headerBannerRef.current;
-      const content = contentSectionRef.current;
-      if (!header) { scrollRafRef.current = requestAnimationFrame(tick); return; }
-
-      const headerH = header.offsetHeight;
-      const rawProgress = Math.min(Math.max(window.scrollY / (headerH * 0.85), 0), 1);
-      // Smooth lerp so the transform eases rather than snapping
-      currentProgress = lerp(currentProgress, rawProgress, 0.1);
-      const p = currentProgress;
-
-      // Header: recede in 3D
-      const rotateX = p * 14;          // 0 → 14deg tilt away
-      const scale = 1 - p * 0.1;     // 1 → 0.9
-      const translateZ = -p * 100;      // 0 → -100px push back
-      const opacity = 1 - p * 0.62;   // 1 → 0.38
-
-      header.style.transformOrigin = '50% 0%';
-      header.style.transform =
-        `perspective(1200px) rotateX(${rotateX}deg) scale(${scale}) translateZ(${translateZ}px)`;
-      header.style.opacity = opacity;
-
-      // Content: slide up over the receding header
-      if (content) {
-        const slideUp = p * 60;          // shift up by up to 60px
-        content.style.transform = `translateY(-${slideUp}px)`;
-      }
-
-      scrollRafRef.current = requestAnimationFrame(tick);
-    };
-
-    scrollRafRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
-    };
-  }, []);
-  // ──────────────────────────────────────────────────────────────────────────
+  const [featured, ...remaining] = sports;
 
   return (
-    <div style={{ background: '#F4F5EB', minHeight: '100vh', perspective: '1200px' }}>
-      {/* Google Font Montserrat */}
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap"
-      />
-
-      {/* Page header banner with falling & repelling particles and crisp boundary */}
-      <div
-        ref={headerBannerRef}
-        onMouseMove={handleHeaderMouseMove}
-        onTouchMove={handleHeaderTouchMove}
-        onMouseLeave={handleHeaderLeave}
-        onTouchEnd={handleHeaderLeave}
-        className="relative py-6 md:py-10 px-4 overflow-hidden border-b border-[#185B1D]/20"
-        style={{
-          background: '#F2D16D',
-          willChange: 'transform, opacity',
-          transformOrigin: '50% 0%',
-          zIndex: 1,
-        }}
-      >
-        {/* Falling & repelling header particles canvas */}
-        <canvas
-          ref={canvasRef}
-          className="absolute inset-0 w-full h-full pointer-events-none z-10"
-        />
-
-        <div className="relative max-w-10xl mx-auto z-20 px-4 sm:px-6 lg:px-8">
-          {/* Square Sticky Note Patch Tag */}
-          <div
-            className="relative inline-flex flex-col items-center justify-center w-24 h-24 -rotate-3 select-none mb-6 shadow-[4px_4px_14px_rgba(0,0,0,0.45)] hover:rotate-0 hover:scale-105 transition-all duration-300 ease-out cursor-default"
-            style={{ background: '#3d5a06ff' }}
-          >
-            {/* Tape strip at top */}
-            <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-10 h-4 bg-[#b8952b]/50 backdrop-blur-[1px] rotate-1 border border-[#F2D16D]/60 shadow-sm z-10" />
-            <span className="text-[10px] font-black tracking-widest uppercase text-[#b8952b] text-center leading-snug px-2">
-              EXPLORE<br />
-              <span className="text-2xl font-black leading-none">{sports.length}</span><br />
-              EVENTS
-            </span>
-          </div>
-
-          <div className="block">
-            <span className="text-xs font-bold tracking-widest uppercase text-[#0a2112]">
-              9th Inter-IIIT Sports Meet · 2026
-            </span>
-          </div>
-
-          {/* Interactive Heading with character hover & yellow cursor effect */}
-          <div className="mt-4 max-w-4xl">
-            <InteractiveHeading text="SPORTING  EVENTS" />
-          </div>
-
-          <div className="mt-4 w-14 h-1 rounded-full" style={{ background: '#185B1D' }} />
-
-          <p className="mt-4 text-sm sm:text-base max-w-xl font-normal leading-relaxed" style={{ color: 'rgba(9, 61, 12, 0.97)' }}>
-            {sports.length} competitive events testing speed, skill, strength, and strategy.
+    <main className="min-h-screen bg-ivory">
+      <section className="relative overflow-hidden bg-brand-dark text-white">
+        <div className="absolute inset-0 opacity-20">
+          <Image src={featured.image} alt="" fill priority className="object-cover" />
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-brand-dark via-brand-dark/95 to-brand-dark/55" />
+        <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <p className="mb-5 text-xs font-black uppercase tracking-[0.28em] text-brand-highlight">
+            9th Inter-IIIT Sports Meet · 2026
           </p>
-        </div>
-      </div>
-
-      {/* Events content – slides up over the receding header */}
-      <div
-        ref={contentSectionRef}
-        style={{ willChange: 'transform', position: 'relative', zIndex: 2 }}
-      >
-        {/* Circular Gallery Section */}
-        <div className="max-w-30xl mx-auto py-12 sm:py-20 md:py-28 px-4">
-          <div className="w-full">
-            <CircularGallery
-              items={galleryItems}
-              bend={3}
-              textColor="#ffffff"
-              borderRadius={0.05}
-              scrollEase={0.12}
-              fontUrl="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap"
-              font="800 24px 'Montserrat', sans-serif"
-              scrollSpeed={1.5}
-            />
-          </div>
-        </div>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-4">
-        <div data-reveal className="reveal rulebook-panel rounded-[28px] border p-6 sm:p-8 md:p-10 shadow-sm"
-          style={{ background: 'linear-gradient(135deg, rgba(245,197,24,0.12), rgba(255,255,255,0.9)), #fff', borderColor: 'rgba(27,94,32,0.14)' }}>
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
-            <div className="max-w-2xl">
-              <span className="text-[10px] font-black tracking-[0.25em] uppercase" style={{ color: '#c9972f' }}>
-                Rule Book
-              </span>
-              <h2 className="mt-3 font-black text-2xl sm:text-3xl" style={{ color: '#0a2112' }}>
-                Competition rules, eligibility criteria, event regulations, and participation guidelines will be published here.
-              </h2>
-            </div>
-            <Link
-              href="/assets/docs/rulebook.pdf"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center px-7 py-3.5 rounded-full text-sm font-black transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lg"
-              style={{ background: '#0a2112', color: '#f5c518', letterSpacing: '0.04em' }}
-            >
-              View Rule Book
+          <h1 className="max-w-3xl text-5xl font-black leading-[0.95] tracking-tight text-white sm:text-7xl">
+            Every event has a story.
+          </h1>
+          <p className="mt-6 max-w-xl text-base leading-relaxed text-white/75 sm:text-lg">
+            Explore the competitive programme, from track and field to team sports and precision disciplines.
+          </p>
+          <div className="mt-8 flex flex-wrap gap-3 text-sm font-bold">
+            <span className="rounded-full border border-brand-highlight/50 px-4 py-2 text-brand-highlight">
+              {sports.length} events
+            </span>
+            <Link href="/register" className="yellow-button rounded-full bg-brand-highlight px-5 py-2 text-brand-dark transition-transform hover:-translate-y-0.5">
+              Register your roster
             </Link>
           </div>
         </div>
-      </div>
-      </div>
-    </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+        <div className="mb-8 flex items-end justify-between gap-6">
+          <div>
+            <p className="text-xs font-black uppercase tracking-[0.25em] text-brand-accent">The programme</p>
+            <h2 className="mt-2 text-3xl font-black text-brand-dark sm:text-4xl">Find your arena</h2>
+          </div>
+          <p className="hidden max-w-xs text-right text-sm leading-relaxed text-brand-dark/60 sm:block">
+            Natural imagery, bold moments, and a clear view of every sporting discipline.
+          </p>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-[1.25fr_0.75fr]">
+          <EventCard sport={featured} index={0} featured />
+          <div className="grid gap-5 sm:grid-cols-2 md:grid-cols-1">
+            {remaining.slice(0, 2).map((sport, index) => (
+              <EventCard key={sport.name} sport={sport} index={index + 1} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {remaining.slice(2).map((sport, index) => (
+            <EventCard key={sport.name} sport={sport} index={index + 3} />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }

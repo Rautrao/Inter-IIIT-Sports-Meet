@@ -9,15 +9,18 @@ export default function Gallery() {
   return (
     <div style={{ background: '#faf6ee', minHeight: '100vh' }}>
       {/* Page header */}
-      <div className="py-16 px-4" style={{ background: '#f0d574' }}>
+      <div className="green-page-header py-16 px-4">
         <div className="max-w-7xl mx-auto">
-          <span className="text-xs font-black tracking-[0.25em] uppercase" style={{ color: '#000000' }}>
+          <span className="page-eyebrow text-xs font-black tracking-[0.25em] uppercase">
             Glimpses of Glory
           </span>
           <h1 className="mt-3 font-black" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', color: '#0a2112' }}>
             Gallery
           </h1>
-          <div className="mt-3 w-12 h-1 rounded-full" style={{ background: '#070706' }} />
+          <div className="page-rule mt-3 w-12 h-1 rounded-full" />
+          <p className="mt-4 max-w-2xl text-base leading-relaxed text-white/80">
+            A visual collection of the energy, teamwork, and unforgettable moments behind the Inter-IIIT Sports Meet.
+          </p>
         </div>
       </div>
 
