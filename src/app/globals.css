@@ -45,6 +45,50 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Keep content readable whenever a section uses a dark surface. */
+.dark-surface,
+.dark-surface * {
+  color: #fff !important;
+}
+
+.dark-surface :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--color-brand-highlight) !important;
+}
+
+.dark-surface .students-badge {
+  color: var(--color-brand-primary) !important;
+}
+
+.dark-surface .location-email-link {
+  color: var(--color-brand-highlight) !important;
+}
+
+.yellow-button {
+  color: var(--color-brand-dark) !important;
+}
+
+.green-page-header {
+  background: var(--color-brand-dark);
+  color: #fff;
+}
+
+.green-page-header .page-eyebrow {
+  color: var(--color-brand-highlight) !important;
+}
+
+.green-page-header h1 {
+  color: #fff !important;
+}
+
+.green-page-header p,
+.green-page-header strong {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+.green-page-header .page-rule {
+  background: var(--color-brand-highlight) !important;
+}
+
 button,
 input,
 select,
@@ -55,7 +99,7 @@ textarea {
 h1, h2, h3, h4, h5, h6 {
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--foreground);
+  color: inherit;
 }
 
 /* Custom Scrollbar */
@@ -88,40 +132,6 @@ h1, h2, h3, h4, h5, h6 {
   to   { opacity: 1; transform: translateX(0); }
 }
 
-/* Cinematic Intro Keyframes */
-@keyframes roadDash {
-  0% { transform: translateY(-100%); }
-  100% { transform: translateY(100%); }
-}
-
-@keyframes trophyRise {
-  0% {
-    opacity: 0;
-    transform: translateY(60px) scale(0.85);
-  }
-  60% {
-    opacity: 1;
-    transform: translateY(-8px) scale(1.04);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-@keyframes glowPulse {
-  0%, 100% {
-    filter: drop-shadow(0 0 25px rgba(245, 197, 24, 0.4)) drop-shadow(0 0 60px rgba(27, 94, 32, 0.3));
-  }
-  50% {
-    filter: drop-shadow(0 0 45px rgba(245, 197, 24, 0.8)) drop-shadow(0 0 90px rgba(27, 94, 32, 0.6));
-  }
-}
-
-@keyframes shimmerSweep {
-  0% { transform: translateX(-150%) skewX(-25deg); }
-  100% { transform: translateX(250%) skewX(-25deg); }
-}
 
 @keyframes cardCascade {
   from {
@@ -152,8 +162,6 @@ h1, h2, h3, h4, h5, h6 {
 .animate-fadeUp { animation: fadeUp 0.6s ease both; }
 .animate-fadeIn { animation: fadeIn 0.8s ease both; }
 .animate-slideRight { animation: slideRight 0.6s ease both; }
-.animate-trophyRise { animation: trophyRise 1.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
-.animate-glowPulse { animation: glowPulse 2.5s ease-in-out infinite; }
 .animate-cardCascade { animation: cardCascade 0.7s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
 .reveal {
@@ -194,6 +202,12 @@ h1, h2, h3, h4, h5, h6 {
 .sport-card:hover::after {
   opacity: 1;
   transform: scale(1.02);
+}
+
+/* Photo overlays need a stable high-contrast text color. */
+.sport-card h2,
+.sport-card p {
+  color: #fff !important;
 }
 
 .rulebook-panel {
@@ -297,4 +311,3 @@ h1, h2, h3, h4, h5, h6 {
     transform: none !important;
   }
 }
-

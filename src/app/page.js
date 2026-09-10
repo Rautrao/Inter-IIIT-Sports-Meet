@@ -424,11 +424,11 @@ export default function Home() {
       {/* ─── 7. STUDENTS' & EMPLOYEES' MEET ──────────────────────────────── */}
       <section className="flex flex-col md:flex-row">
         {/* Students */}
-        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#0a2112' }}>
+        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#87894d' }}>
           <div className="absolute inset-0 opacity-25">
             <Image src="/assets/gallery/gallery-02.jpg" alt="Students Meet" fill className="object-cover" />
           </div>
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,33,18,0.95) 0%, rgba(10,33,18,0.3) 100%)' }} />
+          <div className="absolute inset-0" />
           <div className="relative z-10 p-10 md:p-14">
             {/* <div className="students-badge inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
               style={{ background: '#f5c518', color: '#1b5e20' }}>
@@ -441,11 +441,11 @@ export default function Home() {
           </div>
         </div>
         {/* Employees */}
-        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#1b5e20' }}>
+        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#87894d' }}>
           <div className="absolute inset-0 opacity-25">
             <Image src="/assets/gallery/gallery-03.jpg" alt="Employees Meet" fill className="object-cover" />
           </div>
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,60,20,0.95) 0%, rgba(10,60,20,0.3) 100%)' }} />
+          <div className="absolute inset-0" />
           <div className="relative z-10 p-10 md:p-14">
             {/* <div className="inline-block px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
               style={{ background: '#c9972f', color: '#fff' }}>Faculty &amp; Staff</div> */}
