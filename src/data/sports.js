@@ -15,5 +15,4 @@ export const sports = [
   { name: "Tennis", image: "/assets/events/tennis.jpg" },
   { name: "Volleyball", image: "/assets/events/volleyball.jpeg" },
   { name: "Tug of War", image: "/assets/events/tug-of-war.jpeg" },
-  { name: "Squash", image: "/assets/events/squash.webp" }
 ];
