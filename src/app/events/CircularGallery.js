@@ -644,8 +644,8 @@ export default function CircularGallery({
                 Inter-IIIT 2026 Event
               </span>
               <h3
-                className="text-2xl sm:text-3xl font-black text-[#F4F5EB] uppercase tracking-wide mt-1"
-                style={{ fontFamily: "'Cinzel Decorative', 'Cinzel', serif" }}
+                className="text-2xl sm:text-3xl font-black uppercase tracking-wide mt-1"
+                style={{ fontFamily: "'Cinzel Decorative', 'Cinzel', serif", color: '#ffffff', opacity: 1 }}
               >
                 {zoomedItem.text}
               </h3>
