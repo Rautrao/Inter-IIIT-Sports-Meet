@@ -55,20 +55,13 @@ export default function LoginPage() {
         className="hidden md:flex flex-col w-[42%] p-12 relative overflow-hidden"
         style={{ background: "#0a2112" }}
       >
-        <div className="absolute inset-0 opacity-20 z-0">
-          <Image
-            src="/assets/hero/hero-placeholder.png"
-            alt=""
-            fill
-            className="object-cover"
-          />
-        </div>
+        
 
         <div
           className="absolute inset-0 z-0"
           style={{
             background:
-              "linear-gradient(to bottom, rgba(240,213,116,0.78) 0%, rgba(240,213,116,0.96) 100%)",
+              "linear-gradient(to bottom, rgba(64, 161, 57, 0.95) 0%, rgba(248, 255, 40, 0.84) 100%)",
           }}
         />
 

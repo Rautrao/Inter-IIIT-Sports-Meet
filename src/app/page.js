@@ -264,7 +264,7 @@ export default function Home() {
                 <span style={{ color: 'rgba(245,197,24,0.4)' }}>◆</span>
                 9th Inter-IIIT Sports Meet
                 <span style={{ color: 'rgba(245,197,24,0.4)' }}>◆</span>
-                25+ Participating Institutes
+                25 Participating Institutes
                 <span style={{ color: 'rgba(245,197,24,0.4)' }}>◆</span>
               </span>
             ))}
@@ -309,7 +309,7 @@ export default function Home() {
                 National Scale
               </div>
               <div className="font-black text-xl mb-1" style={{ color: '#0a2112' }}>
-                25+ IIITs Nationwide
+                25 IIITs Nationwide
               </div>
               <div className="text-xs text-gray-600">
                 Over 2,000 student-athletes and staff delegations participating.
@@ -432,7 +432,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="text-xs font-black tracking-[0.2em] uppercase" style={{ color: '#c9972f' }}>Participating Institutes</span>
-            <h2 className="mt-3 font-black text-3xl sm:text-4xl" style={{ color: '#0a2112' }}>25+ IIITs &bull; 1 Champion</h2>
+            <h2 className="mt-3 font-black text-3xl sm:text-4xl" style={{ color: '#0a2112' }}>25 IIITs &bull; 1 Champion</h2>
           </div>
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-7 gap-4">
             {iiits.map((iiit, idx) => (
@@ -454,7 +454,7 @@ export default function Home() {
       {/* ─── 7. STUDENTS' & EMPLOYEES' MEET ──────────────────────────────── */}
       <section className="flex flex-col md:flex-row">
         {/* Students */}
-        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#87894d' }}>
+        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#282828' }}>
           <div className="absolute inset-0 opacity-25">
             <Image src="/assets/gallery/gallery-02.jpg" alt="Students Meet" fill className="object-cover" />
           </div>
@@ -466,12 +466,12 @@ export default function Home() {
             </div> */}
             <h2 className="font-black text-white text-3xl md:text-4xl leading-tight mb-3">Students&apos; <br />Sports Meet</h2>
             <p className="text-sm leading-relaxed max-w-sm text-white/75">
-              2,000+ student-athletes from 25+ IIITs competing across 15+ disciplines over 5 championship days.
+              2,000+ student-athletes from 25 IIITs competing across 15+ disciplines over 5 championship days.
             </p>
           </div>
         </div>
         {/* Employees */}
-        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#87894d' }}>
+        <div className="dark-surface flex-1 relative min-h-[380px] flex items-end" style={{ background: '#282828' }}>
           <div className="absolute inset-0 opacity-25">
             <Image src="/assets/gallery/gallery-03.jpg" alt="Employees Meet" fill className="object-cover" />
           </div>
